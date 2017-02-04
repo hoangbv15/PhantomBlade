@@ -9,3 +9,4 @@ pipelines:
     - step:
         script: # Modify the commands below to build your repository.
           - ./gradlew desktop:dist
+          - curl -X POST "https://${BB_AUTH_STRING}@api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"desktop/build/libs/desktop-1.0.jar"
