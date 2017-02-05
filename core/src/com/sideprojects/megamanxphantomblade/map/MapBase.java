@@ -10,7 +10,7 @@ import com.sideprojects.megamanxphantomblade.player.PlayerFactory;
  */
 public abstract class MapBase {
     public static int EMPTY = 0xffffff;
-    public static int TILE = 0;
+    public static int TILE = 0x000000;
     public static int START = 0xff0000;
     public static int DOOR = 0x00ffff;
 
@@ -36,9 +36,8 @@ public abstract class MapBase {
                 if (match(pix, START)) {
                     // we create the player here
                     player = playerFactory.createPlayer(x, y);
-                } else {
-                    tiles[x][y] = pix;
                 }
+                tiles[x][y] = pix;
             }
         }
     }
@@ -48,6 +47,6 @@ public abstract class MapBase {
     }
 
     public void update(float deltaTime) {
-        player.update(deltaTime);
+        player.update(deltaTime, this);
     }
 }

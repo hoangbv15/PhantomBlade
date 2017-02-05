@@ -17,12 +17,12 @@ public class XAnimationFactory extends AnimationFactory {
     }
 
     @Override
-    protected String getTextureIdleRun() {
-        return "sprites/x/run.txt";
+    protected int[] getAnimationRun() {
+        return null;
     }
 
     @Override
-    protected int[] getAnimationRun() {
-        return null;
+    protected String getTextureIdleRun() {
+        return "sprites/x/run.txt";
     }
 }

@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Array;
  * Created by buivuhoang on 05/02/17.
  */
 class AnimationHelper {
-    protected static Animation create(String atlasFile, int[] animationIndex, boolean flipped, float frameDuration) {
+    static Animation<TextureRegion> create(String atlasFile, int[] animationIndex, boolean flipped, float frameDuration) {
         TextureAtlas atlas = new TextureAtlas(atlasFile);
 
         Array<TextureAtlas.AtlasRegion> regions = atlas.getRegions();
