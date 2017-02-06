@@ -2,6 +2,9 @@ package com.sideprojects.megamanxphantomblade.map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerFactory;
 
@@ -13,13 +16,19 @@ public abstract class MapBase {
     public static int TILE = 0x000000;
     public static int START = 0xff0000;
     public static int DOOR = 0x00ffff;
+    public float GRAVITY = 12f;
+    public float MAX_FALLSPEED = -7f;
 
     private PlayerFactory playerFactory;
     public PlayerBase player;
     public int[][] tiles;
+    public Rectangle[][] bounds;
+
+    public TextureRegion ground;
 
     public MapBase(PlayerFactory playerFactory) {
         this.playerFactory = playerFactory;
+        ground = new TextureRegion(new Texture(Gdx.files.internal("sprites/ground.png")));
         loadMap();
     }
 
@@ -28,6 +37,7 @@ public abstract class MapBase {
     private void loadMap() {
         Pixmap pixmap = getMapResource();
         tiles = new int[pixmap.getWidth()][pixmap.getHeight()];
+        bounds = new Rectangle[pixmap.getWidth()][pixmap.getHeight()];
 
         for (int y = 0; y < pixmap.getHeight(); y++) {
             for (int x = 0; x < pixmap.getWidth(); x++) {
@@ -38,6 +48,10 @@ public abstract class MapBase {
                     player = playerFactory.createPlayer(x, y);
                 }
                 tiles[x][y] = pix;
+                if (match(pix, TILE)) {
+                    // collision rectangles
+                    bounds[x][y] = new Rectangle(x, y, 1, 1);
+                }
             }
         }
     }

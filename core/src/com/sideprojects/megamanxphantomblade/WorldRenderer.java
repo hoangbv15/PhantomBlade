@@ -21,7 +21,6 @@ public class WorldRenderer {
     private int[][] blocks;
     private float viewportHeight = 18f;
     private float viewportWidth = 20f;
-    private TextureRegion tile;
 
     private Vector3 lerpTarget;
 
@@ -38,7 +37,6 @@ public class WorldRenderer {
     }
 
     private void createBlocks() {
-        tile = new TextureRegion(new Texture(Gdx.files.internal("sprites/ground.png")));
         int width = map.tiles.length;
         int height = map.tiles[0].length;
 
@@ -49,9 +47,9 @@ public class WorldRenderer {
                     for (int x = blockX * (int) viewportWidth; x < blockX * viewportWidth + viewportWidth; x++) {
                         if (x > width || y > height) continue;
                         if (map.match(map.tiles[x][y], MapBase.TILE)){
-                            int posX = x * tile.getRegionWidth();
-                            int posY = (height - y - 1) * tile.getRegionHeight();
-                            cache.add(tile, posX, posY, tile.getRegionWidth(), tile.getRegionHeight());
+                            int posX = x * map.ground.getRegionWidth();
+                            int posY = y * map.ground.getRegionHeight();
+                            cache.add(map.ground, posX, posY, map.ground.getRegionWidth(), map.ground.getRegionHeight());
                         }
                     }
                 }
@@ -63,7 +61,7 @@ public class WorldRenderer {
     }
 
     public void render() {
-        cam.position.lerp(lerpTarget.set(map.player.pos.x * tile.getRegionWidth(), camFixedHeight, 0), 1);
+        cam.position.lerp(lerpTarget.set(map.player.pos.x * map.ground.getRegionWidth(), camFixedHeight, 0), 1);
         cam.update();
         Gdx.gl.glDisable(GL20.GL_BLEND);
         renderMap();
@@ -85,13 +83,13 @@ public class WorldRenderer {
 
     private void renderPlayer() {
         // Calculate vertical padding for player's position
-        float posY = map.player.pos.y + tile.getRegionHeight() * 2 / 3;
+        float posY = (map.player.pos.y - 1/5f) * map.ground.getRegionHeight();
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
 
         TextureRegion currentFrame = map.player.currentFrame;
 
-        batch.draw(currentFrame, map.player.pos.x * tile.getRegionWidth(), posY);
+        batch.draw(currentFrame, map.player.pos.x * map.ground.getRegionWidth(), posY);
 
         batch.end();
     }
