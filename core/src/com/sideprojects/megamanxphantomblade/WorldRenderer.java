@@ -19,8 +19,8 @@ public class WorldRenderer {
     private SpriteBatch batch;
 
     private int[][] blocks;
-    private float viewportHeight = 18f;
-    private float viewportWidth = 20f;
+    private float viewportHeight = 16f;
+    private float viewportWidth = 9f;
 
     private Vector3 lerpTarget;
 
@@ -45,7 +45,7 @@ public class WorldRenderer {
                 cache.beginCache();
                 for (int y = blockY * (int) viewportHeight; y < blockY * viewportHeight + viewportHeight; y++) {
                     for (int x = blockX * (int) viewportWidth; x < blockX * viewportWidth + viewportWidth; x++) {
-                        if (x > width || y > height) continue;
+                        if (x >= width || y >= height) continue;
                         if (map.match(map.tiles[x][y], MapBase.TILE)){
                             int posX = x * map.ground.getRegionWidth();
                             int posY = y * map.ground.getRegionHeight();

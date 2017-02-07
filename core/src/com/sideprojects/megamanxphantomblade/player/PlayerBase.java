@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 
 import java.util.OptionalInt;
-import java.util.stream.IntStream;
 
 /**
  * Created by buivuhoang on 04/02/17.
@@ -23,7 +22,7 @@ public abstract class PlayerBase {
     public static final int LEFT = -1;
     private static final int RIGHT = 1;
 
-    private static final float VELOCITY_WALK = 20f;
+    private static final float VELOCITY_WALK = 6f;
     private static final float VELOCITY_JUMP = 6f;
 
     public int state;
@@ -43,7 +42,7 @@ public abstract class PlayerBase {
 
     public PlayerBase(float x, float y) {
         pos = new Vector2(x, y);
-        bounds = new Rectangle(x, y, 1f, 1);
+        bounds = new Rectangle(x, y, 0.6f, 1);
         vel = new Vector2(0, 0);
         stateTime = 0;
         state = IDLE;
@@ -121,9 +120,9 @@ public abstract class PlayerBase {
     }
 
     private void tryMove(float deltaTime, MapBase map) {
-        if (vel.x == 0 && vel.y == 0) {
-            return;
-        }
+//        if (vel.x == 0 && vel.y == 0) {
+//            return;
+//        }
         // Apply gravity
         if (grounded) {
             vel.y = map.MAX_FALLSPEED;
@@ -170,95 +169,89 @@ public abstract class PlayerBase {
             if (vel.y > 0) {
                 pos.y = yCollision.getAsInt() - bounds.height;
             } else {
+                vel.y = 0;
                 pos.y = yCollision.getAsInt() + 1;
             }
-            vel.y = 0;
             grounded = true;
         }
-
-
-
-
-//        int x = (int)Math.floor(bounds.x);
-//        int y = (int)Math.floor(pos.y);
-//        int xJustBefore = x + 1;
-//        if (x > pos.x) {
-//            x = (int) Math.ceil(bounds.x);
-//            xJustBefore = x - 1;
-//        }
-//        if (x < 0 || x >= map.tiles.length ||
-//                map.match(map.tiles[x][y], MapBase.TILE)) {
-//            state = IDLE;
-//            vel.x = 0;
-//            pos.x = xJustBefore;
-//        }
-//
-//        x = (int)Math.floor(pos.x);
-//        y = (int)Math.floor(bounds.y);
-//        int yJustBefore = y + 1;
-//        if (y > pos.y) {
-//            y = (int) Math.ceil(bounds.y);
-//            yJustBefore = y - 1;
-//        }
-//
-//        if (y < 0 || y >= map.tiles[0].length ||
-//                map.match(map.tiles[x][y], MapBase.TILE)) {
-//            vel.y = 0;
-//            pos.y = yJustBefore;
-//            grounded = true;
-//        }
     }
 
     private OptionalInt isXCollidingWithMap(float deltaTime, MapBase map) {
-        int x = (int)Math.floor(pos.x);
-        int y = (int)Math.floor(pos.y);
-        int xAfter = (int)Math.floor(bounds.x + vel.x * deltaTime);
-        IntStream path;
-        if (vel.x > 0) {
-            x = (int) Math.ceil(bounds.x + bounds.getWidth());
-            xAfter = (int) Math.ceil(bounds.x  + bounds.getWidth() + vel.x * deltaTime);
-            path = IntStream.range(x, xAfter);
-        } else {
-            path = IntStream.range(xAfter, x);
+        if (vel.x == 0) {
+            return OptionalInt.empty();
         }
-
-        return path.filter(i -> {
-            if (i < 0 || i >= map.tiles.length) {
-                return true;
-            } else {
-                Rectangle newBounds = new Rectangle(i, pos.y, bounds.width, bounds.height);
-                if (map.bounds[i][y] == null) {
-                    return false;
+        float step = vel.x * deltaTime;
+        // First, check if direction is left or right
+        if (vel.x < 0) {
+            // Player is going left
+            if (pos.x - (int)pos.x < Math.abs(step)) {
+                // This means the player is about to move out of the current tile
+                // In that case, check if the tile on the left is walkable.
+                int x = (int)pos.x - 1;
+                int y = (int)pos.y;
+                if (isTileCollidable(x, y, map)) {
+                   return OptionalInt.of(x);
                 }
-                return newBounds.overlaps(map.bounds[i][y]);
             }
-        }).findFirst();
+            return OptionalInt.empty();
+        }
+        // Player is going right
+        if ((int)Math.ceil(pos.x) - pos.x - bounds.width < step) {
+            // This means the player is about to move out of the current tile
+            // Check if the tile on the right is walkable
+            int x = (int)pos.x + 1;
+            int y = (int)pos.y;
+            if (isTileCollidable(x, y, map)) {
+                return OptionalInt.of(x);
+            }
+        }
+        return OptionalInt.empty();
     }
 
     private OptionalInt isYCollidingWithMap(float deltaTime, MapBase map) {
-        int x = (int)Math.floor(pos.x);
-        int y = (int)Math.floor(pos.y);
-        int yAfter = (int)Math.floor(bounds.y + vel.y * deltaTime);
-        IntStream path;
-        if (vel.y > 0) {
-            y = (int) Math.ceil(bounds.y + bounds.getHeight());
-            yAfter = (int) Math.ceil(bounds.y  + bounds.getWidth() + vel.y * deltaTime);
-            path = IntStream.range(y, yAfter);
-        } else {
-            path = IntStream.range(yAfter, y);
+        if (vel.y == 0) {
+            return OptionalInt.empty();
+        }
+        float step = vel.y * deltaTime;
+        // First, check if direction is up or down
+        if (vel.y < 0) {
+            // Player is going down
+            if (pos.y - (int)pos.y < Math.abs(step)) {
+                // This means the player is about to move out of the current tile
+                // In that case, check if the tile below is walkable.
+                int y = (int)pos.y - 1;
+                int x = (int)pos.x;
+                // This is to include the adjacent tile if the player is between 2 tiles
+                float x2Float = pos.x + bounds.width;
+                int x2 = (int)x2Float;
+                if (isTileCollidable(x, y, map) || (x2Float != x2 && isTileCollidable(x2, y, map))) {
+                    return OptionalInt.of(y);
+                }
+            }
+            return OptionalInt.empty();
+        }
+        // Player is going up
+        if ((int)Math.ceil(pos.y) - pos.y - bounds.height < step) {
+            // This means the player is about to move out of the current tile
+            // Check if the tile above is walkable
+            int y = (int)pos.y + 1;
+            int x = (int)pos.x;
+            // This is to include the adjacent tile if the player is between 2 tiles
+            float x2Float = pos.x + bounds.width;
+            int x2 = (int)x2Float;
+            if (isTileCollidable(x, y, map) || (x2Float != x2 && isTileCollidable(x2, y, map))) {
+                return OptionalInt.of(y);
+            }
+        }
+        return OptionalInt.empty();
+    }
+
+    private boolean isTileCollidable(int x, int y, MapBase map) {
+        if (x < 0 || y < 0 || x > map.tiles.length || y > map.tiles[0].length) {
+            return true;
         }
 
-        return path.filter(i -> {
-            if (i < 0 || i >= map.tiles[0].length) {
-                return true;
-            } else {
-                Rectangle newBounds = new Rectangle(pos.x, i, bounds.width, bounds.height);
-                if (map.bounds[x][i] == null) {
-                    return false;
-                }
-                return newBounds.overlaps(map.bounds[x][i]);
-            }
-        }).findFirst();
+        return map.bounds[x][y] != null;
     }
 
     public abstract void createAnimations();
