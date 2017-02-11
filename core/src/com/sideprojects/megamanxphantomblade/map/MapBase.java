@@ -63,4 +63,11 @@ public abstract class MapBase {
     public void update(float deltaTime) {
         player.update(deltaTime, this);
     }
+
+    public Rectangle getCollidableBox(int x, int y) {
+        if (x < 0 || y < 0 || x >= bounds.length || y >= bounds[0].length) {
+            return new Rectangle(x, y, 1, 1);
+        }
+        return bounds[x][y];
+    }
 }

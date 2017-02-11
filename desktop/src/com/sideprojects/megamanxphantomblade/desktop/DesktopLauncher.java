@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		config.width = 1920;
 		config.height = 1080;
 		config.foregroundFPS = 60;
-		config.backgroundFPS = 30;
+		config.backgroundFPS = 60;
 		new LwjglApplication(new PhantomBladeGame(), config);
 	}
 }

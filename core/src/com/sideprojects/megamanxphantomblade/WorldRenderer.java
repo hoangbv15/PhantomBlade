@@ -12,8 +12,8 @@ import com.sideprojects.megamanxphantomblade.map.MapBase;
  * Created by buivuhoang on 04/02/17.
  */
 public class WorldRenderer {
-    private MapBase map;
-    private OrthographicCamera cam;
+    public MapBase map;
+    public OrthographicCamera cam;
     private float camFixedHeight;
     private SpriteCache cache;
     private SpriteBatch batch;
@@ -83,7 +83,7 @@ public class WorldRenderer {
 
     private void renderPlayer() {
         // Calculate vertical padding for player's position
-        float posY = (map.player.pos.y - 1/5f) * map.ground.getRegionHeight();
+        float posY = (map.player.pos.y - 1/5f*0) * map.ground.getRegionHeight();
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
 
