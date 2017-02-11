@@ -183,25 +183,25 @@ public abstract class PlayerBase {
         if (stepY > 0) {
             paddingY = bounds.height;
         }
-        Vector2 endPos = new Vector2(pos.x + stepX, pos.y + stepY);
+        Vector2 endPosX = new Vector2(pos.x + stepX, pos.y);
+        Vector2 endPosY = new Vector2(pos.x, pos.y + stepY);
 
         // Setup collision detection rays
         List<CollisionDetectionRay> detectionRayList = new ArrayList<CollisionDetectionRay>(0);
-        detectionRayList.add(new CollisionDetectionRay(pos, endPos, paddingX, 0));
-        if (stepX != 0) {
-            detectionRayList.add(new CollisionDetectionRay(pos, endPos, paddingX, bounds.height));
-        }
-        if (stepX > 0) {
-            detectionRayList.add(new CollisionDetectionRay(pos, endPos, 0, paddingY));
-        } else {
-            detectionRayList.add(new CollisionDetectionRay(pos, endPos, bounds.width, paddingY));
-        }
+        detectionRayList.add(new CollisionDetectionRay(pos, endPosX, paddingX, 0));
+        detectionRayList.add(new CollisionDetectionRay(pos, endPosX, paddingX, bounds.height));
+        detectionRayList.add(new CollisionDetectionRay(pos, endPosY, 0, paddingY));
+        detectionRayList.add(new CollisionDetectionRay(pos, endPosY, bounds.width, paddingY));
+
 
         // Loop through map and use collision detection rays to detect...well..collisions.
         int xStart = (int)pos.x;
         int yStart = (int)pos.y;
-        int xEnd = (int)(endPos.x + paddingX);
-        int yEnd = (int)(endPos.y + paddingY);
+        if (direction == LEFT) {
+            xStart += 1;
+        }
+        int xEnd = (int)(endPosX.x + paddingX);
+        int yEnd = (int)(endPosY.y + paddingY);
 
         // Loop through the rectangular area that the speed vector occupies
         // Get a list of all collisions with map tiles in the area
