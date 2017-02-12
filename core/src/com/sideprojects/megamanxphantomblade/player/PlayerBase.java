@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.math.GeoMath;
 import com.sideprojects.megamanxphantomblade.math.NumberMath;
@@ -124,21 +125,18 @@ public abstract class PlayerBase {
         }
     }
 
-    private void chainState(final int state1, int duration, final int state2) {
+    private void chainState(final int state1, float duration, final int state2) {
         if (state != state1) {
             setState(state1);
             // Stop the animation after it finishes and switch state to IDLE
-            new java.util.Timer().schedule(
-                    new java.util.TimerTask() {
-                        @Override
-                        public void run() {
-                            if (state == state1) {
-                                setState(state2);
-                            }
-                        }
-                    },
-                    duration
-            );
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    if (state == state1) {
+                        setState(state2);
+                    }
+                }
+            }, duration);
         }
     }
 
@@ -274,7 +272,7 @@ public abstract class PlayerBase {
                 case UP:
                     vel.y = 0;
                     if (vel.x == 0 && state == FALL) {
-                        int duration = (int)(playerTouchdownLeft.getAnimationDuration() * 1000);
+                        float duration = playerTouchdownLeft.getAnimationDuration();
                         chainState(TOUCHDOWN, duration, IDLE);
                     }
                     grounded = true;
