@@ -17,6 +17,10 @@ public abstract class AnimationFactory {
     private Animation<TextureRegion> instanceFallRight;
     private Animation<TextureRegion> instanceTouchdownLeft;
     private Animation<TextureRegion> instanceTouchdownRight;
+    private Animation<TextureRegion> instanceWallSlideLeft;
+    private Animation<TextureRegion> instanceWallSlideRight;
+    private Animation<TextureRegion> instanceWallJumpLeft;
+    private Animation<TextureRegion> instanceWallJumpRight;
 
     public Animation<TextureRegion> getIdleLeft() {
         if (instanceIdleLeft == null) {
@@ -88,6 +92,34 @@ public abstract class AnimationFactory {
         return instanceTouchdownRight;
     }
 
+    public Animation<TextureRegion> getWallSlideLeft() {
+        if (instanceWallSlideLeft == null) {
+            instanceWallSlideLeft = AnimationHelper.create(getTextureWallSlideAtlas(), getAnimationWallSlide(), true, 0.05f);
+        }
+        return instanceWallSlideLeft;
+    }
+
+    public Animation<TextureRegion> getWallSlideRight() {
+        if (instanceWallSlideRight == null) {
+            instanceWallSlideRight = AnimationHelper.create(getTextureWallSlideAtlas(), getAnimationWallSlide(), false, 0.05f);
+        }
+        return instanceWallSlideRight;
+    }
+
+    public Animation<TextureRegion> getWallJumpLeft() {
+        if (instanceWallJumpLeft == null) {
+            instanceWallJumpLeft = AnimationHelper.create(getTextureWallJumpAtlas(), getAnimationWallJump(), true, 0.10f);
+        }
+        return instanceWallJumpLeft;
+    }
+
+    public Animation<TextureRegion> getWallJumpRight() {
+        if (instanceWallJumpRight == null) {
+            instanceWallJumpRight = AnimationHelper.create(getTextureWallJumpAtlas(), getAnimationWallJump(), false, 0.10f);
+        }
+        return instanceWallJumpRight;
+    }
+
     protected abstract String getTextureIdleAtlas();
     protected abstract int[] getAnimationIdle();
 
@@ -102,4 +134,10 @@ public abstract class AnimationFactory {
 
     protected abstract String getTextureTouchdownAtlas();
     protected abstract int[] getAnimationTouchdown();
+
+    protected abstract String getTextureWallSlideAtlas();
+    protected abstract int[] getAnimationWallSlide();
+
+    protected abstract String getTextureWallJumpAtlas();
+    protected abstract int[] getAnimationWallJump();
 }

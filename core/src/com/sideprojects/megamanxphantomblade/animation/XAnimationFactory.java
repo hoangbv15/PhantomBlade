@@ -43,4 +43,16 @@ public class XAnimationFactory extends AnimationFactory {
 
     @Override
     protected int[] getAnimationTouchdown() { return new int[] {8, 9, 10}; }
+
+    @Override
+    protected String getTextureWallSlideAtlas() { return "sprites/x/wallslide.txt"; }
+
+    @Override
+    protected int[] getAnimationWallSlide() { return new int[] {0, 1, 2, 3}; }
+
+    @Override
+    protected String getTextureWallJumpAtlas() { return "sprites/x/wallslide.txt"; }
+
+    @Override
+    protected int[] getAnimationWallJump() { return new int[] {4, 5, 6}; }
 }

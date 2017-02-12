@@ -18,6 +18,7 @@ public abstract class MapBase {
     public static int DOOR = 0x00ffff;
     public float GRAVITY = 15f;
     public float MAX_FALLSPEED = -8f;
+    public float WALLSLIDE_FALLSPEED = -2f;
 
     private PlayerFactory playerFactory;
     public PlayerBase player;

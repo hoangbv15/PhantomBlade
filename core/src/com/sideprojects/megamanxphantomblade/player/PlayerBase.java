@@ -22,17 +22,21 @@ public abstract class PlayerBase {
     public List<Collision> collisions;
     private Vector2 originPos;
 
+    // States
     public static final int IDLE = 0;
     public static final int RUN = 1;
     public static final int JUMP = 2;
     public static final int FALL = 3;
     public static final int TOUCHDOWN = 4;
-
+    public static final int WALLSLIDE = 5;
+    public static final int WALLJUMP = 6;
+    // Directions
     public static final int LEFT = -1;
     private static final int RIGHT = 1;
-
-    private static final float VELOCITY_WALK = 6f;
+    // Velocities
+    private static final float VELOCITY_WALK = 4f;
     private static final float VELOCITY_JUMP = 6f;
+    private static final float VELOCITY_X_WALLJUMP = -3f;
 
     public int state;
     public int direction;
@@ -53,6 +57,10 @@ public abstract class PlayerBase {
     public Animation<TextureRegion> playerFallRight;
     public Animation<TextureRegion> playerTouchdownLeft;
     public Animation<TextureRegion> playerTouchdownRight;
+    public Animation<TextureRegion> playerWallSlideLeft;
+    public Animation<TextureRegion> playerWallSlideRight;
+    public Animation<TextureRegion> playerWallJumpLeft;
+    public Animation<TextureRegion> playerWallJumpRight;
     public TextureRegion currentFrame;
 
     public PlayerBase(float x, float y) {
@@ -69,13 +77,13 @@ public abstract class PlayerBase {
     }
 
     public void update(float deltaTime, MapBase map) {
-        processKeys();
+        processKeys(deltaTime);
         tryMove(deltaTime, map);
         stateTime += deltaTime;
         updateAnimation();
     }
 
-    private void processKeys() {
+    private void processKeys(float deltaTime) {
         // Reset button
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             pos.x = originPos.x;
@@ -88,33 +96,56 @@ public abstract class PlayerBase {
 
         if (Gdx.input.isKeyPressed(Input.Keys.X)) {
             if (state != FALL) {
-                if (state != JUMP) {
+                if (state != JUMP && state != WALLJUMP && state != WALLSLIDE) {
                     vel.y = VELOCITY_JUMP;
                 }
-                setState(JUMP);
-                grounded = false;
+                if (state == WALLSLIDE && Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+                    setState(WALLJUMP);
+                    vel.y = VELOCITY_JUMP;
+                    vel.x = VELOCITY_X_WALLJUMP * direction;
+                }
+                if (state != WALLJUMP && Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+                    setState(JUMP);
+                    grounded = false;
+                }
             }
-        } else if (!grounded) {
+        } else if (!grounded && state != WALLSLIDE) {
             setState(FALL);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            if (grounded) {
-                setState(RUN);
+            if (direction == RIGHT && state == WALLSLIDE && !grounded) {
+                setState(FALL);
             }
             direction = LEFT;
-            vel.x = VELOCITY_WALK * LEFT;
+            if (state == WALLJUMP) {
+                if (vel.x > VELOCITY_WALK * direction) {
+                    vel.x += VELOCITY_WALK * direction * deltaTime * 4;
+                }
+            } else {
+                vel.x = VELOCITY_WALK * direction;
+            }
+
         } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            if (grounded) {
-                setState(RUN);
+            if (direction == LEFT && state == WALLSLIDE && !grounded) {
+                setState(FALL);
             }
             direction = RIGHT;
-            vel.x = VELOCITY_WALK * RIGHT;
+            if (state == WALLJUMP) {
+                if (vel.x < VELOCITY_WALK * direction) {
+                    vel.x += VELOCITY_WALK * direction * deltaTime * 4;
+                }
+            } else {
+                vel.x = VELOCITY_WALK * direction;
+            }
         } else {
             if (grounded && state != TOUCHDOWN) {
                 setState(IDLE);
             }
             vel.x = 0;
+            if (state == WALLSLIDE && !grounded) {
+                setState(FALL);
+            }
         }
     }
 
@@ -177,12 +208,26 @@ public abstract class PlayerBase {
                 currentAnimation = playerTouchdownRight;
             }
             currentFrame = currentAnimation.getKeyFrame(stateTime, false);
+        } else if (state == WALLSLIDE) {
+            if (direction == LEFT) {
+                currentAnimation = playerWallSlideLeft;
+            } else {
+                currentAnimation = playerWallSlideRight;
+            }
+            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
+        } else if (state == WALLJUMP) {
+            if (direction == LEFT) {
+                currentAnimation = playerWallJumpLeft;
+            } else {
+                currentAnimation = playerWallJumpRight;
+            }
+            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
         }
     }
 
     private void tryMove(float deltaTime, MapBase map) {
         // Apply gravity
-        if (state != JUMP) {
+        if (state != JUMP && state != WALLJUMP && state != WALLSLIDE) {
             if (vel.y > 0) {
                 vel.y = 0;
             }
@@ -190,11 +235,16 @@ public abstract class PlayerBase {
                 vel.y -= map.GRAVITY * deltaTime;
             }
         }
+
+        if (state == WALLSLIDE) {
+            vel.y = map.WALLSLIDE_FALLSPEED;
+        }
+
         // Collision checking here
         collisionCheck(deltaTime, map);
 
         // if jumping, apply gravity
-        if (state == JUMP) {
+        if (state == JUMP || state == WALLJUMP) {
             if (vel.y > map.MAX_FALLSPEED) {
                 vel.y -= map.GRAVITY * deltaTime;
             } else {
@@ -203,8 +253,13 @@ public abstract class PlayerBase {
         }
 
         // player is falling if going downwards
-        if (vel.y < 0) {
+        if (vel.y < 0 && state != WALLSLIDE) {
             setState(FALL);
+            grounded = false;
+        }
+
+        if (grounded && vel.x != 0) {
+            setState(RUN);
         }
 
         pos.x += vel.x * deltaTime;
@@ -271,7 +326,7 @@ public abstract class PlayerBase {
             switch (collision.side) {
                 case UP:
                     vel.y = 0;
-                    if (vel.x == 0 && state == FALL) {
+                    if ((vel.x == 0 && state == FALL) || state == WALLSLIDE) {
                         float duration = playerTouchdownLeft.getAnimationDuration();
                         chainState(TOUCHDOWN, duration, IDLE);
                     }
@@ -287,8 +342,10 @@ public abstract class PlayerBase {
                 case RIGHT:
                     vel.x = 0;
                     pos.x = preCollide.x;
-                    if (grounded) {
+                    if (grounded && state != TOUCHDOWN) {
                         setState(IDLE);
+                    } else if (!grounded) {
+                        setState(WALLSLIDE);
                     }
                     break;
             }
