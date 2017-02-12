@@ -139,9 +139,6 @@ public abstract class PlayerBase {
     }
 
     private void tryMove(float deltaTime, MapBase map) {
-//        if (vel.x == 0 && vel.y == 0) {
-//            return;
-//        }
         // Apply gravity
         if (grounded) {
             vel.y = map.MAX_FALLSPEED;
