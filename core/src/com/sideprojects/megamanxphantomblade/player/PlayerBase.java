@@ -45,14 +45,17 @@ public abstract class PlayerBase {
     public Animation<TextureRegion> playerRunLeft;
     public Animation<TextureRegion> playerIdleRight;
     public Animation<TextureRegion> playerIdleLeft;
+    public Animation<TextureRegion> playerJumpLeft;
+    public Animation<TextureRegion> playerJumpRight;
+    public Animation<TextureRegion> playerFallLeft;
+    public Animation<TextureRegion> playerFallRight;
     public TextureRegion currentFrame;
 
     public PlayerBase(float x, float y) {
         pos = new Vector2(x, y);
         bounds = new Rectangle(x, y, 0.6f, 0.8f);
         vel = new Vector2(0, 0);
-        stateTime = 0;
-        state = IDLE;
+        setState(IDLE);
         direction = RIGHT;
         grounded = true;
         createAnimations();
@@ -69,39 +72,52 @@ public abstract class PlayerBase {
     }
 
     private void processKeys() {
+        // Reset button
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             pos.x = originPos.x;
             pos.y = originPos.y;
             vel.x = 0;
             vel.y = 0;
-            state = IDLE;
+            setState(IDLE);
             grounded = true;
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
-            if (state != JUMP) {
-                state = JUMP;
-                vel.y = VELOCITY_JUMP;
+        if (Gdx.input.isKeyPressed(Input.Keys.X)) {
+            if (state != FALL) {
+                if (state != JUMP) {
+                    vel.y = VELOCITY_JUMP;
+                }
+                setState(JUMP);
                 grounded = false;
             }
+        } else if (!grounded) {
+            setState(FALL);
         }
+
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            if (state != JUMP) {
-                state = RUN;
+            if (grounded) {
+                setState(RUN);
             }
             direction = LEFT;
             vel.x = VELOCITY_WALK * LEFT;
         } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            if (state != JUMP) {
-                state = RUN;
+            if (grounded) {
+                setState(RUN);
             }
             direction = RIGHT;
             vel.x = VELOCITY_WALK * RIGHT;
         } else {
-            if (state != JUMP) {
-                state = IDLE;
+            if (grounded) {
+                setState(IDLE);
             }
             vel.x = 0;
+        }
+    }
+
+    private void setState(int state) {
+        if (this.state != state) {
+            stateTime = 0;
+            this.state = state;
         }
     }
 
@@ -123,31 +139,36 @@ public abstract class PlayerBase {
             currentFrame = currentAnimation.getKeyFrame(stateTime, true);
         } else if (state == JUMP) {
             if (direction == LEFT) {
-                currentAnimation = playerRunLeft;
+                currentAnimation = playerJumpLeft;
             } else {
-                currentAnimation = playerRunRight;
+                currentAnimation = playerJumpRight;
             }
-            currentFrame = currentAnimation.getKeyFrame(stateTime, true);
+            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
         } else if (state == FALL) {
             if (direction == LEFT) {
-                currentAnimation = playerIdleLeft;
+                currentAnimation = playerFallLeft;
             } else {
-                currentAnimation = playerIdleRight;
+                currentAnimation = playerFallRight;
             }
-            currentFrame = currentAnimation.getKeyFrame(stateTime, true);
+            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
         }
     }
 
     private void tryMove(float deltaTime, MapBase map) {
         // Apply gravity
-        if (grounded) {
-            vel.y = map.MAX_FALLSPEED;
+        if (state != JUMP) {
+            if (vel.y > 0) {
+                vel.y = 0;
+            }
+            if (vel.y > map.MAX_FALLSPEED) {
+                vel.y -= map.GRAVITY * deltaTime;
+            }
         }
         // Collision checking here
-        collisionCheck2(deltaTime, map);
+        collisionCheck(deltaTime, map);
 
         // if jumping, apply gravity
-        if (!grounded) {
+        if (state == JUMP) {
             if (vel.y > map.MAX_FALLSPEED) {
                 vel.y -= map.GRAVITY * deltaTime;
             } else {
@@ -157,7 +178,7 @@ public abstract class PlayerBase {
 
         // player is falling if going downwards
         if (vel.y < 0) {
-            state = FALL;
+            setState(FALL);
         }
 
         pos.x += vel.x * deltaTime;
@@ -166,7 +187,7 @@ public abstract class PlayerBase {
         bounds.y = pos.y;
     }
 
-    private void collisionCheck2(float deltaTime, MapBase map) {
+    private void collisionCheck(float deltaTime, MapBase map) {
         collisions.clear();
         // From inside out, find the first tile that collides with the player
         float stepX = vel.x * deltaTime;
@@ -229,14 +250,16 @@ public abstract class PlayerBase {
                     break;
                 case DOWN:
                     vel.y = 0;
-                    state = FALL;
+                    setState(FALL);
                     pos.y = preCollide.y;
                     break;
                 case LEFT:
                 case RIGHT:
                     vel.x = 0;
                     pos.x = preCollide.x;
-                    state = IDLE;
+                    if (grounded) {
+                        setState(IDLE);
+                    }
                     break;
             }
         }

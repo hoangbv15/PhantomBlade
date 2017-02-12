@@ -11,6 +11,10 @@ public abstract class AnimationFactory {
     private Animation<TextureRegion> instanceIdleRight;
     private Animation<TextureRegion> instanceRunLeft;
     private Animation<TextureRegion> instanceRunRight;
+    private Animation<TextureRegion> instanceJumpLeft;
+    private Animation<TextureRegion> instanceJumpRight;
+    private Animation<TextureRegion> instanceFallLeft;
+    private Animation<TextureRegion> instanceFallRight;
 
     public Animation<TextureRegion> getIdleLeft() {
         if (instanceIdleLeft == null) {
@@ -28,21 +32,55 @@ public abstract class AnimationFactory {
 
     public Animation<TextureRegion> getRunLeft() {
         if (instanceRunLeft == null) {
-            instanceRunLeft = AnimationHelper.create(getTextureIdleRun(), getAnimationRun(), true, 0.05f);
+            instanceRunLeft = AnimationHelper.create(getTextureRunAtlas(), getAnimationRun(), true, 0.05f);
         }
         return instanceRunLeft;
     }
 
     public Animation<TextureRegion> getRunRight() {
         if (instanceRunRight == null) {
-            instanceRunRight = AnimationHelper.create(getTextureIdleRun(), getAnimationRun(), false, 0.05f);
+            instanceRunRight = AnimationHelper.create(getTextureRunAtlas(), getAnimationRun(), false, 0.05f);
         }
         return instanceRunRight;
+    }
+
+    public Animation<TextureRegion> getJumpLeft() {
+        if (instanceJumpLeft == null) {
+            instanceJumpLeft = AnimationHelper.create(getTextureJumpAtlas(), getAnimationJump(), true, 0.10f);
+        }
+        return instanceJumpLeft;
+    }
+
+    public Animation<TextureRegion> getJumpRight() {
+        if (instanceJumpRight == null) {
+            instanceJumpRight = AnimationHelper.create(getTextureJumpAtlas(), getAnimationJump(), false, 0.10f);
+        }
+        return instanceJumpRight;
+    }
+
+    public Animation<TextureRegion> getFallLeft() {
+        if (instanceFallLeft == null) {
+            instanceFallLeft = AnimationHelper.create(getTextureFallAtlas(), getAnimationFall(), true, 0.05f);
+        }
+        return instanceFallLeft;
+    }
+
+    public Animation<TextureRegion> getFallRight() {
+        if (instanceFallRight == null) {
+            instanceFallRight = AnimationHelper.create(getTextureFallAtlas(), getAnimationFall(), false, 0.05f);
+        }
+        return instanceFallRight;
     }
 
     protected abstract String getTextureIdleAtlas();
     protected abstract int[] getAnimationIdle();
 
-    protected abstract String getTextureIdleRun();
+    protected abstract String getTextureRunAtlas();
     protected abstract int[] getAnimationRun();
+
+    protected abstract String getTextureJumpAtlas();
+    protected abstract int[] getAnimationJump();
+
+    protected abstract String getTextureFallAtlas();
+    protected abstract int[] getAnimationFall();
 }

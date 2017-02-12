@@ -16,8 +16,8 @@ public abstract class MapBase {
     public static int TILE = 0x000000;
     public static int START = 0xff0000;
     public static int DOOR = 0x00ffff;
-    public float GRAVITY = 12f;
-    public float MAX_FALLSPEED = -7f;
+    public float GRAVITY = 15f;
+    public float MAX_FALLSPEED = -8f;
 
     private PlayerFactory playerFactory;
     public PlayerBase player;
