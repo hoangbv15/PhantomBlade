@@ -15,6 +15,8 @@ public abstract class AnimationFactory {
     private Animation<TextureRegion> instanceJumpRight;
     private Animation<TextureRegion> instanceFallLeft;
     private Animation<TextureRegion> instanceFallRight;
+    private Animation<TextureRegion> instanceTouchdownLeft;
+    private Animation<TextureRegion> instanceTouchdownRight;
 
     public Animation<TextureRegion> getIdleLeft() {
         if (instanceIdleLeft == null) {
@@ -72,6 +74,20 @@ public abstract class AnimationFactory {
         return instanceFallRight;
     }
 
+    public Animation<TextureRegion> getTouchdownLeft() {
+        if (instanceTouchdownLeft == null) {
+            instanceTouchdownLeft = AnimationHelper.create(getTextureTouchdownAtlas(), getAnimationTouchdown(), true, 0.05f);
+        }
+        return instanceTouchdownLeft;
+    }
+
+    public Animation<TextureRegion> getTouchdownRight() {
+        if (instanceTouchdownRight == null) {
+            instanceTouchdownRight = AnimationHelper.create(getTextureTouchdownAtlas(), getAnimationTouchdown(), false, 0.05f);
+        }
+        return instanceTouchdownRight;
+    }
+
     protected abstract String getTextureIdleAtlas();
     protected abstract int[] getAnimationIdle();
 
@@ -83,4 +99,7 @@ public abstract class AnimationFactory {
 
     protected abstract String getTextureFallAtlas();
     protected abstract int[] getAnimationFall();
+
+    protected abstract String getTextureTouchdownAtlas();
+    protected abstract int[] getAnimationTouchdown();
 }

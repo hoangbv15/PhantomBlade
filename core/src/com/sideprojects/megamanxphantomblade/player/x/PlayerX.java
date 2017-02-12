@@ -23,5 +23,7 @@ public class PlayerX extends PlayerBase {
         playerJumpRight = aniFactory.getJumpRight();
         playerFallLeft = aniFactory.getFallLeft();
         playerFallRight = aniFactory.getFallRight();
+        playerTouchdownLeft = aniFactory.getTouchdownLeft();
+        playerTouchdownRight = aniFactory.getTouchdownRight();
     }
 }

@@ -25,6 +25,7 @@ public abstract class PlayerBase {
     public static final int RUN = 1;
     public static final int JUMP = 2;
     public static final int FALL = 3;
+    public static final int TOUCHDOWN = 4;
 
     public static final int LEFT = -1;
     private static final int RIGHT = 1;
@@ -49,6 +50,8 @@ public abstract class PlayerBase {
     public Animation<TextureRegion> playerJumpRight;
     public Animation<TextureRegion> playerFallLeft;
     public Animation<TextureRegion> playerFallRight;
+    public Animation<TextureRegion> playerTouchdownLeft;
+    public Animation<TextureRegion> playerTouchdownRight;
     public TextureRegion currentFrame;
 
     public PlayerBase(float x, float y) {
@@ -107,7 +110,7 @@ public abstract class PlayerBase {
             direction = RIGHT;
             vel.x = VELOCITY_WALK * RIGHT;
         } else {
-            if (grounded) {
+            if (grounded && state != TOUCHDOWN) {
                 setState(IDLE);
             }
             vel.x = 0;
@@ -118,6 +121,24 @@ public abstract class PlayerBase {
         if (this.state != state) {
             stateTime = 0;
             this.state = state;
+        }
+    }
+
+    private void chainState(final int state1, int duration, final int state2) {
+        if (state != state1) {
+            setState(state1);
+            // Stop the animation after it finishes and switch state to IDLE
+            new java.util.Timer().schedule(
+                    new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+                            if (state == state1) {
+                                setState(state2);
+                            }
+                        }
+                    },
+                    duration
+            );
         }
     }
 
@@ -149,6 +170,13 @@ public abstract class PlayerBase {
                 currentAnimation = playerFallLeft;
             } else {
                 currentAnimation = playerFallRight;
+            }
+            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
+        } else if (state == TOUCHDOWN) {
+            if (direction == LEFT) {
+                currentAnimation = playerTouchdownLeft;
+            } else {
+                currentAnimation = playerTouchdownRight;
             }
             currentFrame = currentAnimation.getKeyFrame(stateTime, false);
         }
@@ -245,6 +273,10 @@ public abstract class PlayerBase {
             switch (collision.side) {
                 case UP:
                     vel.y = 0;
+                    if (vel.x == 0 && state == FALL) {
+                        int duration = (int)(playerTouchdownLeft.getAnimationDuration() * 1000);
+                        chainState(TOUCHDOWN, duration, IDLE);
+                    }
                     grounded = true;
                     pos.y = preCollide.y;
                     break;

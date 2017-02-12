@@ -37,4 +37,10 @@ public class XAnimationFactory extends AnimationFactory {
 
     @Override
     protected int[] getAnimationFall() { return new int[] {3, 4, 5, 6, 7}; }
+
+    @Override
+    protected String getTextureTouchdownAtlas() { return "sprites/x/jump.txt"; }
+
+    @Override
+    protected int[] getAnimationTouchdown() { return new int[] {8, 9, 10}; }
 }
