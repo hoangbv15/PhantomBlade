@@ -201,6 +201,9 @@ public abstract class PlayerBase {
             xStart += 1;
         }
         int xEnd = (int)(endPosX.x + paddingX);
+        if (direction == RIGHT) {
+            xEnd += 1;
+        }
         int yEnd = (int)(endPosY.y + paddingY);
 
         // Loop through the rectangular area that the speed vector occupies
