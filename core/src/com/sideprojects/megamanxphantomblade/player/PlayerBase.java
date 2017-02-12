@@ -344,7 +344,7 @@ public abstract class PlayerBase {
                     pos.x = preCollide.x;
                     if (grounded && state != TOUCHDOWN) {
                         setState(IDLE);
-                    } else if (!grounded) {
+                    } else if (state == FALL) {
                         setState(WALLSLIDE);
                     }
                     break;
