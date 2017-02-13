@@ -7,19 +7,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
+import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
-import com.sideprojects.megamanxphantomblade.math.GeoMath;
-import com.sideprojects.megamanxphantomblade.math.NumberMath;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by buivuhoang on 04/02/17.
  */
-public abstract class PlayerBase {
-    // Debug property, used for rendering collisions to the screen
-    public List<Collision> collisions;
+public abstract class PlayerBase extends MovingObject {
     private Vector2 originPos;
 
     // States
@@ -30,21 +26,13 @@ public abstract class PlayerBase {
     public static final int TOUCHDOWN = 4;
     public static final int WALLSLIDE = 5;
     public static final int WALLJUMP = 6;
-    // Directions
-    public static final int LEFT = -1;
-    private static final int RIGHT = 1;
     // Velocities
     private static final float VELOCITY_WALK = 4f;
     private static final float VELOCITY_JUMP = 6f;
     private static final float VELOCITY_X_WALLJUMP = -3f;
 
     public int state;
-    public int direction;
     public boolean grounded;
-
-    public Vector2 pos;
-    public Vector2 vel;
-    public Rectangle bounds;
     public float stateTime;
 
     public Animation<TextureRegion> playerRunRight;
@@ -72,7 +60,6 @@ public abstract class PlayerBase {
         grounded = true;
         createAnimations();
 
-        collisions = new ArrayList<Collision>();
         originPos = new Vector2(x, y);
     }
 
@@ -241,85 +228,7 @@ public abstract class PlayerBase {
         }
 
         // Collision checking here
-        collisionCheck(deltaTime, map);
-
-        // if jumping, apply gravity
-        if (state == JUMP || state == WALLJUMP) {
-            if (vel.y > map.MAX_FALLSPEED) {
-                vel.y -= map.GRAVITY * deltaTime;
-            } else {
-                vel.y = map.MAX_FALLSPEED;
-            }
-        }
-
-        // player is falling if going downwards
-        if (vel.y < 0 && state != WALLSLIDE) {
-            setState(FALL);
-            grounded = false;
-        }
-
-        if (grounded && vel.x != 0) {
-            setState(RUN);
-        }
-
-        pos.x += vel.x * deltaTime;
-        pos.y += vel.y * deltaTime;
-        bounds.x = pos.x;
-        bounds.y = pos.y;
-    }
-
-    private void collisionCheck(float deltaTime, MapBase map) {
-        collisions.clear();
-        // From inside out, find the first tile that collides with the player
-        float stepX = vel.x * deltaTime;
-        float stepY = vel.y * deltaTime;
-        // Translate the start and end vectors depending on the direction of the movement
-        float paddingX = 0;
-        float paddingY = 0;
-        if (stepX > 0) {
-            paddingX = bounds.width;
-        }
-        if (stepY > 0) {
-            paddingY = bounds.height;
-        }
-        Vector2 endPosX = new Vector2(pos.x + stepX, pos.y);
-        Vector2 endPosY = new Vector2(pos.x, pos.y + stepY);
-
-        // Setup collision detection rays
-        List<CollisionDetectionRay> detectionRayList = new ArrayList<CollisionDetectionRay>(0);
-        detectionRayList.add(new CollisionDetectionRay(pos, endPosX, paddingX, 0));
-        detectionRayList.add(new CollisionDetectionRay(pos, endPosX, paddingX, bounds.height));
-        detectionRayList.add(new CollisionDetectionRay(pos, endPosY, 0, paddingY));
-        detectionRayList.add(new CollisionDetectionRay(pos, endPosY, bounds.width, paddingY));
-
-
-        // Loop through map and use collision detection rays to detect...well..collisions.
-        int xStart = (int)pos.x;
-        int yStart = (int)pos.y;
-        if (direction == LEFT) {
-            xStart += 1;
-        }
-        int xEnd = (int)(endPosX.x + paddingX);
-        if (direction == RIGHT) {
-            xEnd += 1;
-        }
-        int yEnd = (int)(endPosY.y + paddingY);
-
-        // Loop through the rectangular area that the speed vector occupies
-        // Get a list of all collisions with map tiles in the area
-        // Identify the collision nearest to the player
-        List<Collision> collisionList = new ArrayList<Collision>(0);
-        for (int y = yStart; NumberMath.hasNotExceeded(y, yStart, yEnd); y = NumberMath.iteratorNext(y, yStart, yEnd)) {
-            for (int x = xStart; NumberMath.hasNotExceeded(x, xStart, xEnd); x = NumberMath.iteratorNext(x, xStart, xEnd)) {
-                for (CollisionDetectionRay ray: detectionRayList) {
-                    Collision collision = getCollisionVector(x, y, ray, map);
-                    if (collision != null) {
-                        collisionList.add(collision);
-                        collisions.add(collision);
-                    }
-                }
-            }
-        }
+        List<Collision> collisionList = map.mapCollisionCheck(this, deltaTime);
 
         for (Collision collision: collisionList) {
             Vector2 preCollide = collision.getPrecollidePos();
@@ -345,40 +254,36 @@ public abstract class PlayerBase {
                     if (grounded && state != TOUCHDOWN) {
                         setState(IDLE);
                     } else if (state == FALL) {
+                        // TODO: Needs to find a way: In megaman X4, wall sliding starts after 50% of jump animation
                         setState(WALLSLIDE);
                     }
                     break;
             }
         }
-    }
 
-    private Collision getCollisionVector(int x, int y, CollisionDetectionRay ray, MapBase map) {
-        Rectangle tile = map.getCollidableBox(x, y);
-        if (tile == null) {
-            return null;
+        // if jumping, apply gravity
+        if (state == JUMP || state == WALLJUMP) {
+            if (vel.y > map.MAX_FALLSPEED) {
+                vel.y -= map.GRAVITY * deltaTime;
+            } else {
+                vel.y = map.MAX_FALLSPEED;
+            }
         }
 
-        Vector2 start = ray.getStart();
-        Vector2 end = ray.getEnd();
-
-        // Find intersection on each side of the tile
-        Collision left = new Collision(GeoMath.findIntersectionLeft(tile, start, end), Collision.Side.LEFT, ray, tile);
-        Collision right = new Collision(GeoMath.findIntersectionRight(tile, start, end), Collision.Side.RIGHT, ray, tile);
-        Collision up = new Collision(GeoMath.findIntersectionUp(tile, start, end), Collision.Side.UP, ray, tile);
-        Collision down = new Collision(GeoMath.findIntersectionDown(tile, start, end), Collision.Side.DOWN, ray, tile);
-
-        // Put non-null ones in an array, then sort by distance to start
-        List<Collision> collisionList = new ArrayList<Collision>(0);
-        if (left.point != null) collisionList.add(left);
-        if (right.point != null) collisionList.add(right);
-        if (up.point != null) collisionList.add(up);
-        if (down.point != null) collisionList.add(down);
-
-        if (collisionList.isEmpty()) {
-            return null;
+        // player is falling if going downwards
+        if (vel.y < 0 && state != WALLSLIDE) {
+            setState(FALL);
+            grounded = false;
         }
 
-        return Collision.getCollisionNearestToStart(collisionList, start);
+        if (grounded && vel.x != 0) {
+            setState(RUN);
+        }
+
+        pos.x += vel.x * deltaTime;
+        pos.y += vel.y * deltaTime;
+        bounds.x = pos.x;
+        bounds.y = pos.y;
     }
 
     public abstract void createAnimations();

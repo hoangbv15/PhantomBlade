@@ -26,7 +26,7 @@ public class PhantomBladeGame extends ApplicationAdapter {
 		float delta = Gdx.graphics.getRawDeltaTime();
 		map.update(delta);
 		mapRenderer.render();
-		debugRenderer.render(delta, map.player.collisions);
+		debugRenderer.render(delta, map.collisions);
 	}
 	
 	@Override
