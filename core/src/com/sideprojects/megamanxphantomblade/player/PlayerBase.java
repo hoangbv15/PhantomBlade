@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import com.sideprojects.megamanxphantomblade.MovingObject;
+import com.sideprojects.megamanxphantomblade.map.Collision;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 
 import java.util.List;
@@ -70,6 +71,7 @@ public abstract class PlayerBase extends MovingObject {
         updateAnimation();
     }
 
+    // TODO: Refactor the below blocks to not have state modifications everywhere
     private void processKeys(float deltaTime) {
         // Reset button
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
@@ -259,6 +261,10 @@ public abstract class PlayerBase extends MovingObject {
                     }
                     break;
             }
+        }
+
+        if (collisionList.isEmpty() && state == WALLSLIDE) {
+            setState(FALL);
         }
 
         // if jumping, apply gravity

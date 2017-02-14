@@ -1,12 +1,11 @@
 package com.sideprojects.megamanxphantomblade;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
-import com.sideprojects.megamanxphantomblade.player.Collision;
+import com.sideprojects.megamanxphantomblade.map.Collision;
 
 import java.util.List;
 

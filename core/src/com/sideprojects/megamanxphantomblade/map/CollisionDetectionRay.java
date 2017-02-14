@@ -1,4 +1,4 @@
-package com.sideprojects.megamanxphantomblade.player;
+package com.sideprojects.megamanxphantomblade.map;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -11,7 +11,7 @@ public class CollisionDetectionRay {
     private float paddingX;
     private float paddingY;
 
-    public CollisionDetectionRay(Vector2 start, Vector2 end, float paddingX, float paddingY) {
+    CollisionDetectionRay(Vector2 start, Vector2 end, float paddingX, float paddingY) {
         this.start = start;
         this.end = end;
         this.paddingX = paddingX;
@@ -26,7 +26,7 @@ public class CollisionDetectionRay {
         return new Vector2(end.x + paddingX, end.y + paddingY);
     }
 
-    public Vector2 getOrigin(Vector2 collisionPoint) {
+    Vector2 getOrigin(Vector2 collisionPoint) {
         return new Vector2(collisionPoint.x - paddingX, collisionPoint.y - paddingY);
     }
 }

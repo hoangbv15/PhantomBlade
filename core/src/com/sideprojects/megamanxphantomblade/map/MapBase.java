@@ -9,8 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.math.GeoMath;
 import com.sideprojects.megamanxphantomblade.math.NumberMath;
-import com.sideprojects.megamanxphantomblade.player.Collision;
-import com.sideprojects.megamanxphantomblade.player.CollisionDetectionRay;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerFactory;
 
@@ -78,13 +76,6 @@ public abstract class MapBase {
         player.update(deltaTime, this);
     }
 
-    public Rectangle getCollidableBox(int x, int y) {
-        if (x < 0 || y < 0 || x >= bounds.length || y >= bounds[0].length) {
-            return new Rectangle(x, y, 1, 1);
-        }
-        return bounds[x][y];
-    }
-
     public List<Collision> mapCollisionCheck(MovingObject object, float deltaTime) {
         int direction = object.direction;
         Vector2 pos = object.pos;
@@ -118,6 +109,9 @@ public abstract class MapBase {
         // Loop through map and use collision detection rays to detect...well..collisions.
         int xStart = (int)pos.x;
         int yStart = (int)pos.y;
+        if (vel.y < 0) {
+            yStart += 1;
+        }
         if (direction == MovingObject.LEFT) {
             xStart += 1;
         }
@@ -133,9 +127,19 @@ public abstract class MapBase {
         List<Collision> collisionList = new ArrayList<Collision>(0);
         for (int y = yStart; NumberMath.hasNotExceeded(y, yStart, yEnd); y = NumberMath.iteratorNext(y, yStart, yEnd)) {
             for (int x = xStart; NumberMath.hasNotExceeded(x, xStart, xEnd); x = NumberMath.iteratorNext(x, xStart, xEnd)) {
+                Rectangle tile = getCollidableBox(x, y);
+                if (tile == null) {
+                    continue;
+                }
+                // Get the tiles surrounding this one
+                Rectangle tileUp = getCollidableBox(x, y + 1);
+                Rectangle tileDown = getCollidableBox(x, y - 1);
+                Rectangle tileLeft = getCollidableBox(x - 1, y);
+                Rectangle tileRight = getCollidableBox(x + 1, y);
+
                 for (CollisionDetectionRay ray: detectionRayList) {
-                    Rectangle tile = getCollidableBox(x, y);
-                    Collision collision = getCollisionVector(ray, tile);
+                    Collision collision = getSideOfCollisionWithTile(ray, tile,
+                            tileUp, tileDown, tileLeft, tileRight);
                     if (collision != null) {
                         collisionList.add(collision);
                         collisions.add(collision);
@@ -147,26 +151,41 @@ public abstract class MapBase {
         return collisionList;
     }
 
-    private Collision getCollisionVector(CollisionDetectionRay ray, Rectangle tile) {
-        if (tile == null) {
-            return null;
+    private Rectangle getCollidableBox(int x, int y) {
+        if (x < 0 || y < 0 || x >= bounds.length || y >= bounds[0].length) {
+            return new Rectangle(x, y, 1, 1);
         }
+        return bounds[x][y];
+    }
 
+    private Collision getSideOfCollisionWithTile(CollisionDetectionRay ray, Rectangle tile,
+                                                 Rectangle tileUp,
+                                                 Rectangle tileDown,
+                                                 Rectangle tileLeft,
+                                                 Rectangle tileRight) {
         Vector2 start = ray.getStart();
         Vector2 end = ray.getEnd();
 
-        // Find intersection on each side of the tile
-        Collision left = new Collision(GeoMath.findIntersectionLeft(tile, start, end), Collision.Side.LEFT, ray, tile);
-        Collision right = new Collision(GeoMath.findIntersectionRight(tile, start, end), Collision.Side.RIGHT, ray, tile);
-        Collision up = new Collision(GeoMath.findIntersectionUp(tile, start, end), Collision.Side.UP, ray, tile);
-        Collision down = new Collision(GeoMath.findIntersectionDown(tile, start, end), Collision.Side.DOWN, ray, tile);
-
         // Put non-null ones in an array, then sort by distance to start
         List<Collision> collisionList = new ArrayList<Collision>(0);
-        if (left.point != null) collisionList.add(left);
-        if (right.point != null) collisionList.add(right);
-        if (up.point != null) collisionList.add(up);
-        if (down.point != null) collisionList.add(down);
+
+        // Find intersection on each side of the tile
+        if (tileLeft == null) {
+            Collision left = new Collision(GeoMath.findIntersectionLeft(tile, start, end), Collision.Side.LEFT, ray, tile);
+            if (left.point != null) collisionList.add(left);
+        }
+        if (tileRight == null) {
+            Collision right = new Collision(GeoMath.findIntersectionRight(tile, start, end), Collision.Side.RIGHT, ray, tile);
+            if (right.point != null) collisionList.add(right);
+        }
+        if (tileUp == null) {
+            Collision up = new Collision(GeoMath.findIntersectionUp(tile, start, end), Collision.Side.UP, ray, tile);
+            if (up.point != null) collisionList.add(up);
+        }
+        if (tileDown == null) {
+            Collision down = new Collision(GeoMath.findIntersectionDown(tile, start, end), Collision.Side.DOWN, ray, tile);
+            if (down.point != null) collisionList.add(down);
+        }
 
         if (collisionList.isEmpty()) {
             return null;
