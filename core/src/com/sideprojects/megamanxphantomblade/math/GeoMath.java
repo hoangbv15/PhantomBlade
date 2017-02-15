@@ -56,9 +56,6 @@ public class GeoMath {
         }
 
         // Ignore if the collision is on top, and the player is also on top
-//        if (start.y >= tile.y + tile.height && y >= tile.y + tile.height) {
-//            return null;
-//        }
         if (start.x < tile.x + tile.width) {
             return null;
         }
@@ -109,11 +106,6 @@ public class GeoMath {
         }
 
         // Ignore if the collision is from outside of the tile's x range
-//        if ((start.x >= tile.x + tile.width && x >= tile.x + tile.width) ||
-//                (start.x <= tile.x && x <= tile.x)) {
-//            return null;
-//        }
-
         if (start.y < tile.y + tile.height) {
             return null;
         }
