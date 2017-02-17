@@ -97,14 +97,19 @@ public abstract class MapBase {
         }
         Vector2 endPosX = new Vector2(pos.x + stepX, pos.y);
         Vector2 endPosY = new Vector2(pos.x, pos.y + stepY);
+        Vector2 endPos = new Vector2(pos.x + stepX, pos.y + stepY);
 
         // Setup collision detection rays
         List<CollisionDetectionRay> detectionRayList = new ArrayList<CollisionDetectionRay>(0);
-        detectionRayList.add(new CollisionDetectionRay(pos, endPosX, paddingX, 0));
-        detectionRayList.add(new CollisionDetectionRay(pos, endPosX, paddingX, bounds.height));
         detectionRayList.add(new CollisionDetectionRay(pos, endPosY, 0, paddingY));
         detectionRayList.add(new CollisionDetectionRay(pos, endPosY, bounds.width, paddingY));
-
+        if (vel.x != 0) {
+            detectionRayList.add(new CollisionDetectionRay(pos, endPosX, paddingX, 0));
+            detectionRayList.add(new CollisionDetectionRay(pos, endPosX, paddingX, bounds.height));
+        }
+        if (vel.x != 0 && vel.y != 0) {
+            detectionRayList.add(new CollisionDetectionRay(pos, endPos, paddingX, paddingY));
+        }
 
         // Loop through map and use collision detection rays to detect...well..collisions.
         int xStart = (int)pos.x;
