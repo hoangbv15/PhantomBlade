@@ -20,6 +20,10 @@ public class GeoMath {
         if (!numberIsBetween(x, start.x, end.x)) {
             return null;
         }
+        // Ignore if the collision is on top, and the player is also on top
+        if (start.x > tile.x) {
+            return null;
+        }
 
         // Find the y of the intersection
         float ratio = (end.x - x) / (end.x - start.x);
@@ -27,11 +31,6 @@ public class GeoMath {
 
         // Check if y is outside of the tile
         if (!numberIsBetween(y, tile.y, tile.y + tile.height)) {
-            return null;
-        }
-
-        // Ignore if the collision is on top, and the player is also on top
-        if (start.x > tile.x) {
             return null;
         }
 
@@ -45,6 +44,10 @@ public class GeoMath {
         if (!numberIsBetween(x, start.x, end.x)) {
             return null;
         }
+        // Ignore if the collision is on top, and the player is also on top
+        if (start.x < tile.x + tile.width) {
+            return null;
+        }
 
         // Find the y of the intersection
         float ratio = (end.x - x) / (end.x - start.x);
@@ -52,11 +55,6 @@ public class GeoMath {
 
         // Check if y is outside of the tile
         if (!numberIsBetween(y, tile.y, tile.y + tile.height)) {
-            return null;
-        }
-
-        // Ignore if the collision is on top, and the player is also on top
-        if (start.x < tile.x + tile.width) {
             return null;
         }
 
@@ -70,6 +68,10 @@ public class GeoMath {
         if (!numberIsBetween(y, start.y, end.y)) {
             return null;
         }
+        // Ignore if the collision is from outside of the tile's x range
+        if (start.y > tile.y) {
+            return null;
+        }
 
         // Find the y of the intersection
         float ratio = (end.y - y) / (end.y - start.y);
@@ -77,11 +79,6 @@ public class GeoMath {
 
         // Check if y is outside of the tile
         if (!numberIsBetween(x, tile.x, tile.x + tile.width)) {
-            return null;
-        }
-
-        // Ignore if the collision is from outside of the tile's x range
-        if (start.y > tile.y) {
             return null;
         }
 
@@ -95,6 +92,10 @@ public class GeoMath {
         if (!numberIsBetween(y, start.y, end.y)) {
             return null;
         }
+        // Ignore if the collision is from outside of the tile's x range
+        if (start.y < tile.y + tile.height) {
+            return null;
+        }
 
         // Find the y of the intersection
         float ratio = (end.y - y) / (end.y - start.y);
@@ -102,11 +103,6 @@ public class GeoMath {
 
         // Check if y is outside of the tile
         if (!numberIsBetween(x, tile.x, tile.x + tile.width)) {
-            return null;
-        }
-
-        // Ignore if the collision is from outside of the tile's x range
-        if (start.y < tile.y + tile.height) {
             return null;
         }
 

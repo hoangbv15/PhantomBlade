@@ -54,7 +54,7 @@ public class GeoMathRightInteresectionTests {
 
 
     @Test
-    public void should_find_correct_left_intersection() throws Exception {
+    public void should_find_correct_right_intersection() throws Exception {
         Vector2 intersection = GeoMath.findIntersectionRight(rec, start, end);
         Assert.assertEquals(expected, intersection);
     }

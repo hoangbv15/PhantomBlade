@@ -19,21 +19,21 @@ public class GeoMathDownInteresectionTests {
         return Arrays.asList(new Object[][] {
                 {
                         new Rectangle(1, 1, 1, 1),
-                        new Vector2(0.5f, 2.5f),
-                        new Vector2(2.5f, 0.5f),
-                        new Vector2(2, 1)
+                        new Vector2(0.5f, 0.5f),
+                        new Vector2(2.5f, 2.5f),
+                        new Vector2(1, 1)
                 },
                 {
                         new Rectangle(-2, 1, 1, 1),
-                        new Vector2(-0.5f, 2.5f),
-                        new Vector2(-2.5f, 0.5f),
-                        new Vector2(-2, 1)
+                        new Vector2(-0.5f, 0.5f),
+                        new Vector2(-2.5f, 2.5f),
+                        new Vector2(-1, 1)
                 },
                 {
                         new Rectangle(1, -3, 1, 1),
                         new Vector2(0.5f, -3.5f),
                         new Vector2(2.5f, -1.5f),
-                        null
+                        new Vector2(1, -3)
                 },
                 {
                         new Rectangle(-2, -3, 1, 1),
@@ -70,7 +70,7 @@ public class GeoMathDownInteresectionTests {
 
 
     @Test
-    public void should_find_correct_left_intersection() throws Exception {
+    public void should_find_correct_down_intersection() throws Exception {
         Vector2 intersection = GeoMath.findIntersectionDown(rec, start, end);
         Assert.assertEquals(expected, intersection);
     }

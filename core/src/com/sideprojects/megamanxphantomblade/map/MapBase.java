@@ -100,7 +100,7 @@ public abstract class MapBase {
         Vector2 endPos = new Vector2(pos.x + stepX, pos.y + stepY);
 
         // Setup collision detection rays
-        List<CollisionDetectionRay> detectionRayList = new ArrayList<CollisionDetectionRay>(0);
+        List<CollisionDetectionRay> detectionRayList = new ArrayList<CollisionDetectionRay>(5);
         detectionRayList.add(new CollisionDetectionRay(pos, endPosY, 0, paddingY));
         detectionRayList.add(new CollisionDetectionRay(pos, endPosY, bounds.width, paddingY));
         if (vel.x != 0) {
@@ -129,7 +129,8 @@ public abstract class MapBase {
         // Loop through the rectangular area that the speed vector occupies
         // Get a list of all collisions with map tiles in the area
         // Identify the collision nearest to the player
-        List<Collision> collisionList = new ArrayList<Collision>(0);
+        // Player has at most 2 collisions with the map at the same time
+        List<Collision> collisionList = new ArrayList<Collision>(2);
         for (int y = yStart; NumberMath.hasNotExceeded(y, yStart, yEnd); y = NumberMath.iteratorNext(y, yStart, yEnd)) {
             for (int x = xStart; NumberMath.hasNotExceeded(x, xStart, xEnd); x = NumberMath.iteratorNext(x, xStart, xEnd)) {
                 Rectangle tile = getCollidableBox(x, y);
@@ -172,7 +173,8 @@ public abstract class MapBase {
         Vector2 end = ray.getEnd();
 
         // Put non-null ones in an array, then sort by distance to start
-        List<Collision> collisionList = new ArrayList<Collision>(0);
+        // A line can only have at most 2 intersections with a rectangle
+        List<Collision> collisionList = new ArrayList<Collision>(2);
 
         // Find intersection on each side of the tile
         if (tileLeft == null) {

@@ -28,7 +28,7 @@ public class GeoMathLeftInteresectionTests {
                         new Rectangle(-2, 1, 1, 1),
                         new Vector2(-0.5f, 2.5f),
                         new Vector2(-2.5f, 0.5f),
-                        new Vector2(-2f, 1f)
+                        null
                 },
                 {
                         new Rectangle(1, -3, 1, 1),
@@ -41,13 +41,13 @@ public class GeoMathLeftInteresectionTests {
                         new Rectangle(1, 1, 1, 1),
                         new Vector2(1f, 2f),
                         new Vector2(1.5f, 2f),
-                        null
+                        new Vector2(1, 2)
                 },
                 {
                         new Rectangle(1, 1, 1, 1),
                         new Vector2(0.5f, 2.5f),
                         new Vector2(2.5f, 0.5f),
-                        null
+                        new Vector2(1, 2)
                 },
                 {
                         new Rectangle(-2, -3, 1, 1),

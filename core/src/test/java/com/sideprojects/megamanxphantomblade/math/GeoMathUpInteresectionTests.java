@@ -19,14 +19,14 @@ public class GeoMathUpInteresectionTests {
         return Arrays.asList(new Object[][] {
                 {
                         new Rectangle(1, 1, 1, 1),
-                        new Vector2(0.5f, 2.5f),
-                        new Vector2(2.5f, 0.5f),
-                        new Vector2(2, 1)
+                        new Vector2(3f, 3f),
+                        new Vector2(1.5f, 1.5f),
+                        new Vector2(2, 2)
                 },
                 {
                         new Rectangle(1, 1, 1, 1),
-                        new Vector2(0.5f, 2.5f),
-                        new Vector2(2.5f, 1f),
+                        new Vector2(1, 3),
+                        new Vector2(3, 2),
                         null
                 }
         });
@@ -46,8 +46,8 @@ public class GeoMathUpInteresectionTests {
 
 
     @Test
-    public void should_find_correct_left_intersection() throws Exception {
-        Vector2 intersection = GeoMath.findIntersectionDown(rec, start, end);
+    public void should_find_correct_up_intersection() throws Exception {
+        Vector2 intersection = GeoMath.findIntersectionUp(rec, start, end);
         Assert.assertEquals(expected, intersection);
     }
 
