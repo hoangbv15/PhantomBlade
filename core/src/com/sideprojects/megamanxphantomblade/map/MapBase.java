@@ -125,7 +125,7 @@ public abstract class MapBase {
         // Loop through map and use collision detection rays to detect...well..collisions.
         int xStart = (int)pos.x;
         int yStart = (int)pos.y;
-        if (vel.y < 0) {
+        if (vel.y <= 0) {
             yStart += 1;
         }
         if (direction == MovingObject.LEFT) {
