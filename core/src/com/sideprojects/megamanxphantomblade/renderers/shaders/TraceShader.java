@@ -8,7 +8,7 @@ import com.sideprojects.megamanxphantomblade.player.TraceColour;
  */
 public class TraceShader {
     public static ShaderProgram getShaderColor(TraceColour colour) {
-        return getShaderColor(colour.r, colour.g, colour.b, 0.5f);
+        return getShaderColor(colour.r, colour.g, colour.b, 0.3f);
     }
 
     private static ShaderProgram getShaderColor(float r, float g, float b, float a) {
