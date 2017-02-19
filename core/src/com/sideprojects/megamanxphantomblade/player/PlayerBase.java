@@ -354,6 +354,7 @@ public abstract class PlayerBase extends MovingObject {
                         // TODO: Needs to find a way: In megaman X4, wall sliding starts after 50% of jump animation
                         setState(WALLSLIDE);
                         canAirDash = true;
+                        isHoldingDash = false;
                     }
                     break;
             }
