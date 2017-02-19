@@ -29,5 +29,9 @@ public class PlayerX extends PlayerBase {
         playerWallSlideRight = aniFactory.getWallSlideRight();
         playerWallJumpLeft = aniFactory.getWallJumpLeft();
         playerWallJumpRight = aniFactory.getWallJumpRight();
+        playerDashLeft = aniFactory.getDashLeft();
+        playerDashRight = aniFactory.getDashRight();
+        playerDashBreakLeft = aniFactory.getDashBreakLeft();
+        playerDashBreakRight = aniFactory.getDashBreakRight();
     }
 }

@@ -54,17 +54,17 @@ public class DebugRenderer {
                     end = new Vector2(start.x, start.y + collision.tile.height);
                     break;
             }
-            start.x *= map.ground.getRegionWidth();
-            start.y *= map.ground.getRegionHeight();
-            end.x *= map.ground.getRegionWidth();
-            end.y *= map.ground.getRegionHeight();
+            start.x *= map.getTileWidth();
+            start.y *= map.getTileHeight();
+            end.x *= map.getTileWidth();
+            end.y *= map.getTileHeight();
             shapeDebugger.line(start, end);
         }
 
-        Vector2 playerStart = new Vector2(map.player.pos.x * map.ground.getRegionWidth(),
-                map.player.pos.y * map.ground.getRegionHeight());
-        Vector2 playerEnd = new Vector2((map.player.pos.x + map.player.vel.x * delta) * map.ground.getRegionWidth(),
-                (map.player.pos.y + map.player.vel.y * delta) * map.ground.getRegionHeight());
+        Vector2 playerStart = new Vector2(map.player.pos.x * map.getTileWidth(),
+                map.player.pos.y * map.getTileHeight());
+        Vector2 playerEnd = new Vector2((map.player.pos.x + map.player.vel.x * delta) * map.getTileWidth(),
+                (map.player.pos.y + map.player.vel.y * delta) * map.getTileHeight());
         shapeDebugger.line(playerStart, playerEnd);
 
         shapeDebugger.end();

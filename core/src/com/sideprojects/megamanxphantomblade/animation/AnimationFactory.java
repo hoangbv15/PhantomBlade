@@ -21,6 +21,10 @@ public abstract class AnimationFactory {
     private Animation<TextureRegion> instanceWallSlideRight;
     private Animation<TextureRegion> instanceWallJumpLeft;
     private Animation<TextureRegion> instanceWallJumpRight;
+    private Animation<TextureRegion> instanceDashLeft;
+    private Animation<TextureRegion> instanceDashRight;
+    private Animation<TextureRegion> instanceDashBreakLeft;
+    private Animation<TextureRegion> instanceDashBreakRight;
 
     public Animation<TextureRegion> getIdleLeft() {
         if (instanceIdleLeft == null) {
@@ -120,6 +124,34 @@ public abstract class AnimationFactory {
         return instanceWallJumpRight;
     }
 
+    public Animation<TextureRegion> getDashRight() {
+        if (instanceDashRight == null) {
+            instanceDashRight = AnimationHelper.create(getTextureDashAtlas(), getAnimationDash(), false, 0.05f);
+        }
+        return instanceDashRight;
+    }
+
+    public Animation<TextureRegion> getDashLeft() {
+        if (instanceDashLeft == null) {
+            instanceDashLeft = AnimationHelper.create(getTextureDashAtlas(), getAnimationDash(), true, 0.05f);
+        }
+        return instanceDashLeft;
+    }
+
+    public Animation<TextureRegion> getDashBreakRight() {
+        if (instanceDashBreakRight == null) {
+            instanceDashBreakRight = AnimationHelper.create(getTextureDashBreakAtlas(), getAnimationDashBreak(), false, 0.08f);
+        }
+        return instanceDashBreakRight;
+    }
+
+    public Animation<TextureRegion> getDashBreakLeft() {
+        if (instanceDashBreakLeft == null) {
+            instanceDashBreakLeft = AnimationHelper.create(getTextureDashBreakAtlas(), getAnimationDashBreak(), true, 0.08f);
+        }
+        return instanceDashBreakLeft;
+    }
+
     protected abstract String getTextureIdleAtlas();
     protected abstract int[] getAnimationIdle();
 
@@ -140,4 +172,10 @@ public abstract class AnimationFactory {
 
     protected abstract String getTextureWallJumpAtlas();
     protected abstract int[] getAnimationWallJump();
+
+    protected abstract String getTextureDashAtlas();
+    protected abstract int[] getAnimationDash();
+
+    protected abstract String getTextureDashBreakAtlas();
+    protected abstract int[] getAnimationDashBreak();
 }

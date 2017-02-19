@@ -55,4 +55,16 @@ public class XAnimationFactory extends AnimationFactory {
 
     @Override
     protected int[] getAnimationWallJump() { return new int[] {4, 5, 6}; }
+
+    @Override
+    protected String getTextureDashAtlas() { return "sprites/x/dash.txt"; }
+
+    @Override
+    protected int[] getAnimationDash() { return new int[] {0, 1, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3}; }
+
+    @Override
+    protected String getTextureDashBreakAtlas() { return "sprites/x/dash.txt"; }
+
+    @Override
+    protected int[] getAnimationDashBreak() { return new int[] {4, 5, 6, 7}; }
 }

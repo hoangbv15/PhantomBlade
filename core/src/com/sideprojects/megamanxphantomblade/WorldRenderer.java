@@ -3,7 +3,6 @@ package com.sideprojects.megamanxphantomblade;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector3;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
@@ -24,6 +23,8 @@ public class WorldRenderer {
 
     private Vector3 lerpTarget;
 
+    private float playerYOffset;
+
     public WorldRenderer(MapBase map) {
         this.map = map;
         this.cam = new OrthographicCamera(960, 540);
@@ -33,6 +34,7 @@ public class WorldRenderer {
         lerpTarget = new Vector3();
         // Fixing the camera height for now.
         camFixedHeight = cam.viewportHeight/2;
+        playerYOffset = 1/5f * map.getTileHeight();
         createBlocks();
     }
 
@@ -46,22 +48,23 @@ public class WorldRenderer {
                 for (int y = blockY * (int) viewportHeight; y < blockY * viewportHeight + viewportHeight; y++) {
                     for (int x = blockX * (int) viewportWidth; x < blockX * viewportWidth + viewportWidth; x++) {
                         if (x >= width || y >= height) continue;
-                        if (map.match(map.tiles[x][y], MapBase.TILE)){
-                            int posX = x * map.ground.getRegionWidth();
-                            int posY = y * map.ground.getRegionHeight();
-                            cache.add(map.ground, posX, posY, map.ground.getRegionWidth(), map.ground.getRegionHeight());
+                        int posX = x * map.getTileWidth();
+                        int posY = y * map.getTileHeight();
+                        if (map.match(map.tiles[x][y], MapBase.GROUND)){
+                            cache.add(map.getGround(), posX, posY, map.getTileWidth(), map.getTileHeight());
+                        }
+                        else if (map.match(map.tiles[x][y], MapBase.WALL)){
+                            cache.add(map.getWall(), posX, posY, map.getTileWidth(), map.getTileHeight());
                         }
                     }
                 }
                 blocks[blockX][blockY] = cache.endCache();
             }
         }
-
-        Gdx.app.debug("Cubocy", "blocks created");
     }
 
     public void render() {
-        cam.position.lerp(lerpTarget.set(map.player.pos.x * map.ground.getRegionWidth(), camFixedHeight, 0), 1);
+        cam.position.lerp(lerpTarget.set(map.player.pos.x * map.getTileWidth(), camFixedHeight, 0), 1);
         cam.update();
         Gdx.gl.glDisable(GL20.GL_BLEND);
         renderMap();
@@ -83,13 +86,13 @@ public class WorldRenderer {
 
     private void renderPlayer() {
         // Calculate vertical padding for player's position
-        float posY = (map.player.pos.y - 1/5f*0) * map.ground.getRegionHeight();
+        float posY = map.player.pos.y * map.getTileHeight() - playerYOffset;
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
 
         TextureRegion currentFrame = map.player.currentFrame;
 
-        batch.draw(currentFrame, map.player.pos.x * map.ground.getRegionWidth(), posY);
+        batch.draw(currentFrame, map.player.pos.x * map.getTileWidth(), posY);
 
         batch.end();
     }

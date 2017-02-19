@@ -4,7 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
-import com.sideprojects.megamanxphantomblade.map.test.MapTest;
+import com.sideprojects.megamanxphantomblade.map.maps.IntroStage;
 import com.sideprojects.megamanxphantomblade.player.x.PlayerXFactory;
 
 public class PhantomBladeGame extends ApplicationAdapter {
@@ -14,7 +14,7 @@ public class PhantomBladeGame extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-		map = new MapTest(new PlayerXFactory());
+		map = new IntroStage(new PlayerXFactory());
 		mapRenderer = new WorldRenderer(map);
 		debugRenderer = new DebugRenderer(mapRenderer);
 	}
@@ -26,7 +26,7 @@ public class PhantomBladeGame extends ApplicationAdapter {
 		float delta = Gdx.graphics.getRawDeltaTime();
 		map.update(delta);
 		mapRenderer.render();
-		debugRenderer.render(delta, map.collisions);
+//		debugRenderer.render(delta, map.collisions);
 	}
 	
 	@Override

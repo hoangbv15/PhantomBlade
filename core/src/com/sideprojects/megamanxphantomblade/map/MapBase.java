@@ -23,7 +23,8 @@ public abstract class MapBase {
     public List<Collision> collisions;
 
     public static int EMPTY = 0xffffff;
-    public static int TILE = 0x000000;
+    public static int GROUND = 0x000000;
+    public static int WALL = 0x0000A0;
     public static int START = 0xff0000;
     public static int DOOR = 0x00ffff;
     public float GRAVITY = 15f;
@@ -35,13 +36,23 @@ public abstract class MapBase {
     public int[][] tiles;
     public Rectangle[][] bounds;
 
-    public TextureRegion ground;
+    protected TextureRegion ground;
+    public abstract TextureRegion getGround();
+    protected TextureRegion wall;
+    public abstract TextureRegion getWall();
 
     public MapBase(PlayerFactory playerFactory) {
         this.playerFactory = playerFactory;
-        ground = new TextureRegion(new Texture(Gdx.files.internal("sprites/ground.png")));
         collisions = new ArrayList<Collision>();
         loadMap();
+    }
+
+    public int getTileWidth() {
+        return getGround().getRegionWidth();
+    }
+
+    public int getTileHeight() {
+        return getGround().getRegionHeight();
     }
 
     protected abstract Pixmap getMapResource();
@@ -53,14 +64,14 @@ public abstract class MapBase {
 
         for (int y = 0; y < pixmap.getHeight(); y++) {
             for (int x = 0; x < pixmap.getWidth(); x++) {
-                int pix = (pixmap.getPixel(x, y) >>> 8) & 0xffffff;
+                int pix = (pixmap.getPixel(x, pixmap.getHeight() - y - 1) >>> 8) & 0xffffff;
 
                 if (match(pix, START)) {
                     // we create the player here
                     player = playerFactory.createPlayer(x, y);
                 }
                 tiles[x][y] = pix;
-                if (match(pix, TILE)) {
+                if (match(pix, GROUND) || match(pix, WALL)) {
                     // collision rectangles
                     bounds[x][y] = new Rectangle(x, y, 1, 1);
                 }
