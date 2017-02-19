@@ -71,6 +71,13 @@ public abstract class PlayerBase extends MovingObject {
         updateAnimation();
     }
 
+    private void setStateAndResetTimer(int state) {
+        setState(state);
+        if (stateChainTimer != null) {
+            stateChainTimer.cancel();
+        }
+    }
+
     private void setState(int state) {
         if (this.state != state) {
             stateTime = 0;
@@ -135,7 +142,7 @@ public abstract class PlayerBase extends MovingObject {
             }
         } else {
             if (!grounded && state == DASH) {
-                setState(FALL);
+                setStateAndResetTimer(FALL);
             }
             if (state == WALLSLIDE) {
                 isHoldingDash = false;
@@ -149,7 +156,7 @@ public abstract class PlayerBase extends MovingObject {
                     vel.y = VELOCITY_JUMP;
                 }
                 if (state == WALLSLIDE && Gdx.input.isKeyJustPressed(keyMap.jump)) {
-                    setState(WALLJUMP);
+                    setStateAndResetTimer(WALLJUMP);
                     vel.y = VELOCITY_JUMP;
                     vel.x = VELOCITY_X_WALLJUMP * direction;
                     if (isHoldingDash) {
@@ -158,17 +165,17 @@ public abstract class PlayerBase extends MovingObject {
                 }
                 if ((!(!grounded && state == DASH) && state != WALLJUMP) &&
                         Gdx.input.isKeyJustPressed(keyMap.jump)) {
-                    setState(JUMP);
+                    setStateAndResetTimer(JUMP);
                     grounded = false;
                 }
             }
         } else if (!grounded && state != WALLSLIDE && state != DASH) {
-            setState(FALL);
+            setStateAndResetTimer(FALL);
         }
 
         if (Gdx.input.isKeyPressed(keyMap.left)) {
             if (direction == RIGHT && ((!grounded && state == WALLSLIDE) || state == DASH)) {
-                setState(FALL);
+                setStateAndResetTimer(FALL);
             }
             direction = LEFT;
             if (state == WALLJUMP) {
@@ -183,7 +190,7 @@ public abstract class PlayerBase extends MovingObject {
             }
         } else if (Gdx.input.isKeyPressed(keyMap.right)) {
             if (direction == LEFT && ((!grounded && state == WALLSLIDE) || state == DASH)) {
-                setState(FALL);
+                setStateAndResetTimer(FALL);
             }
             direction = RIGHT;
             if (state == WALLJUMP) {
@@ -198,10 +205,10 @@ public abstract class PlayerBase extends MovingObject {
             }
         } else {
             if (grounded && state != TOUCHDOWN && state != DASH && state != DASHBREAK) {
-                setState(IDLE);
+                setStateAndResetTimer(IDLE);
             }
             if (state == WALLSLIDE && !grounded) {
-                setState(FALL);
+                setStateAndResetTimer(FALL);
             }
             if (!Gdx.input.isKeyPressed(keyMap.dash) && grounded && state == DASH) {
                 float duration = animations.getDashBreakLeft().getAnimationDuration();
@@ -254,7 +261,7 @@ public abstract class PlayerBase extends MovingObject {
                     break;
                 case DOWN:
                     vel.y = 0;
-                    setState(FALL);
+                    setStateAndResetTimer(FALL);
                     pos.y = preCollide.y;
                     break;
                 case LEFT:
@@ -270,10 +277,7 @@ public abstract class PlayerBase extends MovingObject {
                             float duration = animations.getDashBreakLeft().getAnimationDuration();
                             chainState(DASHBREAK, duration, IDLE);
                         } else if (state != DASHBREAK){
-                            if (stateChainTimer != null) {
-                                stateChainTimer.cancel();
-                            }
-                            setState(IDLE);
+                            setStateAndResetTimer(IDLE);
                         }
                     } else if (state == FALL || state == DASH) {
                         // TODO: Needs to find a way: In megaman X4, wall sliding starts after 50% of jump animation
@@ -286,7 +290,7 @@ public abstract class PlayerBase extends MovingObject {
         }
 
         if (collisionList.isEmpty() && state == WALLSLIDE) {
-            setState(FALL);
+            setStateAndResetTimer(FALL);
         }
 
         // if jumping, apply gravity
@@ -300,12 +304,12 @@ public abstract class PlayerBase extends MovingObject {
 
         // player is falling if going downwards
         if (vel.y < 0 && state != WALLSLIDE) {
-            setState(FALL);
+            setStateAndResetTimer(FALL);
             grounded = false;
         }
 
         if (grounded && vel.x != 0 && state != DASH) {
-            setState(RUN);
+            setStateAndResetTimer(RUN);
         }
 
         pos.x += vel.x * deltaTime;
