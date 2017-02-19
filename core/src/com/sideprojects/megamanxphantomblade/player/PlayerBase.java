@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Timer;
+import com.sideprojects.megamanxphantomblade.KeyMap;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.map.Collision;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
@@ -18,7 +19,7 @@ import java.util.List;
  * Created by buivuhoang on 04/02/17.
  */
 public abstract class PlayerBase extends MovingObject {
-    private Vector2 originPos;
+    private KeyMap keyMap;
 
     // States
     public static final int IDLE = 0;
@@ -64,7 +65,8 @@ public abstract class PlayerBase extends MovingObject {
     public Animation<TextureRegion> playerDashBreakRight;
     public TextureRegion currentFrame;
 
-    public PlayerBase(float x, float y) {
+    public PlayerBase(float x, float y, KeyMap keyMap) {
+        this.keyMap = keyMap;
         pos = new Vector2(x, y);
         bounds = new Rectangle(x, y, 0.6f, 0.8f);
         vel = new Vector2(0, 0);
@@ -73,8 +75,6 @@ public abstract class PlayerBase extends MovingObject {
         grounded = true;
         canAirDash = true;
         createAnimations();
-
-        originPos = new Vector2(x, y);
     }
 
     public void update(float deltaTime, MapBase map) {
@@ -87,9 +87,7 @@ public abstract class PlayerBase extends MovingObject {
     // TODO: Refactor the below blocks to not have state modifications everywhere
     private void processKeys(float deltaTime) {
         // Reset button
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            pos.x = originPos.x;
-            pos.y = originPos.y;
+        if (Gdx.input.isKeyPressed(keyMap.reset)) {
             vel.x = 0;
             vel.y = 0;
             setState(IDLE);
@@ -98,12 +96,12 @@ public abstract class PlayerBase extends MovingObject {
             isHoldingDash = false;
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+        if (Gdx.input.isKeyPressed(keyMap.dash)) {
+            if (Gdx.input.isKeyJustPressed(keyMap.jump)) {
                 isHoldingDash = true;
                 canAirDash = false;
             }
-            if ((canAirDash || grounded) && Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+            if ((canAirDash || grounded) && Gdx.input.isKeyJustPressed(keyMap.dash)) {
                 if (!grounded) {
                     canAirDash = false;
                 }
@@ -119,13 +117,13 @@ public abstract class PlayerBase extends MovingObject {
             }
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.X)) {
+        if (Gdx.input.isKeyPressed(keyMap.jump)) {
             if (grounded || state != FALL) {
                 if (!(!grounded && state == DASH) &&
                         (state != JUMP && state != WALLJUMP && state != WALLSLIDE)) {
                     vel.y = VELOCITY_JUMP;
                 }
-                if (state == WALLSLIDE && Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+                if (state == WALLSLIDE && Gdx.input.isKeyJustPressed(keyMap.jump)) {
                     setState(WALLJUMP);
                     vel.y = VELOCITY_JUMP;
                     vel.x = VELOCITY_X_WALLJUMP * direction;
@@ -134,7 +132,7 @@ public abstract class PlayerBase extends MovingObject {
                     }
                 }
                 if ((!(!grounded && state == DASH) && state != WALLJUMP) &&
-                        Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+                        Gdx.input.isKeyJustPressed(keyMap.jump)) {
                     setState(JUMP);
                     grounded = false;
                 }
@@ -143,7 +141,7 @@ public abstract class PlayerBase extends MovingObject {
             setState(FALL);
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if (Gdx.input.isKeyPressed(keyMap.left)) {
             if (direction == RIGHT && ((!grounded && state == WALLSLIDE) || state == DASH)) {
                 setState(FALL);
             }
@@ -158,7 +156,7 @@ public abstract class PlayerBase extends MovingObject {
             } else if (state != DASH){
                 vel.x = VELOCITY_WALK * direction;
             }
-        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        } else if (Gdx.input.isKeyPressed(keyMap.right)) {
             if (direction == LEFT && ((!grounded && state == WALLSLIDE) || state == DASH)) {
                 setState(FALL);
             }
@@ -180,7 +178,7 @@ public abstract class PlayerBase extends MovingObject {
             if (state == WALLSLIDE && !grounded) {
                 setState(FALL);
             }
-            if (!Gdx.input.isKeyPressed(Input.Keys.Z) && grounded && state == DASH) {
+            if (!Gdx.input.isKeyPressed(keyMap.dash) && grounded && state == DASH) {
                 float duration = playerDashBreakLeft.getAnimationDuration();
                 chainState(DASHBREAK, duration, IDLE);
             }

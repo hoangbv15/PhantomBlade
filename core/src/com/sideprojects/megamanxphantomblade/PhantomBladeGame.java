@@ -13,10 +13,12 @@ public class PhantomBladeGame extends ApplicationAdapter {
 	MapBase map;
 	WorldRenderer mapRenderer;
 	DebugRenderer debugRenderer;
+	KeyMap keyMap;
 
 	@Override
 	public void create () {
-		map = new IntroStage(new PlayerXFactory());
+		keyMap = new KeyMap();
+		map = new IntroStage(new PlayerXFactory(keyMap));
 		mapRenderer = new WorldRenderer(map);
 		debugRenderer = new DebugRenderer(mapRenderer);
 	}
