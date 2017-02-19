@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Queue;
@@ -20,6 +21,7 @@ public class WorldRenderer {
     private float camFixedHeight;
     private SpriteCache cache;
     private SpriteBatch batch;
+    private ShaderProgram traceShader;
 
     private int[][] blocks;
     private float viewportHeight = 16f;
@@ -51,6 +53,7 @@ public class WorldRenderer {
         // Fixing the camera height for now.
         camFixedHeight = cam.viewportHeight/2;
         playerYOffset = 1/5f * map.getTileHeight();
+        traceShader = TraceShader.getShaderColor(map.player.getTraceColour());
         lastPlayerFrameQueue = new Queue<TextureRegion>(numOfTraces);
         lastPlayerPositionQueue = new Queue<Vector2>(numOfTraces);
         startRemovingTraces = false;
@@ -153,7 +156,7 @@ public class WorldRenderer {
             for (int i = 0; i < lastPlayerFrameQueue.size; i++) {
                 TextureRegion frame = lastPlayerFrameQueue.get(i);
                 Vector2 position = lastPlayerPositionQueue.get(i);
-                batch.setShader(TraceShader.getShaderColor(map.player.getTraceColour()));
+                batch.setShader(traceShader);
                 batch.draw(frame, position.x, position.y);
             }
         } else {
@@ -165,5 +168,6 @@ public class WorldRenderer {
     public void dispose() {
         cache.dispose();
         batch.dispose();
+        traceShader.dispose();
     }
 }
