@@ -1,4 +1,4 @@
-package com.sideprojects.megamanxphantomblade;
+package com.sideprojects.megamanxphantomblade.renderers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.map.Collision;
+import com.sideprojects.megamanxphantomblade.renderers.WorldRenderer;
 
 import java.util.List;
 

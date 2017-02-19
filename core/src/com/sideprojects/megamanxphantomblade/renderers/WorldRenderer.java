@@ -1,12 +1,18 @@
-package com.sideprojects.megamanxphantomblade;
+package com.sideprojects.megamanxphantomblade.renderers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
+import com.sideprojects.megamanxphantomblade.renderers.shaders.TraceShader;
+
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * Created by buivuhoang on 04/02/17.
@@ -26,6 +32,18 @@ public class WorldRenderer {
 
     private float playerYOffset;
 
+    // Keep the last frames of the player to draw a trace
+    private Queue<TextureRegion> lastPlayerFrameQueue;
+    private Queue<Vector2> lastPlayerPositionQueue;
+    // Number of traces to render
+    private int numOfTraces = 4;
+    // Number of frame skip per trace
+    private int traceFrameSkip = 1;
+    // Flag to indicate when to start removing traces
+    private boolean startRemovingTraces;
+    // private count towards number of frame skip
+    private int traceFrameSkipCount = 0;
+
     public WorldRenderer(MapBase map) {
         this.map = map;
         this.cam = new OrthographicCamera(960, 540);
@@ -36,6 +54,9 @@ public class WorldRenderer {
         // Fixing the camera height for now.
         camFixedHeight = cam.viewportHeight/2;
         playerYOffset = 1/5f * map.getTileHeight();
+        lastPlayerFrameQueue = new ArrayBlockingQueue<TextureRegion>(numOfTraces);
+        lastPlayerPositionQueue = new ArrayBlockingQueue<Vector2>(numOfTraces);
+        startRemovingTraces = false;
         createBlocks();
     }
 
@@ -95,12 +116,57 @@ public class WorldRenderer {
             // Without this the animation frames will be misaligned
             posX += map.getTileWidth() * 0.6f - currentFrame.getRegionWidth();
         }
+
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
-
+        renderPlayerTrace(currentFrame, posX, posY);
         batch.draw(currentFrame, posX, posY);
-
         batch.end();
+    }
+
+    private void renderPlayerTrace(TextureRegion currentFrame, float posX, float posY) {
+        if (traceFrameSkipCount != traceFrameSkip) {
+            traceFrameSkipCount++;
+        } else {
+            if (startRemovingTraces) {
+                lastPlayerFrameQueue.poll();
+                lastPlayerPositionQueue.poll();
+            }
+            traceFrameSkipCount = 0;
+            // If player is dashing, draw a trace
+            if (map.player.state == PlayerBase.DASH || map.player.isHoldingDash) {
+                lastPlayerFrameQueue.add(currentFrame);
+                lastPlayerPositionQueue.add(new Vector2(posX, posY));
+            }
+            if (lastPlayerFrameQueue.size() == numOfTraces) {
+                startRemovingTraces = true;
+            }
+        }
+
+        if (map.player.state == PlayerBase.DASH || map.player.isHoldingDash) {
+            if (lastPlayerFrameQueue.size() != numOfTraces) {
+                startRemovingTraces = false;
+            }
+        } else {
+            startRemovingTraces = true;
+        }
+
+
+        if (!lastPlayerFrameQueue.isEmpty()) {
+            TextureRegion[] frames = new TextureRegion[lastPlayerFrameQueue.size()];
+            Vector2[] positions = new Vector2[lastPlayerPositionQueue.size()];
+            frames = lastPlayerFrameQueue.toArray(frames);
+            positions = lastPlayerPositionQueue.toArray(positions);
+            for (int i = 0; i < frames.length; i++) {
+                TextureRegion frame = frames[i];
+                Vector2 position = positions[i];
+                batch.setShader(TraceShader.getShaderColor(map.player.getTraceColour()));
+                batch.draw(frame, position.x, position.y);
+            }
+        } else {
+            startRemovingTraces = false;
+        }
+        batch.setShader(null);
     }
 
     public void dispose() {

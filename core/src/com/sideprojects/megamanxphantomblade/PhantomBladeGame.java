@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.map.maps.IntroStage;
 import com.sideprojects.megamanxphantomblade.player.x.PlayerXFactory;
+import com.sideprojects.megamanxphantomblade.renderers.DebugRenderer;
+import com.sideprojects.megamanxphantomblade.renderers.WorldRenderer;
 
 public class PhantomBladeGame extends ApplicationAdapter {
 	MapBase map;
