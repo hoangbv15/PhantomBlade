@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Timer;
 import com.sideprojects.megamanxphantomblade.KeyMap;
 import com.sideprojects.megamanxphantomblade.MovingObject;
+import com.sideprojects.megamanxphantomblade.animation.AnimationFactory;
 import com.sideprojects.megamanxphantomblade.map.Collision;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 
@@ -45,25 +46,11 @@ public abstract class PlayerBase extends MovingObject {
     public boolean isHoldingDash;
     public float stateTime;
 
-    public Animation<TextureRegion> playerRunRight;
-    public Animation<TextureRegion> playerRunLeft;
-    public Animation<TextureRegion> playerIdleRight;
-    public Animation<TextureRegion> playerIdleLeft;
-    public Animation<TextureRegion> playerJumpLeft;
-    public Animation<TextureRegion> playerJumpRight;
-    public Animation<TextureRegion> playerFallLeft;
-    public Animation<TextureRegion> playerFallRight;
-    public Animation<TextureRegion> playerTouchdownLeft;
-    public Animation<TextureRegion> playerTouchdownRight;
-    public Animation<TextureRegion> playerWallSlideLeft;
-    public Animation<TextureRegion> playerWallSlideRight;
-    public Animation<TextureRegion> playerWallJumpLeft;
-    public Animation<TextureRegion> playerWallJumpRight;
-    public Animation<TextureRegion> playerDashLeft;
-    public Animation<TextureRegion> playerDashRight;
-    public Animation<TextureRegion> playerDashBreakLeft;
-    public Animation<TextureRegion> playerDashBreakRight;
+    public AnimationFactory animations;
     public TextureRegion currentFrame;
+
+    // The internal clock for chaining states
+    private Timer.Task stateChainTimer;
 
     public PlayerBase(float x, float y, KeyMap keyMap) {
         this.keyMap = keyMap;
@@ -84,6 +71,43 @@ public abstract class PlayerBase extends MovingObject {
         updateAnimation();
     }
 
+    private void setState(int state) {
+        if (this.state != state) {
+            stateTime = 0;
+            this.state = state;
+        }
+    }
+
+    private void chainState(final int state1, float duration, final int state2) {
+        if (state != state1) {
+            setState(state1);
+            // Stop the animation after it finishes and switch state to IDLE
+            stateChainTimer = Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    if (state == state1) {
+                        setState(state2);
+                    }
+                }
+            }, duration);
+        }
+    }
+
+    private void chainState(final int state1, float duration, final int state2, final float duration2, final int state3) {
+        if (state != state1) {
+            setState(state1);
+            // Stop the animation after it finishes and switch state to IDLE
+            stateChainTimer = Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    if (state == state1) {
+                        chainState(state2, duration2, state3);
+                    }
+                }
+            }, duration);
+        }
+    }
+
     // TODO: Refactor the below blocks to not have state modifications everywhere
     private void processKeys(float deltaTime) {
         // Reset button
@@ -101,11 +125,12 @@ public abstract class PlayerBase extends MovingObject {
                 isHoldingDash = true;
                 canAirDash = false;
             }
-            if ((canAirDash || grounded) && Gdx.input.isKeyJustPressed(keyMap.dash)) {
+            if ((canAirDash || grounded) && state != WALLSLIDE
+                    && Gdx.input.isKeyJustPressed(keyMap.dash)) {
                 if (!grounded) {
                     canAirDash = false;
                 }
-                float duration = playerDashBreakLeft.getAnimationDuration();
+                float duration = animations.getDashBreakLeft().getAnimationDuration();
                 chainState(DASH, 0.5f, DASHBREAK, duration, IDLE);
             }
         } else {
@@ -179,115 +204,10 @@ public abstract class PlayerBase extends MovingObject {
                 setState(FALL);
             }
             if (!Gdx.input.isKeyPressed(keyMap.dash) && grounded && state == DASH) {
-                float duration = playerDashBreakLeft.getAnimationDuration();
+                float duration = animations.getDashBreakLeft().getAnimationDuration();
                 chainState(DASHBREAK, duration, IDLE);
             }
             vel.x = 0;
-        }
-    }
-
-    private void setState(int state) {
-        if (this.state != state) {
-            stateTime = 0;
-            this.state = state;
-        }
-    }
-
-    private void chainState(final int state1, float duration, final int state2) {
-        if (state != state1) {
-            setState(state1);
-            // Stop the animation after it finishes and switch state to IDLE
-            Timer.schedule(new Timer.Task() {
-                @Override
-                public void run() {
-                    if (state == state1) {
-                        setState(state2);
-                    }
-                }
-            }, duration);
-        }
-    }
-
-    private void chainState(final int state1, float duration, final int state2, final float duration2, final int state3) {
-        if (state != state1) {
-            setState(state1);
-            // Stop the animation after it finishes and switch state to IDLE
-            Timer.schedule(new Timer.Task() {
-                @Override
-                public void run() {
-                    if (state == state1) {
-                        chainState(state2, duration2, state3);
-                    }
-                }
-            }, duration);
-        }
-    }
-
-    private void updateAnimation() {
-        Animation<TextureRegion> currentAnimation;
-        if (state == IDLE) {
-            if (direction == LEFT) {
-                currentAnimation = playerIdleLeft;
-            } else {
-                currentAnimation = playerIdleRight;
-            }
-            currentFrame = currentAnimation.getKeyFrame(stateTime, true);
-        } else if (state == RUN) {
-            if (direction == LEFT) {
-                currentAnimation = playerRunLeft;
-            } else {
-                currentAnimation = playerRunRight;
-            }
-            currentFrame = currentAnimation.getKeyFrame(stateTime, true);
-        } else if (state == JUMP) {
-            if (direction == LEFT) {
-                currentAnimation = playerJumpLeft;
-            } else {
-                currentAnimation = playerJumpRight;
-            }
-            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
-        } else if (state == FALL) {
-            if (direction == LEFT) {
-                currentAnimation = playerFallLeft;
-            } else {
-                currentAnimation = playerFallRight;
-            }
-            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
-        } else if (state == TOUCHDOWN) {
-            if (direction == LEFT) {
-                currentAnimation = playerTouchdownLeft;
-            } else {
-                currentAnimation = playerTouchdownRight;
-            }
-            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
-        } else if (state == WALLSLIDE) {
-            if (direction == LEFT) {
-                currentAnimation = playerWallSlideLeft;
-            } else {
-                currentAnimation = playerWallSlideRight;
-            }
-            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
-        } else if (state == WALLJUMP) {
-            if (direction == LEFT) {
-                currentAnimation = playerWallJumpLeft;
-            } else {
-                currentAnimation = playerWallJumpRight;
-            }
-            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
-        } else if (state == DASH) {
-            if (direction == LEFT) {
-                currentAnimation = playerDashLeft;
-            } else {
-                currentAnimation = playerDashRight;
-            }
-            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
-        } else if (state == DASHBREAK) {
-            if (direction == LEFT) {
-                currentAnimation = playerDashBreakLeft;
-            } else {
-                currentAnimation = playerDashBreakRight;
-            }
-            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
         }
     }
 
@@ -324,7 +244,7 @@ public abstract class PlayerBase extends MovingObject {
                 case UP:
                     vel.y = 0;
                     if ((vel.x == 0 && state == FALL) || state == WALLSLIDE) {
-                        float duration = playerTouchdownLeft.getAnimationDuration();
+                        float duration = animations.getTouchdownLeft().getAnimationDuration();
                         chainState(TOUCHDOWN, duration, IDLE);
                     }
                     canAirDash = true;
@@ -340,12 +260,19 @@ public abstract class PlayerBase extends MovingObject {
                 case LEFT:
                 case RIGHT:
                     vel.x = 0;
+                    boolean collideFromDistance = true;
+                    if (pos.x == preCollide.x) {
+                        collideFromDistance = false;
+                    }
                     pos.x = preCollide.x;
                     if (grounded && state != TOUCHDOWN) {
-                        if (state == DASH) {
-                            float duration = playerDashBreakLeft.getAnimationDuration();
+                        if (state == DASH && collideFromDistance) {
+                            float duration = animations.getDashBreakLeft().getAnimationDuration();
                             chainState(DASHBREAK, duration, IDLE);
                         } else if (state != DASHBREAK){
+                            if (stateChainTimer != null) {
+                                stateChainTimer.cancel();
+                            }
                             setState(IDLE);
                         }
                     } else if (state == FALL || state == DASH) {
@@ -385,6 +312,74 @@ public abstract class PlayerBase extends MovingObject {
         pos.y += vel.y * deltaTime;
         bounds.x = pos.x;
         bounds.y = pos.y;
+    }
+
+    private void updateAnimation() {
+        Animation<TextureRegion> currentAnimation;
+        if (state == IDLE) {
+            if (direction == LEFT) {
+                currentAnimation = animations.getIdleLeft();
+            } else {
+                currentAnimation = animations.getIdleRight();
+            }
+            currentFrame = currentAnimation.getKeyFrame(stateTime, true);
+        } else if (state == RUN) {
+            if (direction == LEFT) {
+                currentAnimation = animations.getRunLeft();
+            } else {
+                currentAnimation = animations.getRunRight();
+            }
+            currentFrame = currentAnimation.getKeyFrame(stateTime, true);
+        } else if (state == JUMP) {
+            if (direction == LEFT) {
+                currentAnimation = animations.getJumpLeft();
+            } else {
+                currentAnimation = animations.getJumpRight();
+            }
+            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
+        } else if (state == FALL) {
+            if (direction == LEFT) {
+                currentAnimation = animations.getFallLeft();
+            } else {
+                currentAnimation = animations.getFallRight();
+            }
+            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
+        } else if (state == TOUCHDOWN) {
+            if (direction == LEFT) {
+                currentAnimation = animations.getTouchdownLeft();
+            } else {
+                currentAnimation = animations.getTouchdownRight();
+            }
+            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
+        } else if (state == WALLSLIDE) {
+            if (direction == LEFT) {
+                currentAnimation = animations.getWallSlideLeft();
+            } else {
+                currentAnimation = animations.getWallSlideRight();
+            }
+            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
+        } else if (state == WALLJUMP) {
+            if (direction == LEFT) {
+                currentAnimation = animations.getWallJumpLeft();
+            } else {
+                currentAnimation = animations.getWallJumpRight();
+            }
+            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
+        } else if (state == DASH) {
+            if (direction == LEFT) {
+                currentAnimation = animations.getDashLeft();
+            } else {
+                currentAnimation = animations.getDashRight();
+            }
+            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
+        } else if (state == DASHBREAK) {
+            if (direction == LEFT) {
+                currentAnimation = animations.getDashBreakLeft();
+            } else {
+                currentAnimation = animations.getDashBreakRight();
+            }
+            currentFrame = currentAnimation.getKeyFrame(stateTime, false);
+        }
     }
 
     public abstract void createAnimations();
