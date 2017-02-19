@@ -120,7 +120,8 @@ public abstract class PlayerBase extends MovingObject {
 
         if (Gdx.input.isKeyPressed(Input.Keys.X)) {
             if (grounded || state != FALL) {
-                if (state != JUMP && state != WALLJUMP && state != WALLSLIDE) {
+                if (!(!grounded && state == DASH) &&
+                        (state != JUMP && state != WALLJUMP && state != WALLSLIDE)) {
                     vel.y = VELOCITY_JUMP;
                 }
                 if (state == WALLSLIDE && Gdx.input.isKeyJustPressed(Input.Keys.X)) {
@@ -131,7 +132,8 @@ public abstract class PlayerBase extends MovingObject {
                         vel.x -= VELOCITY_DASH_ADDITION * direction;
                     }
                 }
-                if (state != WALLJUMP && Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+                if ((!(!grounded && state == DASH) && state != WALLJUMP) &&
+                        Gdx.input.isKeyJustPressed(Input.Keys.X)) {
                     setState(JUMP);
                     grounded = false;
                 }
