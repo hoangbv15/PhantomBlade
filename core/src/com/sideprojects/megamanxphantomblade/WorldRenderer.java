@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector3;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
+import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 
 /**
  * Created by buivuhoang on 04/02/17.
@@ -85,14 +86,19 @@ public class WorldRenderer {
     }
 
     private void renderPlayer() {
+        TextureRegion currentFrame = map.player.currentFrame;
         // Calculate vertical padding for player's position
         float posY = map.player.pos.y * map.getTileHeight() - playerYOffset;
+        float posX = map.player.pos.x * map.getTileWidth();
+        if (map.player.direction == PlayerBase.RIGHT) {
+            // Pad the texture's start x because the engine is drawing from left to right.
+            // Without this the animation frames will be misaligned
+            posX += map.getTileWidth() * 0.6f - currentFrame.getRegionWidth();
+        }
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
 
-        TextureRegion currentFrame = map.player.currentFrame;
-
-        batch.draw(currentFrame, map.player.pos.x * map.getTileWidth(), posY);
+        batch.draw(currentFrame, posX, posY);
 
         batch.end();
     }

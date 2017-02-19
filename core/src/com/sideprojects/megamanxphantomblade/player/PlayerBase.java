@@ -346,6 +346,8 @@ public abstract class PlayerBase extends MovingObject {
                         if (state == DASH) {
                             float duration = playerDashBreakLeft.getAnimationDuration();
                             chainState(DASHBREAK, duration, IDLE);
+                        } else if (state != DASHBREAK){
+                            setState(IDLE);
                         }
                     } else if (state == FALL || state == DASH) {
                         // TODO: Needs to find a way: In megaman X4, wall sliding starts after 50% of jump animation
