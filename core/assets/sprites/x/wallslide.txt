@@ -1,0 +1,54 @@
+wallslide.png
+size: 214, 58
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+1
+  rotate: false
+  xy: 182, 0
+  size: 32, 51
+  orig: 32, 51
+  offset: 0, 0
+  index: -1
+2
+  rotate: false
+  xy: 32, 0
+  size: 34, 57
+  orig: 34, 57
+  offset: 0, 0
+  index: -1
+3
+  rotate: false
+  xy: 89, 0
+  size: 34, 55
+  orig: 34, 55
+  offset: 0, 0
+  index: -1
+4
+  rotate: false
+  xy: 0, 0
+  size: 32, 58
+  orig: 32, 58
+  offset: 0, 0
+  index: -1
+5
+  rotate: false
+  xy: 151, 0
+  size: 31, 53
+  orig: 31, 53
+  offset: 0, 0
+  index: -1
+6
+  rotate: false
+  xy: 123, 0
+  size: 28, 54
+  orig: 28, 54
+  offset: 0, 0
+  index: -1
+7
+  rotate: false
+  xy: 66, 0
+  size: 23, 57
+  orig: 23, 57
+  offset: 0, 0
+  index: -1

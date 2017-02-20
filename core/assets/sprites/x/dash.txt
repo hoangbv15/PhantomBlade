@@ -1,0 +1,61 @@
+dash.png
+size: 123, 118
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+1
+  rotate: false
+  xy: 46, 31
+  size: 36, 42
+  orig: 36, 42
+  offset: 0, 0
+  index: -1
+2
+  rotate: false
+  xy: 0, 31
+  size: 46, 36
+  orig: 46, 36
+  offset: 0, 0
+  index: -1
+3
+  rotate: false
+  xy: 0, 0
+  size: 53, 31
+  orig: 53, 31
+  offset: 0, 0
+  index: -1
+4
+  rotate: false
+  xy: 53, 0
+  size: 57, 31
+  orig: 57, 31
+  offset: 0, 0
+  index: -1
+5
+  rotate: false
+  xy: 0, 74
+  size: 38, 43
+  orig: 38, 43
+  offset: 0, 0
+  index: -1
+6
+  rotate: false
+  xy: 72, 74
+  size: 30, 44
+  orig: 30, 44
+  offset: 0, 0
+  index: -1
+7
+  rotate: false
+  xy: 82, 31
+  size: 41, 43
+  orig: 41, 43
+  offset: 0, 0
+  index: -1
+8
+  rotate: false
+  xy: 38, 74
+  size: 34, 43
+  orig: 34, 43
+  offset: 0, 0
+  index: -1
