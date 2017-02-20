@@ -57,6 +57,8 @@ public class PhantomBladeGame extends ApplicationAdapter {
 
 	@Override
 	public void dispose () {
+		shapeRenderer.dispose();
 		mapRenderer.dispose();
+		debugRenderer.dispose();
 	}
 }

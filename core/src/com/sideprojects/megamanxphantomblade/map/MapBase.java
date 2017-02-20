@@ -56,6 +56,10 @@ public abstract class MapBase {
         return getGround().getRegionHeight();
     }
 
+    public int getWidth() { return tiles.length * getTileWidth(); }
+
+    public int getHeight() { return tiles[0].length * getTileHeight(); }
+
     protected abstract Pixmap getMapResource();
 
     public abstract ParallaxBackground getBackground();

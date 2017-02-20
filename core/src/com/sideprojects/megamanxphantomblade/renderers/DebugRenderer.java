@@ -70,4 +70,8 @@ public class DebugRenderer {
 
         shapeDebugger.end();
     }
+
+    public void dispose() {
+        shapeDebugger.dispose();
+    }
 }

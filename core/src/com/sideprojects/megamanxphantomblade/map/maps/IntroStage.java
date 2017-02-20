@@ -32,7 +32,7 @@ public class IntroStage extends MapBase {
         float worldHeight = Gdx.graphics.getHeight();
         float worldWidth = Utils.calculateOtherDimension(Utils.WH.height, worldHeight, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 //        float worldHeight = Utils.calculateOtherDimension(Utils.WH.width, worldWidth, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        TextureAtlas atlas = new TextureAtlas("data/main_atlas.atlas");
+        TextureAtlas atlas = new TextureAtlas("maps/background.atlas");
 
         TextureRegion mountainsRegionA = atlas.findRegion("mountains_a");
         TextureRegionParallaxLayer mountainsLayerA = new TextureRegionParallaxLayer(mountainsRegionA, worldWidth, new Vector2(.3f,.3f), Utils.WH.width);

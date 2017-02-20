@@ -1,5 +1,5 @@
 
-main_atlas.png
+background.png
 size: 802,994
 format: RGBA8888
 filter: Linear,Linear
@@ -33,7 +33,7 @@ mountains_a
   offset: 0, 0
   index: -1
 
-main_atlas2.png
+background2.png
 size: 688,493
 format: RGBA8888
 filter: Linear,Linear
