@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Queue;
+import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerState;
@@ -17,8 +18,9 @@ import com.sideprojects.megamanxphantomblade.renderers.shaders.TraceShader;
  * Created by buivuhoang on 04/02/17.
  */
 public class WorldRenderer {
-    public MapBase map;
-    public OrthographicCamera cam;
+    MapBase map;
+    OrthographicCamera cam;
+    private ParallaxBackground background;
     private float camFixedHeight;
     private SpriteCache cache;
     private SpriteBatch batch;
@@ -46,6 +48,7 @@ public class WorldRenderer {
 
     public WorldRenderer(MapBase map) {
         this.map = map;
+        this.background = map.getBackground();
         this.cam = new OrthographicCamera(960, 540);
         this.cache = new SpriteCache(this.map.tiles.length * this.map.tiles[0].length, false);
         this.batch = new SpriteBatch(5460);
@@ -90,6 +93,9 @@ public class WorldRenderer {
         cam.position.lerp(lerpTarget.set(map.player.pos.x * map.getTileWidth(), camFixedHeight, 0), 1);
         cam.update();
         Gdx.gl.glDisable(GL20.GL_BLEND);
+        batch.begin();
+        background.draw(cam, batch);
+        batch.end();
         renderMap();
         renderPlayer();
     }

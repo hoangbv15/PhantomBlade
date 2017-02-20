@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.math.GeoMath;
 import com.sideprojects.megamanxphantomblade.math.NumberMath;
@@ -56,6 +57,8 @@ public abstract class MapBase {
     }
 
     protected abstract Pixmap getMapResource();
+
+    public abstract ParallaxBackground getBackground();
 
     private void loadMap() {
         Pixmap pixmap = getMapResource();
