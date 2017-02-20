@@ -1,12 +1,10 @@
 package com.sideprojects.megamanxphantomblade.player;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Timer;
 import com.sideprojects.megamanxphantomblade.KeyMap;
 import com.sideprojects.megamanxphantomblade.MovingObject;
@@ -22,23 +20,13 @@ import java.util.List;
 public abstract class PlayerBase extends MovingObject {
     private KeyMap keyMap;
 
-    // States
-    public static final int IDLE = 0;
-    public static final int RUN = 1;
-    public static final int JUMP = 2;
-    public static final int FALL = 3;
-    public static final int DASH = 4;
-    public static final int DASHBREAK = 5;
-    public static final int TOUCHDOWN = 6;
-    public static final int WALLSLIDE = 7;
-    public static final int WALLJUMP = 8;
     // Velocities
     private static final float VELOCITY_WALK = 4f;
     private static final float VELOCITY_JUMP = 6f;
     private static final float VELOCITY_X_WALLJUMP = -3f;
     private static final float VELOCITY_DASH_ADDITION = 4f;
 
-    public int state;
+    public PlayerState state;
     public boolean grounded;
     // Player can only air dash once
     public boolean canAirDash;
@@ -57,7 +45,7 @@ public abstract class PlayerBase extends MovingObject {
         pos = new Vector2(x, y);
         bounds = new Rectangle(x, y, 0.6f, 0.8f);
         vel = new Vector2(0, 0);
-        setState(IDLE);
+        setState(PlayerState.IDLE);
         direction = RIGHT;
         grounded = true;
         canAirDash = true;
@@ -71,21 +59,21 @@ public abstract class PlayerBase extends MovingObject {
         updateAnimation();
     }
 
-    private void setStateAndResetTimer(int state) {
+    private void setStateAndResetTimer(PlayerState state) {
         setState(state);
         if (stateChainTimer != null) {
             stateChainTimer.cancel();
         }
     }
 
-    private void setState(int state) {
+    private void setState(PlayerState state) {
         if (this.state != state) {
             stateTime = 0;
             this.state = state;
         }
     }
 
-    private void chainState(final int state1, float duration, final int state2) {
+    private void chainState(final PlayerState state1, float duration, final PlayerState state2) {
         if (state != state1) {
             setState(state1);
             // Stop the animation after it finishes and switch state to IDLE
@@ -100,7 +88,7 @@ public abstract class PlayerBase extends MovingObject {
         }
     }
 
-    private void chainState(final int state1, float duration, final int state2, final float duration2, final int state3) {
+    private void chainState(final PlayerState state1, float duration, final PlayerState state2, final float duration2, final PlayerState state3) {
         if (state != state1) {
             setState(state1);
             // Stop the animation after it finishes and switch state to IDLE
@@ -121,7 +109,7 @@ public abstract class PlayerBase extends MovingObject {
         if (Gdx.input.isKeyPressed(keyMap.reset)) {
             vel.x = 0;
             vel.y = 0;
-            setState(IDLE);
+            setState(PlayerState.IDLE);
             canAirDash = true;
             grounded = true;
             isHoldingDash = false;
@@ -132,87 +120,87 @@ public abstract class PlayerBase extends MovingObject {
                 isHoldingDash = true;
                 canAirDash = false;
             }
-            if ((canAirDash || grounded) && state != WALLSLIDE
+            if ((canAirDash || grounded) && state != PlayerState.WALLSLIDE
                     && Gdx.input.isKeyJustPressed(keyMap.dash)) {
                 if (!grounded) {
                     canAirDash = false;
                 }
                 float duration = animations.getDashBreakLeft().getAnimationDuration();
-                chainState(DASH, 0.5f, DASHBREAK, duration, IDLE);
+                chainState(PlayerState.DASH, 0.5f, PlayerState.DASHBREAK, duration, PlayerState.IDLE);
             }
         } else {
-            if (!grounded && state == DASH) {
-                setStateAndResetTimer(FALL);
+            if (!grounded && state == PlayerState.DASH) {
+                setStateAndResetTimer(PlayerState.FALL);
             }
-            if (state == WALLSLIDE) {
+            if (state == PlayerState.WALLSLIDE) {
                 isHoldingDash = false;
             }
         }
 
         if (Gdx.input.isKeyPressed(keyMap.jump)) {
-            if (grounded || state != FALL) {
-                if (!(!grounded && state == DASH) &&
-                        (state != JUMP && state != WALLJUMP && state != WALLSLIDE)) {
+            if (grounded || state != PlayerState.FALL) {
+                if (!(!grounded && state == PlayerState.DASH) &&
+                        (state != PlayerState.JUMP && state != PlayerState.WALLJUMP && state != PlayerState.WALLSLIDE)) {
                     vel.y = VELOCITY_JUMP;
                 }
-                if (state == WALLSLIDE && Gdx.input.isKeyJustPressed(keyMap.jump)) {
-                    setStateAndResetTimer(WALLJUMP);
+                if (state == PlayerState.WALLSLIDE && Gdx.input.isKeyJustPressed(keyMap.jump)) {
+                    setStateAndResetTimer(PlayerState.WALLJUMP);
                     vel.y = VELOCITY_JUMP;
                     vel.x = VELOCITY_X_WALLJUMP * direction;
                     if (isHoldingDash) {
                         vel.x -= VELOCITY_DASH_ADDITION * direction;
                     }
                 }
-                if ((!(!grounded && state == DASH) && state != WALLJUMP) &&
+                if ((!(!grounded && state == PlayerState.DASH) && state != PlayerState.WALLJUMP) &&
                         Gdx.input.isKeyJustPressed(keyMap.jump)) {
-                    setStateAndResetTimer(JUMP);
+                    setStateAndResetTimer(PlayerState.JUMP);
                     grounded = false;
                 }
             }
-        } else if (!grounded && state != WALLSLIDE && state != DASH) {
-            setStateAndResetTimer(FALL);
+        } else if (!grounded && state != PlayerState.WALLSLIDE && state != PlayerState.DASH) {
+            setStateAndResetTimer(PlayerState.FALL);
         }
 
         if (Gdx.input.isKeyPressed(keyMap.left)) {
-            if (direction == RIGHT && ((!grounded && state == WALLSLIDE) || state == DASH)) {
-                setStateAndResetTimer(FALL);
+            if (direction == RIGHT && ((!grounded && state == PlayerState.WALLSLIDE) || state == PlayerState.DASH)) {
+                setStateAndResetTimer(PlayerState.FALL);
             }
             direction = LEFT;
-            if (state == WALLJUMP) {
+            if (state == PlayerState.WALLJUMP) {
                 if (vel.x > VELOCITY_WALK * direction) {
                     vel.x += VELOCITY_WALK * direction * deltaTime * 4;
                 }
                 if (isHoldingDash) {
                     vel.x += VELOCITY_DASH_ADDITION * direction * deltaTime * 4;
                 }
-            } else if (state != DASH){
+            } else if (state != PlayerState.DASH){
                 vel.x = VELOCITY_WALK * direction;
             }
         } else if (Gdx.input.isKeyPressed(keyMap.right)) {
-            if (direction == LEFT && ((!grounded && state == WALLSLIDE) || state == DASH)) {
-                setStateAndResetTimer(FALL);
+            if (direction == LEFT && ((!grounded && state == PlayerState.WALLSLIDE) || state == PlayerState.DASH)) {
+                setStateAndResetTimer(PlayerState.FALL);
             }
             direction = RIGHT;
-            if (state == WALLJUMP) {
+            if (state == PlayerState.WALLJUMP) {
                 if (vel.x < VELOCITY_WALK * direction) {
                     vel.x += VELOCITY_WALK * direction * deltaTime * 4;
                 }
                 if (isHoldingDash) {
                     vel.x += VELOCITY_DASH_ADDITION * direction * deltaTime * 4;
                 }
-            } else if (state != DASH) {
+            } else if (state != PlayerState.DASH) {
                 vel.x = VELOCITY_WALK * direction;
             }
         } else {
-            if (grounded && state != TOUCHDOWN && state != DASH && state != DASHBREAK) {
-                setStateAndResetTimer(IDLE);
+            if (grounded && state != PlayerState.TOUCHDOWN && state != PlayerState.DASH && state != PlayerState.DASHBREAK) {
+                setStateAndResetTimer(PlayerState.IDLE);
             }
-            if (state == WALLSLIDE && !grounded) {
-                setStateAndResetTimer(FALL);
+            if (state == PlayerState.WALLSLIDE && !grounded) {
+                setStateAndResetTimer(PlayerState.FALL);
             }
-            if (!Gdx.input.isKeyPressed(keyMap.dash) && grounded && state == DASH) {
+            if (!Gdx.input.isKeyPressed(keyMap.dash) && grounded && state == PlayerState.DASH) {
                 float duration = animations.getDashBreakLeft().getAnimationDuration();
-                chainState(DASHBREAK, duration, IDLE);
+                chainState(PlayerState.DASHBREAK, duration, PlayerState.IDLE);
             }
             vel.x = 0;
         }
@@ -220,7 +208,7 @@ public abstract class PlayerBase extends MovingObject {
 
     private void tryMove(float deltaTime, MapBase map) {
         // Apply gravity
-        if (state != JUMP && state != WALLJUMP && state != WALLSLIDE) {
+        if (state != PlayerState.JUMP && state != PlayerState.WALLJUMP && state != PlayerState.WALLSLIDE) {
             if (vel.y > 0) {
                 vel.y = 0;
             }
@@ -229,16 +217,16 @@ public abstract class PlayerBase extends MovingObject {
             }
         }
 
-        if (state == WALLSLIDE) {
+        if (state == PlayerState.WALLSLIDE) {
             vel.y = map.WALLSLIDE_FALLSPEED;
         }
 
-        if (state == DASH) {
+        if (state == PlayerState.DASH) {
             vel.x = (VELOCITY_WALK + VELOCITY_DASH_ADDITION) * direction;
             if (!grounded) {
                 vel.y = 0;
             }
-        } else if (isHoldingDash && !grounded && vel.x != 0 && state != WALLJUMP) {
+        } else if (isHoldingDash && !grounded && vel.x != 0 && state != PlayerState.WALLJUMP) {
             vel.x += VELOCITY_DASH_ADDITION * direction;
         }
 
@@ -250,9 +238,9 @@ public abstract class PlayerBase extends MovingObject {
             switch (collision.side) {
                 case UP:
                     vel.y = 0;
-                    if ((vel.x == 0 && state == FALL) || state == WALLSLIDE) {
+                    if ((vel.x == 0 && state == PlayerState.FALL) || state == PlayerState.WALLSLIDE) {
                         float duration = animations.getTouchdownLeft().getAnimationDuration();
-                        chainState(TOUCHDOWN, duration, IDLE);
+                        chainState(PlayerState.TOUCHDOWN, duration, PlayerState.IDLE);
                     }
                     canAirDash = true;
                     grounded = true;
@@ -261,7 +249,7 @@ public abstract class PlayerBase extends MovingObject {
                     break;
                 case DOWN:
                     vel.y = 0;
-                    setStateAndResetTimer(FALL);
+                    setStateAndResetTimer(PlayerState.FALL);
                     pos.y = preCollide.y;
                     break;
                 case LEFT:
@@ -272,16 +260,16 @@ public abstract class PlayerBase extends MovingObject {
                         collideFromDistance = false;
                     }
                     pos.x = preCollide.x;
-                    if (grounded && state != TOUCHDOWN) {
-                        if (state == DASH && collideFromDistance) {
+                    if (grounded && state != PlayerState.TOUCHDOWN) {
+                        if (state == PlayerState.DASH && collideFromDistance) {
                             float duration = animations.getDashBreakLeft().getAnimationDuration();
-                            chainState(DASHBREAK, duration, IDLE);
-                        } else if (state != DASHBREAK){
-                            setStateAndResetTimer(IDLE);
+                            chainState(PlayerState.DASHBREAK, duration, PlayerState.IDLE);
+                        } else if (state != PlayerState.DASHBREAK){
+                            setStateAndResetTimer(PlayerState.IDLE);
                         }
-                    } else if (state == FALL || state == DASH) {
+                    } else if (state == PlayerState.FALL || state == PlayerState.DASH) {
                         // TODO: Needs to find a way: In megaman X4, wall sliding starts after 50% of jump animation
-                        setState(WALLSLIDE);
+                        setState(PlayerState.WALLSLIDE);
                         canAirDash = true;
                         isHoldingDash = false;
                     }
@@ -289,12 +277,12 @@ public abstract class PlayerBase extends MovingObject {
             }
         }
 
-        if (collisionList.isEmpty() && state == WALLSLIDE) {
-            setStateAndResetTimer(FALL);
+        if (collisionList.isEmpty() && state == PlayerState.WALLSLIDE) {
+            setStateAndResetTimer(PlayerState.FALL);
         }
 
         // if jumping, apply gravity
-        if (state == JUMP || state == WALLJUMP) {
+        if (state == PlayerState.JUMP || state == PlayerState.WALLJUMP) {
             if (vel.y > map.MAX_FALLSPEED) {
                 vel.y -= map.GRAVITY * deltaTime;
             } else {
@@ -303,13 +291,13 @@ public abstract class PlayerBase extends MovingObject {
         }
 
         // player is falling if going downwards
-        if (vel.y < 0 && state != WALLSLIDE) {
-            setStateAndResetTimer(FALL);
+        if (vel.y < 0 && state != PlayerState.WALLSLIDE) {
+            setStateAndResetTimer(PlayerState.FALL);
             grounded = false;
         }
 
-        if (grounded && vel.x != 0 && state != DASH) {
-            setStateAndResetTimer(RUN);
+        if (grounded && vel.x != 0 && state != PlayerState.DASH) {
+            setStateAndResetTimer(PlayerState.RUN);
         }
 
         pos.x += vel.x * deltaTime;
@@ -320,63 +308,63 @@ public abstract class PlayerBase extends MovingObject {
 
     private void updateAnimation() {
         Animation<TextureRegion> currentAnimation;
-        if (state == IDLE) {
+        if (state == PlayerState.IDLE) {
             if (direction == LEFT) {
                 currentAnimation = animations.getIdleLeft();
             } else {
                 currentAnimation = animations.getIdleRight();
             }
             currentFrame = currentAnimation.getKeyFrame(stateTime, true);
-        } else if (state == RUN) {
+        } else if (state == PlayerState.RUN) {
             if (direction == LEFT) {
                 currentAnimation = animations.getRunLeft();
             } else {
                 currentAnimation = animations.getRunRight();
             }
             currentFrame = currentAnimation.getKeyFrame(stateTime, true);
-        } else if (state == JUMP) {
+        } else if (state == PlayerState.JUMP) {
             if (direction == LEFT) {
                 currentAnimation = animations.getJumpLeft();
             } else {
                 currentAnimation = animations.getJumpRight();
             }
             currentFrame = currentAnimation.getKeyFrame(stateTime, false);
-        } else if (state == FALL) {
+        } else if (state == PlayerState.FALL) {
             if (direction == LEFT) {
                 currentAnimation = animations.getFallLeft();
             } else {
                 currentAnimation = animations.getFallRight();
             }
             currentFrame = currentAnimation.getKeyFrame(stateTime, false);
-        } else if (state == TOUCHDOWN) {
+        } else if (state == PlayerState.TOUCHDOWN) {
             if (direction == LEFT) {
                 currentAnimation = animations.getTouchdownLeft();
             } else {
                 currentAnimation = animations.getTouchdownRight();
             }
             currentFrame = currentAnimation.getKeyFrame(stateTime, false);
-        } else if (state == WALLSLIDE) {
+        } else if (state == PlayerState.WALLSLIDE) {
             if (direction == LEFT) {
                 currentAnimation = animations.getWallSlideLeft();
             } else {
                 currentAnimation = animations.getWallSlideRight();
             }
             currentFrame = currentAnimation.getKeyFrame(stateTime, false);
-        } else if (state == WALLJUMP) {
+        } else if (state == PlayerState.WALLJUMP) {
             if (direction == LEFT) {
                 currentAnimation = animations.getWallJumpLeft();
             } else {
                 currentAnimation = animations.getWallJumpRight();
             }
             currentFrame = currentAnimation.getKeyFrame(stateTime, false);
-        } else if (state == DASH) {
+        } else if (state == PlayerState.DASH) {
             if (direction == LEFT) {
                 currentAnimation = animations.getDashLeft();
             } else {
                 currentAnimation = animations.getDashRight();
             }
             currentFrame = currentAnimation.getKeyFrame(stateTime, false);
-        } else if (state == DASHBREAK) {
+        } else if (state == PlayerState.DASHBREAK) {
             if (direction == LEFT) {
                 currentAnimation = animations.getDashBreakLeft();
             } else {
@@ -390,4 +378,3 @@ public abstract class PlayerBase extends MovingObject {
 
     public abstract TraceColour getTraceColour();
 }
-

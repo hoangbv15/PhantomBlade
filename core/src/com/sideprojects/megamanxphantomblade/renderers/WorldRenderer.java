@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Queue;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
+import com.sideprojects.megamanxphantomblade.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.TraceShader;
 
 /**
@@ -134,7 +135,7 @@ public class WorldRenderer {
             }
             traceFrameSkipCount = 0;
             // If player is dashing, draw a trace
-            if (map.player.state == PlayerBase.DASH || map.player.isHoldingDash) {
+            if (map.player.state == PlayerState.DASH || map.player.isHoldingDash) {
                 lastPlayerFrameQueue.addLast(currentFrame);
                 lastPlayerPositionQueue.addLast(new Vector2(posX, posY));
             }
@@ -143,7 +144,7 @@ public class WorldRenderer {
             }
         }
 
-        if (map.player.state == PlayerBase.DASH || map.player.isHoldingDash) {
+        if (map.player.state == PlayerState.DASH || map.player.isHoldingDash) {
             if (lastPlayerFrameQueue.size != numOfTraces) {
                 startRemovingTraces = false;
             }
