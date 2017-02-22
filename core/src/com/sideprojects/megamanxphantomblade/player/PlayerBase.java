@@ -9,8 +9,10 @@ import com.badlogic.gdx.utils.Timer;
 import com.sideprojects.megamanxphantomblade.KeyMap;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.animation.AnimationFactory;
-import com.sideprojects.megamanxphantomblade.map.Collision;
+import com.sideprojects.megamanxphantomblade.physics.Collision;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
+import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
+import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 
 import java.util.List;
 
@@ -19,6 +21,7 @@ import java.util.List;
  */
 public abstract class PlayerBase extends MovingObject {
     private KeyMap keyMap;
+    private PlayerPhysics physics;
 
     // Velocities
     private static final float VELOCITY_WALK = 4f;
@@ -40,8 +43,9 @@ public abstract class PlayerBase extends MovingObject {
     // The internal clock for chaining states
     private Timer.Task stateChainTimer;
 
-    public PlayerBase(float x, float y, KeyMap keyMap) {
+    public PlayerBase(float x, float y, KeyMap keyMap, PlayerPhysics physics) {
         this.keyMap = keyMap;
+        this.physics = physics;
         pos = new Vector2(x, y);
         bounds = new Rectangle(x, y, 0.6f, 0.8f);
         vel = new Vector2(0, 0);
@@ -104,7 +108,7 @@ public abstract class PlayerBase extends MovingObject {
     }
 
     // TODO: Refactor the below blocks to not have state modifications everywhere
-    private void processKeys(float deltaTime) {
+    public void processKeys(float deltaTime) {
         // Reset button
         if (Gdx.input.isKeyPressed(keyMap.reset)) {
             vel.x = 0;
@@ -206,7 +210,7 @@ public abstract class PlayerBase extends MovingObject {
         }
     }
 
-    private void tryMove(float deltaTime, MapBase map) {
+    public void tryMove(float deltaTime, MapBase map) {
         // Apply gravity
         if (state != PlayerState.JUMP && state != PlayerState.WALLJUMP && state != PlayerState.WALLSLIDE) {
             if (vel.y > 0) {
@@ -231,7 +235,7 @@ public abstract class PlayerBase extends MovingObject {
         }
 
         // Collision checking here
-        List<Collision> collisionList = map.mapCollisionCheck(this, deltaTime);
+        List<Collision> collisionList = physics.getMapCollision(this, deltaTime, map);
 
         for (Collision collision: collisionList) {
             Vector2 preCollide = collision.getPrecollidePos();
@@ -306,7 +310,7 @@ public abstract class PlayerBase extends MovingObject {
         bounds.y = pos.y;
     }
 
-    private void updateAnimation() {
+    public void updateAnimation() {
         Animation<TextureRegion> currentAnimation;
         if (state == PlayerState.IDLE) {
             if (direction == LEFT) {

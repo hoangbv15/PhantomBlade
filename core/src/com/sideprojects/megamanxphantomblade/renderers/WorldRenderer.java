@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Queue;
 import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
-import com.sideprojects.megamanxphantomblade.player.PlayerState;
+import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.TraceShader;
 
 /**
