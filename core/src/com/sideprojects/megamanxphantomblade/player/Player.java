@@ -14,16 +14,23 @@ public abstract class Player extends PlayerBase {
 
     @Override
     public void processKeys(float deltaTime) {
-        super.processKeys(deltaTime);
+//        super.processKeys(deltaTime);
     }
 
     @Override
     public void tryMove(float deltaTime, MapBase map) {
-        super.tryMove(deltaTime, map);
+//        super.tryMove(deltaTime, map);
     }
 
     @Override
     public void updateAnimation() {
         super.updateAnimation();
+    }
+
+    @Override
+    public void update(float deltaTime, MapBase map) {
+        physics.update(deltaTime, this, map);
+        updateAnimation();
+//        super.update(deltaTime, map);
     }
 }

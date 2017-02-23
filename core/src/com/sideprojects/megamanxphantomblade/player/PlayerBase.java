@@ -21,7 +21,7 @@ import java.util.List;
  */
 public abstract class PlayerBase extends MovingObject {
     private KeyMap keyMap;
-    private PlayerPhysics physics;
+    protected PlayerPhysics physics;
 
     // Velocities
     private static final float VELOCITY_WALK = 4f;
@@ -35,7 +35,6 @@ public abstract class PlayerBase extends MovingObject {
     public boolean canAirDash;
     // If the player is holding dash button
     public boolean isHoldingDash;
-    public float stateTime;
 
     public AnimationFactory animations;
     public TextureRegion currentFrame;

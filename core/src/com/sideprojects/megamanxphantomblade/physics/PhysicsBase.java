@@ -143,5 +143,5 @@ public abstract class PhysicsBase {
         return Collision.getCollisionNearestToStart(collisionList, start);
     }
 
-    public abstract void update();
+    public abstract void update(float delta, MovingObject object, MapBase map);
 }

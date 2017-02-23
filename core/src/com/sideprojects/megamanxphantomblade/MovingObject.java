@@ -20,5 +20,5 @@ public class MovingObject {
     public Vector2 vel;
     public Rectangle bounds;
 
-
+    public float stateTime;
 }
