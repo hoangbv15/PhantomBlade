@@ -15,6 +15,7 @@ public class MovingObject {
     public static final int RIGHT = 1;
 
     public int direction;
+    public boolean grounded;
 
     public Vector2 pos;
     public Vector2 vel;

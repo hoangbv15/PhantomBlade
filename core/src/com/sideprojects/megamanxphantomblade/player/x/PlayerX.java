@@ -10,8 +10,8 @@ import com.sideprojects.megamanxphantomblade.player.TraceColour;
  * Created by buivuhoang on 04/02/17.
  */
 public class PlayerX extends Player {
-    protected PlayerX(float x, float y, KeyMap keyMap, PlayerPhysics physics) {
-        super(x, y, keyMap, physics);
+    protected PlayerX(float x, float y, KeyMap keyMap) {
+        super(x, y, keyMap);
     }
 
     @Override

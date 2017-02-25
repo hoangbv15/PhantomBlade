@@ -1,4 +1,4 @@
-package com.sideprojects.megamanxphantomblade.physics;
+package com.sideprojects.megamanxphantomblade.physics.collision;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -14,7 +14,7 @@ public class Collision {
     /**
      * The point of the collision
       */
-    Vector2 point;
+    public Vector2 point;
 
     /**
      * The side that the collision happens on the tile
@@ -33,7 +33,7 @@ public class Collision {
 
     private CollisionDetectionRay ray;
 
-    Collision(Vector2 collidePoint, Side collideSide, CollisionDetectionRay ray, Rectangle tile) {
+    public Collision(Vector2 collidePoint, Side collideSide, CollisionDetectionRay ray, Rectangle tile) {
         this.point = collidePoint;
         this.side = collideSide;
         if (collidePoint != null) {
@@ -51,7 +51,7 @@ public class Collision {
         UP, DOWN, LEFT, RIGHT
     }
 
-    static Collision getCollisionNearestToStart(List<Collision> list, final Vector2 start) {
+    public static Collision getCollisionNearestToStart(List<Collision> list, final Vector2 start) {
         Collision[] collisionArray = new Collision[list.size()];
         collisionArray = list.toArray(collisionArray);
 

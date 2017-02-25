@@ -10,16 +10,15 @@ import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.rahul.libgdx.parallax.TextureRegionParallaxLayer;
 import com.rahul.libgdx.parallax.Utils;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
+import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
 import com.sideprojects.megamanxphantomblade.player.PlayerFactory;
 
 /**
  * Created by buivuhoang on 04/02/17.
  */
 public class IntroStage extends MapBase {
-//    private final float worldWidth = 40;
-
-    public IntroStage(PlayerFactory playerFactory) {
-        super(playerFactory);
+    public IntroStage(PlayerFactory playerFactory, PlayerPhysicsFactory playerPhysicsFactory) {
+        super(playerFactory, playerPhysicsFactory);
     }
 
     @Override
@@ -31,7 +30,6 @@ public class IntroStage extends MapBase {
     public ParallaxBackground getBackground() {
         float worldHeight = Gdx.graphics.getHeight();
         float worldWidth = Utils.calculateOtherDimension(Utils.WH.height, worldHeight, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-//        float worldHeight = Utils.calculateOtherDimension(Utils.WH.width, worldWidth, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         TextureAtlas atlas = new TextureAtlas("maps/background.atlas");
 
         TextureRegion mountainsRegionA = atlas.findRegion("mountains_a");

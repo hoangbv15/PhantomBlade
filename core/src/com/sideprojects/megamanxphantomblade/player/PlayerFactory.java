@@ -8,9 +8,7 @@ import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
  */
 public abstract class PlayerFactory {
     protected KeyMap keyMap;
-    protected PlayerPhysics physics;
-    public PlayerFactory(KeyMap keyMap, PlayerPhysics physics) {
-        this.physics = physics;
+    public PlayerFactory(KeyMap keyMap) {
         this.keyMap = keyMap;
     }
 

@@ -5,10 +5,12 @@ import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.input.Command;
 import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
-import com.sideprojects.megamanxphantomblade.physics.Collision;
+import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 import com.sideprojects.megamanxphantomblade.physics.PhysicsBase;
-
-import java.util.List;
+import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
+import com.sideprojects.megamanxphantomblade.physics.player.holddashstates.NotHoldingDash;
+import com.sideprojects.megamanxphantomblade.physics.player.movementstates.Idle;
+import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 
 /**
  * Created by buivuhoang on 21/02/17.
@@ -20,60 +22,121 @@ public class PlayerPhysics extends PhysicsBase {
     public static final float VELOCITY_X_WALLJUMP = -3f;
     public static final float VELOCITY_DASH_ADDITION = 4f;
 
-    private PlayerStateBase movementState;
+    private PlayerMovementStateBase movementState;
+    private PlayerHoldDashStateBase holdDashState;
 
-    public PlayerPhysics(InputProcessor input) {
+    public PlayerBase player;
+
+    public PlayerPhysics(InputProcessor input, PlayerBase player) {
         super(input);
+        this.player = player;
         // Create the initial states
-        movementState = new PlayerIdleState();
+        movementState = new Idle(player, null);
+        holdDashState = new NotHoldingDash();
     }
 
     @Override
-    public void update(float delta, MovingObject object, MapBase map) {
-        // Apply gravity
-        movementState.applyGravity(object, map.GRAVITY, map.MAX_FALLSPEED, delta);
+    public void update(float delta, MapBase map) {
+        player.stateTime += delta;
 
-        // Process commands
-        if (input.isCommandPressed(Command.LEFT)) {
-            movementState.left(object, VELOCITY_WALK, delta);
-        } else if (input.isCommandPressed(Command.RIGHT)) {
-            movementState.right(object, VELOCITY_WALK, delta);
+        // Jumping
+        if (input.isCommandPressed(Command.JUMP)) {
+            if (input.isCommandJustPressed(Command.JUMP)) {
+                if (movementState.canJump()) {
+                    player.vel.y = VELOCITY_JUMP;
+                }
+                if (movementState.canWallJump()) {
+                    player.vel.x = VELOCITY_X_WALLJUMP * player.direction;
+                }
+            }
         } else {
-            movementState.none(object);
+            if (player.vel.y > 0) {
+                player.vel.y = 0;
+            }
         }
 
-        List<Collision> collisions = calculateReaction(delta, object, map);
-        movementState = movementState.nextState(input, object, collisions);
+        // Running & direction
+        if (input.isCommandPressed(Command.LEFT)) {
+            if (movementState.canRun()) {
+                player.direction = MovingObject.LEFT;
+                if (movementState.canWallGlide()) {
+                    player.vel.x += VELOCITY_WALK * player.direction * delta * 4;
+                } else {
+                    player.vel.x = VELOCITY_WALK * player.direction;
+                }
+            }
+        } else if (input.isCommandPressed(Command.RIGHT)) {
+            if (movementState.canRun()) {
+                player.direction = MovingObject.RIGHT;
+                if (movementState.canWallGlide()) {
+                    player.vel.x += VELOCITY_WALK * player.direction * delta * 4;
+                } else {
+                    player.vel.x = VELOCITY_WALK * player.direction;
+                }
+            }
+        } else {
+            player.vel.x = 0;
+        }
+
+        // Dashing
+        if (input.isCommandPressed(Command.DASH)) {
+            if (movementState.canDash(input)) {
+                player.vel.x += VELOCITY_DASH_ADDITION * player.direction;
+                // Air dash
+                if (!player.grounded) {
+                    player.vel.y = 0;
+                }
+            }
+        }
+
+        // Apply gravity
+        applyGravity(player, map.GRAVITY, map.MAX_FALLSPEED, delta);
+
+        // Check for collisions
+        CollisionList collisions = calculateReaction(delta, map);
+
+        // Assign next state
+        movementState = movementState.nextState(input, player, collisions);
+        holdDashState = holdDashState.nextState(input, player, collisions);
     }
 
-    private List<Collision> calculateReaction(float delta, MovingObject object, MapBase map) {
+    private CollisionList calculateReaction(float delta, MapBase map) {
         // Process the player input here
-        List<Collision> collisionList = getMapCollision(object, delta, map);
+        CollisionList collisionList = getMapCollision(player, delta, map);
 
-        for (Collision collision: collisionList) {
+        // Apply collision-specific movement logic
+        // Take current state into account if needed
+        for (Collision collision: collisionList.toList) {
             Vector2 preCollide = collision.getPrecollidePos();
             switch (collision.side) {
-                case UP:
-                    object.vel.y = 0;
-                    object.pos.y = preCollide.y;
-                    break;
-                case DOWN:
-                    object.vel.y = 0;
-                    object.pos.y = preCollide.y;
-                    break;
                 case LEFT:
                 case RIGHT:
-                    object.vel.x = 0;
-                    object.pos.x = preCollide.x;
+                    if (movementState.canWallSlide()) {
+                        player.vel.y = map.WALLSLIDE_FALLSPEED;
+                    }
+                    player.vel.x = 0;
+                    player.pos.x = preCollide.x;
+                    break;
+                case UP:
+                    player.grounded = true;
+                case DOWN:
+                    player.vel.y = 0;
+                    player.pos.y = preCollide.y;
                     break;
             }
         }
 
-        object.pos.x += object.vel.x * delta;
-        object.pos.y += object.vel.y * delta;
-        object.bounds.x = object.pos.x;
-        object.bounds.y = object.pos.y;
+        player.pos.x += player.vel.x * delta;
+        player.pos.y += player.vel.y * delta;
+        player.bounds.x = player.pos.x;
+        player.bounds.y = player.pos.y;
 
-        return null;
+        return collisionList;
+    }
+
+    private void applyGravity(MovingObject object, float gravity, float maxFallspeed, float delta) {
+        if (object.vel.y > maxFallspeed) {
+            object.vel.y -= gravity * delta;
+        }
     }
 }

@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.sideprojects.megamanxphantomblade.KeyMap;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.animation.AnimationFactory;
-import com.sideprojects.megamanxphantomblade.physics.Collision;
+import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
@@ -30,7 +30,6 @@ public abstract class PlayerBase extends MovingObject {
     private static final float VELOCITY_DASH_ADDITION = 4f;
 
     public PlayerState state;
-    public boolean grounded;
     // Player can only air dash once
     public boolean canAirDash;
     // If the player is holding dash button
@@ -39,12 +38,11 @@ public abstract class PlayerBase extends MovingObject {
     public AnimationFactory animations;
     public TextureRegion currentFrame;
 
-    // The internal clock for chaining states
+    // The internal clock for chaining movementstates
     private Timer.Task stateChainTimer;
 
-    public PlayerBase(float x, float y, KeyMap keyMap, PlayerPhysics physics) {
+    public PlayerBase(float x, float y, KeyMap keyMap) {
         this.keyMap = keyMap;
-        this.physics = physics;
         pos = new Vector2(x, y);
         bounds = new Rectangle(x, y, 0.6f, 0.8f);
         vel = new Vector2(0, 0);
@@ -234,7 +232,7 @@ public abstract class PlayerBase extends MovingObject {
         }
 
         // Collision checking here
-        List<Collision> collisionList = physics.getMapCollision(this, deltaTime, map);
+        List<Collision> collisionList = physics.getMapCollision(this, deltaTime, map).toList;
 
         for (Collision collision: collisionList) {
             Vector2 preCollide = collision.getPrecollidePos();

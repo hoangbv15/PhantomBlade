@@ -7,6 +7,9 @@ import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.math.GeoMath;
 import com.sideprojects.megamanxphantomblade.math.NumberMath;
+import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
+import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay;
+import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +28,7 @@ public abstract class PhysicsBase {
         collisions = new ArrayList<Collision>();
     }
 
-    public List<Collision> getMapCollision(MovingObject object, float deltaTime, MapBase map) {
+    public CollisionList getMapCollision(MovingObject object, float deltaTime, MapBase map) {
         int direction = object.direction;
         Vector2 pos = object.pos;
         Vector2 vel = object.vel;
@@ -103,7 +106,7 @@ public abstract class PhysicsBase {
             }
         }
 
-        return collisionList;
+        return new CollisionList(collisionList);
     }
 
     private Collision getSideOfCollisionWithTile(CollisionDetectionRay ray, Rectangle tile,
@@ -143,5 +146,5 @@ public abstract class PhysicsBase {
         return Collision.getCollisionNearestToStart(collisionList, start);
     }
 
-    public abstract void update(float delta, MovingObject object, MapBase map);
+    public abstract void update(float delta, MapBase map);
 }

@@ -9,6 +9,7 @@ import com.sideprojects.megamanxphantomblade.input.PlayerInputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.map.maps.IntroStage;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
+import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
 import com.sideprojects.megamanxphantomblade.player.x.PlayerXFactory;
 import com.sideprojects.megamanxphantomblade.renderers.DebugRenderer;
 import com.sideprojects.megamanxphantomblade.renderers.WorldRenderer;
@@ -24,8 +25,7 @@ public class PhantomBladeGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		keyMap = new KeyMap();
-		playerPhysics = new PlayerPhysics(new PlayerInputProcessor(keyMap));
-		map = new IntroStage(new PlayerXFactory(keyMap, playerPhysics));
+		map = new IntroStage(new PlayerXFactory(keyMap), new PlayerPhysicsFactory(new PlayerInputProcessor(keyMap)));
 		mapRenderer = new WorldRenderer(map);
 		debugRenderer = new DebugRenderer(mapRenderer);
 		shapeRenderer = new ShapeRenderer();

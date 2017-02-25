@@ -4,12 +4,10 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.rahul.libgdx.parallax.ParallaxBackground;
-import com.sideprojects.megamanxphantomblade.physics.Collision;
+import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
+import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by buivuhoang on 04/02/17.
@@ -25,7 +23,9 @@ public abstract class MapBase {
     public float WALLSLIDE_FALLSPEED = -2f;
 
     private PlayerFactory playerFactory;
+    private PlayerPhysicsFactory playerPhysicsFactory;
     public PlayerBase player;
+    public PlayerPhysics playerPhysics;
     public int[][] tiles;
     public Rectangle[][] bounds;
 
@@ -34,8 +34,9 @@ public abstract class MapBase {
     protected TextureRegion wall;
     public abstract TextureRegion getWall();
 
-    public MapBase(PlayerFactory playerFactory) {
+    public MapBase(PlayerFactory playerFactory, PlayerPhysicsFactory playerPhysicsFactory) {
         this.playerFactory = playerFactory;
+        this.playerPhysicsFactory = playerPhysicsFactory;
         loadMap();
     }
 
@@ -67,6 +68,7 @@ public abstract class MapBase {
                 if (match(pix, START)) {
                     // we create the player here
                     player = playerFactory.createPlayer(x, y);
+                    playerPhysics = playerPhysicsFactory.create(player);
                 }
                 tiles[x][y] = pix;
                 if (match(pix, GROUND) || match(pix, WALL)) {
@@ -82,6 +84,7 @@ public abstract class MapBase {
     }
 
     public void update(float deltaTime) {
+        playerPhysics.update(deltaTime, this);
         player.update(deltaTime, this);
     }
 

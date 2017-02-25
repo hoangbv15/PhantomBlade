@@ -8,8 +8,8 @@ import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
  * Created by buivuhoang on 21/02/17.
  */
 public abstract class Player extends PlayerBase {
-    public Player(float x, float y, KeyMap keyMap, PlayerPhysics physics) {
-        super(x, y, keyMap, physics);
+    public Player(float x, float y, KeyMap keyMap) {
+        super(x, y, keyMap);
     }
 
     @Override
@@ -29,7 +29,6 @@ public abstract class Player extends PlayerBase {
 
     @Override
     public void update(float deltaTime, MapBase map) {
-        physics.update(deltaTime, this, map);
         updateAnimation();
 //        super.update(deltaTime, map);
     }

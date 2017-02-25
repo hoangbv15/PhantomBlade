@@ -10,7 +10,7 @@ import com.rahul.libgdx.parallax.Utils.WH;
  * TextureRegionParallaxLayer is the direct extension of {@link ParallaxLayer}. It represents a layer in the parallax scrolling background with just one texture region per layer . It still is very nifty and useful as it encapsulates the logic of padding in all the directions.
  * The padding can help you avoid using single full screen texture regions of background.
  * <p>
- * As an example let us suppose you wish to render repeatedly a single cloud region with 1/10  the width and height of the screen . You wish to render it at half way above the screen baseline. An plus no more than one could should be there within one screen width. You can easily achieve this using proper bottom, left and right padding in this layer  
+ * As an example let us suppose you wish to render repeatedly a single cloud region with 1/10  the width and height of the screen . You wish to render it at half way above the screen baseline. An plus no more than one could should be there within one screen width. You can easily achieve this using proper bottom, canLeft and canRight padding in this layer
  * @author Rahul
  *
  */
@@ -71,7 +71,7 @@ public class TextureRegionParallaxLayer extends ParallaxLayer{
 	
 	
 	/**
-	 * draws the texture region at x y ,with left and bottom padding 
+	 * draws the texture region at x y ,with canLeft and bottom padding
 	 * <p>
 	 * You might be wondering that why are topPadding and rightPadding not used , what is their use then . Well they are used by ParallaxBackground when it renders this layer . During rendering it pings the {@link #getWidth()}/{@link #getHeight()} method of this layer which in {@link TextureRegionParallaxLayer} implementation return the sum of regionWidth/regionHeight and paddings.
 	 */
@@ -99,7 +99,7 @@ public class TextureRegionParallaxLayer extends ParallaxLayer{
 	}
 	
 	/**
-	 * sets left right top bottom padding to same value
+	 * sets canLeft canRight top bottom padding to same value
 	 * @param pad padding
 	 */
 	public void setAllPad(float pad){
@@ -118,15 +118,15 @@ public class TextureRegionParallaxLayer extends ParallaxLayer{
 	}
 
 	/**
-	 * get left padding
-	 * @return left padding
+	 * get canLeft padding
+	 * @return canLeft padding
 	 */
 	public float getPadLeft() {
 		return padLeft;
 	}
 
 	/**
-	 * sets the left padding
+	 * sets the canLeft padding
 	 * @param left padding
 	 */
 	public void setPadLeft(float padLeft) {
@@ -134,15 +134,15 @@ public class TextureRegionParallaxLayer extends ParallaxLayer{
 	}
 
 	/**
-	 * get right padding
-	 * @return right padding
+	 * get canRight padding
+	 * @return canRight padding
 	 */
 	public float getPadRight() {
 		return padRight;
 	}
 
 	/**
-	 * sets the right padding
+	 * sets the canRight padding
 	 * @param right padding
 	 */
 	public void setPadRight(float padRight) {

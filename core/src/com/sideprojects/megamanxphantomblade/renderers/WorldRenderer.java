@@ -135,7 +135,7 @@ public class WorldRenderer {
     private void renderPlayer(float posX, float posY) {
         TextureRegion currentFrame = map.player.currentFrame;
         if (map.player.direction == PlayerBase.RIGHT) {
-            // Pad the texture's start x because the engine is drawing from left to right.
+            // Pad the texture's start x because the engine is drawing from canLeft to canRight.
             // Without this the animation frames will be misaligned
             posX += map.getTileWidth() * 0.6f - currentFrame.getRegionWidth();
         }
