@@ -12,8 +12,8 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
  * Created by buivuhoang on 25/02/17.
  */
 public class Run extends Idle {
-    public Run(PlayerBase player, PlayerState lastState) {
-        super(player, lastState);
+    public Run(InputProcessor input, PlayerBase player, PlayerState lastState) {
+        super(input, player, lastState);
     }
 
     @Override
@@ -24,15 +24,17 @@ public class Run extends Idle {
 
     @Override
     public PlayerMovementStateBase nextState(InputProcessor input, PlayerBase player, CollisionList collisionList) {
-        if (input.isCommandPressed(Command.DASH)) {
+        if (player.vel.y > 0) {
+            return new Jump(input, player, player.state);
+        }
+        if (player.vel.y < 0) {
+            return new Fall(input, player, player.state);
+        }
+        if (input.isCommandPressed(Command.DASH) && canDash(input)) {
             return new Dash(input, player);
         }
-
         if (player.vel.x == 0 && player.grounded) {
-            return new Idle(player, player.state);
-        }
-        if (player.vel.y > 0) {
-            return new Jump(player, player.state);
+            return new Idle(input, player, player.state);
         }
         return this;
     }

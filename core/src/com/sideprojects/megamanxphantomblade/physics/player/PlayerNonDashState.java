@@ -10,18 +10,24 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
  * Created by buivuhoang on 25/02/17.
  */
 public abstract class PlayerNonDashState extends PlayerMovementStateBase {
-    private PlayerState lastState;
+    private boolean canDash;
 
-    public PlayerNonDashState(PlayerBase player, PlayerState lastState) {
+    public PlayerNonDashState(InputProcessor input, PlayerBase player, PlayerState lastState) {
         super(player);
-        this.lastState = lastState;
+        if (lastState == PlayerState.DASH && input.isCommandPressed(Command.DASH)) {
+            canDash = false;
+        }
     }
 
     @Override
     public boolean canDash(InputProcessor input) {
-        if (lastState == PlayerState.DASH && input.isCommandPressed(Command.DASH)) {
-            return false;
+        return canDash;
+    }
+
+    @Override
+    public void update(InputProcessor input) {
+        if (!input.isCommandPressed(Command.DASH)) {
+            canDash = true;
         }
-        return true;
     }
 }

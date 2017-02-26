@@ -11,8 +11,8 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
  * Created by buivuhoang on 25/02/17.
  */
 public class Touchdown extends Idle {
-    public Touchdown(PlayerBase player, PlayerState lastState) {
-        super(player, lastState);
+    public Touchdown(InputProcessor input, PlayerBase player, PlayerState lastState) {
+        super(input, player, lastState);
     }
 
     @Override
@@ -24,13 +24,13 @@ public class Touchdown extends Idle {
     @Override
     public PlayerMovementStateBase nextState(InputProcessor input, PlayerBase player, CollisionList collisionList) {
         if (player.vel.x != 0 && player.grounded) {
-            return new Run(player, player.state);
+            return new Run(input, player, player.state);
         }
         if (player.vel.y > 0) {
-            return new Jump(player, player.state);
+            return new Jump(input, player, player.state);
         }
         if (player.stateTime >= player.animations.getTouchdownLeft().getAnimationDuration()) {
-            return new Idle(player, player.state);
+            return new Idle(input, player, player.state);
         }
         return this;
     }

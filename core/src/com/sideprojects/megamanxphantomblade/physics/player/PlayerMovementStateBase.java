@@ -47,4 +47,9 @@ public abstract class PlayerMovementStateBase implements State {
      * @return The next state
      */
     public abstract PlayerMovementStateBase nextState(InputProcessor input, PlayerBase player, CollisionList collisionList);
+
+    /**
+     * Optional method to update internal states within the state if needed
+     */
+    public abstract void update(InputProcessor input);
 }

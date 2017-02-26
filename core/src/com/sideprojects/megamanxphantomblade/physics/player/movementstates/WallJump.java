@@ -1,5 +1,6 @@
 package com.sideprojects.megamanxphantomblade.physics.player.movementstates;
 
+import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 
@@ -7,12 +8,21 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
  * Created by buivuhoang on 25/02/17.
  */
 public class WallJump extends Jump {
-    public WallJump(PlayerBase player, PlayerState lastState) {
-        super(player, lastState);
+    private int startingDirection = 0;
+    private PlayerBase player;
+
+    public WallJump(InputProcessor input, PlayerBase player, PlayerState lastState) {
+        super(input, player, lastState);
+        startingDirection = player.direction;
+        this.player = player;
     }
 
     @Override
     public boolean canWallGlide() {
-        return true;
+        return !hasChangedDirection(player);
+    }
+
+    private boolean hasChangedDirection(PlayerBase player) {
+        return player.direction != startingDirection;
     }
 }

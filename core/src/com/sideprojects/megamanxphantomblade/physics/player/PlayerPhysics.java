@@ -8,7 +8,7 @@ import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 import com.sideprojects.megamanxphantomblade.physics.PhysicsBase;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
-import com.sideprojects.megamanxphantomblade.physics.player.holddashstates.NotHoldingDash;
+import com.sideprojects.megamanxphantomblade.physics.player.holddashstates.NotJumpDashing;
 import com.sideprojects.megamanxphantomblade.physics.player.movementstates.Idle;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 
@@ -17,27 +17,28 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
  */
 public class PlayerPhysics extends PhysicsBase {
     // Velocities
-    public static final float VELOCITY_WALK = 4f;
-    public static final float VELOCITY_JUMP = 6f;
-    public static final float VELOCITY_X_WALLJUMP = -3f;
-    public static final float VELOCITY_DASH_ADDITION = 4f;
+    private static final float VELOCITY_WALK = 4f;
+    private static final float VELOCITY_JUMP = 6f;
+    private static final float VELOCITY_X_WALLJUMP = -3f;
+    private static final float VELOCITY_DASH_ADDITION = 4f;
 
     private PlayerMovementStateBase movementState;
-    private PlayerHoldDashStateBase holdDashState;
+    private PlayerJumpDashStateBase holdDashState;
 
     public PlayerBase player;
 
-    public PlayerPhysics(InputProcessor input, PlayerBase player) {
+    PlayerPhysics(InputProcessor input, PlayerBase player) {
         super(input);
         this.player = player;
         // Create the initial states
-        movementState = new Idle(player, null);
-        holdDashState = new NotHoldingDash();
+        movementState = new Idle(input, player, null);
+        holdDashState = new NotJumpDashing();
     }
 
     @Override
     public void update(float delta, MapBase map) {
         player.stateTime += delta;
+        holdDashState = holdDashState.nextState(input, player);
 
         // Jumping
         if (input.isCommandPressed(Command.JUMP)) {
@@ -79,25 +80,44 @@ public class PlayerPhysics extends PhysicsBase {
         }
 
         // Dashing
+        boolean doNotApplyGravity = false;
         if (input.isCommandPressed(Command.DASH)) {
             if (movementState.canDash(input)) {
-                player.vel.x += VELOCITY_DASH_ADDITION * player.direction;
+                player.vel.x = (VELOCITY_WALK + VELOCITY_DASH_ADDITION) * player.direction;
                 // Air dash
                 if (!player.grounded) {
                     player.vel.y = 0;
+                    doNotApplyGravity = true;
+                }
+            }
+        }
+
+        // Hold dash
+        if (holdDashState.isJumpDashing()) {
+            if (player.vel.x != 0) {
+                if (movementState.canWallJump()){
+                    player.vel.x -= VELOCITY_DASH_ADDITION * player.direction;
+                } else if (movementState.canWallGlide()) {
+                    player.vel.x += VELOCITY_DASH_ADDITION * player.direction * delta * 4;
+                } else {
+                    player.vel.x += VELOCITY_DASH_ADDITION * player.direction;
                 }
             }
         }
 
         // Apply gravity
-        applyGravity(player, map.GRAVITY, map.MAX_FALLSPEED, delta);
+        if (!doNotApplyGravity) {
+            applyGravity(player, map.GRAVITY, map.MAX_FALLSPEED, delta);
+        }
 
         // Check for collisions
         CollisionList collisions = calculateReaction(delta, map);
 
         // Assign next state
         movementState = movementState.nextState(input, player, collisions);
-        holdDashState = holdDashState.nextState(input, player, collisions);
+
+        // Do any optional update
+        movementState.update(input);
     }
 
     private CollisionList calculateReaction(float delta, MapBase map) {

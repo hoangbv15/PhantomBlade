@@ -54,14 +54,19 @@ public class WallSlide extends PlayerMovementStateBase {
     @Override
     public PlayerMovementStateBase nextState(InputProcessor input, PlayerBase player, CollisionList collisionList) {
         if (player.vel.y > 0) {
-            return new WallJump(player, player.state);
+            return new WallJump(input, player, player.state);
         }
         if (player.grounded) {
-            return new Touchdown(player, player.state);
+            return new Touchdown(input, player, player.state);
         }
         if (!collisionList.isCollidingSide()) {
-            return new Fall(player, player.state);
+            return new Fall(input, player, player.state);
         }
         return this;
+    }
+
+    @Override
+    public void update(InputProcessor input) {
+        // No need to do anything
     }
 }

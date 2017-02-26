@@ -14,6 +14,9 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 public class Dash extends PlayerMovementStateBase {
     private float dashDuration = 0.5f;
     private boolean enterWhileRunning = false;
+    private boolean enterWhileIdle = false;
+    private boolean enterWhileAirborne = false;
+    private int startingDirection = 0;
 
     public Dash(InputProcessor input, PlayerBase player) {
         super(player);
@@ -21,7 +24,12 @@ public class Dash extends PlayerMovementStateBase {
                 input.isCommandPressed(Command.LEFT) ||
                 input.isCommandPressed(Command.RIGHT))) {
             enterWhileRunning = true;
+        } else if (player.grounded) {
+            enterWhileIdle = true;
+        } else {
+            enterWhileAirborne = true;
         }
+        startingDirection = player.direction;
     }
 
     @Override
@@ -31,7 +39,7 @@ public class Dash extends PlayerMovementStateBase {
 
     @Override
     public boolean canJump() {
-        return false;
+        return !enterWhileAirborne;
     }
 
     @Override
@@ -63,20 +71,53 @@ public class Dash extends PlayerMovementStateBase {
     @Override
     public PlayerMovementStateBase nextState(InputProcessor input, PlayerBase player, CollisionList collisionList) {
         if (enterWhileRunning) {
-            if (player.stateTime >= dashDuration) {
-                if (player.vel.x != 0 && player.grounded) {
-                    return new Run(player, player.state);
-                }
-                if (player.vel.y > 0) {
-                    return new Jump(player, player.state);
-                }
-                return new Idle(player, player.state);
+            if (player.stateTime >= dashDuration
+                    || input.isCommandPressed(Command.JUMP)
+                    || hasChangedDirection(player)
+                    || player.vel.y < 0
+                    || collisionList.isCollidingSide()) {
+                return nextStateIfExit(input, player, collisionList);
             }
-            return this;
+        } else if (enterWhileIdle) {
+            if (player.stateTime >= dashDuration
+                    || hasChangedDirection(player)
+                    || player.vel.y < 0
+                    || !input.isCommandPressed(Command.DASH) ||
+                    collisionList.isCollidingSide()) {
+                return nextStateIfExit(input, player, collisionList);
+            }
+        } else if (enterWhileAirborne) {
+            if (player.stateTime >= dashDuration
+                    || hasChangedDirection(player)
+                    || !input.isCommandPressed(Command.DASH) ||
+                    collisionList.isCollidingSide()) {
+                return nextStateIfExit(input, player, collisionList);
+            }
+
         }
 
-
-
         return this;
+    }
+
+    private PlayerMovementStateBase nextStateIfExit(InputProcessor input, PlayerBase player, CollisionList collisionList) {
+        if (player.vel.y > 0) {
+            return new Jump(input, player, player.state);
+        }
+        if (!player.grounded) {
+            return new Fall(input, player, player.state);
+        }
+        if (player.vel.x != 0) {
+            return new Run(input, player, player.state);
+        }
+        return new Idle(input, player, player.state);
+    }
+
+    private boolean hasChangedDirection(PlayerBase player) {
+        return player.direction != startingDirection;
+    }
+
+    @Override
+    public void update(InputProcessor input) {
+        // No need to do anything
     }
 }
