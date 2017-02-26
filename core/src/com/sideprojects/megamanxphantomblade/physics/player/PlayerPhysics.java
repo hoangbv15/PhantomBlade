@@ -8,7 +8,7 @@ import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 import com.sideprojects.megamanxphantomblade.physics.PhysicsBase;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
-import com.sideprojects.megamanxphantomblade.physics.player.holddashstates.NotJumpDashing;
+import com.sideprojects.megamanxphantomblade.physics.player.jumpdashstate.NotJumpDashing;
 import com.sideprojects.megamanxphantomblade.physics.player.movementstates.Idle;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 
@@ -32,7 +32,7 @@ public class PlayerPhysics extends PhysicsBase {
         this.player = player;
         // Create the initial states
         movementState = new Idle(input, player, null);
-        holdDashState = new NotJumpDashing();
+        holdDashState = new NotJumpDashing(player);
     }
 
     @Override
@@ -81,14 +81,12 @@ public class PlayerPhysics extends PhysicsBase {
 
         // Dashing
         boolean doNotApplyGravity = false;
-        if (input.isCommandPressed(Command.DASH)) {
-            if (movementState.canDash(input)) {
-                player.vel.x = (VELOCITY_WALK + VELOCITY_DASH_ADDITION) * player.direction;
-                // Air dash
-                if (!player.grounded) {
-                    player.vel.y = 0;
-                    doNotApplyGravity = true;
-                }
+        if (player.state == PlayerState.DASH) {
+            player.vel.x = (VELOCITY_WALK + VELOCITY_DASH_ADDITION) * player.direction;
+            // Air dash
+            if (!player.grounded) {
+                player.vel.y = 0;
+                doNotApplyGravity = true;
             }
         }
 
@@ -117,7 +115,7 @@ public class PlayerPhysics extends PhysicsBase {
         movementState = movementState.nextState(input, player, collisions);
 
         // Do any optional update
-        movementState.update(input);
+        movementState.update(input, player);
     }
 
     private CollisionList calculateReaction(float delta, MapBase map) {

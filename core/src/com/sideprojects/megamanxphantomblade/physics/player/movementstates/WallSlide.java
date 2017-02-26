@@ -66,7 +66,7 @@ public class WallSlide extends PlayerMovementStateBase {
     }
 
     @Override
-    public void update(InputProcessor input) {
+    public void update(InputProcessor input, PlayerBase player) {
         // No need to do anything
     }
 }

@@ -7,18 +7,20 @@ import java.util.List;
  */
 public class CollisionList {
     public List<Collision> toList;
+    private boolean isCollidingSide;
 
     public CollisionList(List<Collision> collisionList) {
         this.toList = collisionList;
-    }
-
-    public boolean isCollidingSide() {
         for (Collision collision: toList) {
             if (collision.side == Collision.Side.LEFT ||
                     collision.side == Collision.Side.RIGHT) {
-                return true;
+                isCollidingSide = true;
             }
         }
-        return false;
+        isCollidingSide = false;
+    }
+
+    public boolean isCollidingSide() {
+        return isCollidingSide;
     }
 }

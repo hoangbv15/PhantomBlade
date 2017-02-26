@@ -106,10 +106,12 @@ public class Dash extends PlayerMovementStateBase {
         if (!player.grounded) {
             return new Fall(input, player, player.state);
         }
-        if (player.vel.x != 0) {
+        if (!collisionList.isCollidingSide() &&
+                (input.isCommandPressed(Command.LEFT) ||
+                input.isCommandPressed(Command.RIGHT))) {
             return new Run(input, player, player.state);
         }
-        return new Idle(input, player, player.state);
+        return new DashBreak(input, player, player.state);
     }
 
     private boolean hasChangedDirection(PlayerBase player) {
@@ -117,7 +119,7 @@ public class Dash extends PlayerMovementStateBase {
     }
 
     @Override
-    public void update(InputProcessor input) {
+    public void update(InputProcessor input, PlayerBase player) {
         // No need to do anything
     }
 }

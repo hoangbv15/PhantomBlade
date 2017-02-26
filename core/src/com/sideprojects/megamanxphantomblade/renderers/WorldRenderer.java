@@ -157,7 +157,7 @@ public class WorldRenderer {
             }
             traceFrameSkipCount = 0;
             // If player is dashing, draw a trace
-            if (map.player.state == PlayerState.DASH || map.player.isHoldingDash) {
+            if (map.player.state == PlayerState.DASH || map.player.isJumpDashing) {
                 lastPlayerFrameQueue.addLast(currentFrame);
                 lastPlayerPositionQueue.addLast(new Vector2(posX, posY));
             }
@@ -166,7 +166,7 @@ public class WorldRenderer {
             }
         }
 
-        if (map.player.state == PlayerState.DASH || map.player.isHoldingDash) {
+        if (map.player.state == PlayerState.DASH || map.player.isJumpDashing) {
             if (lastPlayerFrameQueue.size != numOfTraces) {
                 startRemovingTraces = false;
             }

@@ -51,5 +51,5 @@ public abstract class PlayerMovementStateBase implements State {
     /**
      * Optional method to update internal states within the state if needed
      */
-    public abstract void update(InputProcessor input);
+    public abstract void update(InputProcessor input, PlayerBase player);
 }

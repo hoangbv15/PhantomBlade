@@ -7,7 +7,12 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
  * Created by buivuhoang on 25/02/17.
  */
 public abstract class PlayerJumpDashStateBase {
-    public abstract boolean isJumpDashing();
+    public PlayerJumpDashStateBase(PlayerBase player) {
+        enter(player);
+    }
 
+
+    public abstract boolean isJumpDashing();
+    public abstract void enter(PlayerBase player);
     public abstract PlayerJumpDashStateBase nextState(InputProcessor input, PlayerBase player);
 }

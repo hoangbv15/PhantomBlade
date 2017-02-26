@@ -33,7 +33,7 @@ public abstract class PlayerBase extends MovingObject {
     // Player can only air dash once
     public boolean canAirDash;
     // If the player is holding dash button
-    public boolean isHoldingDash;
+    public boolean isJumpDashing;
 
     public AnimationFactory animations;
     public TextureRegion currentFrame;
@@ -113,12 +113,12 @@ public abstract class PlayerBase extends MovingObject {
             setState(PlayerState.IDLE);
             canAirDash = true;
             grounded = true;
-            isHoldingDash = false;
+            isJumpDashing = false;
         }
 
         if (Gdx.input.isKeyPressed(keyMap.dash)) {
             if (Gdx.input.isKeyJustPressed(keyMap.jump)) {
-                isHoldingDash = true;
+                isJumpDashing = true;
                 canAirDash = false;
             }
             if ((canAirDash || grounded) && state != PlayerState.WALLSLIDE
@@ -134,7 +134,7 @@ public abstract class PlayerBase extends MovingObject {
                 setStateAndResetTimer(PlayerState.FALL);
             }
             if (state == PlayerState.WALLSLIDE) {
-                isHoldingDash = false;
+                isJumpDashing = false;
             }
         }
 
@@ -148,7 +148,7 @@ public abstract class PlayerBase extends MovingObject {
                     setStateAndResetTimer(PlayerState.WALLJUMP);
                     vel.y = VELOCITY_JUMP;
                     vel.x = VELOCITY_X_WALLJUMP * direction;
-                    if (isHoldingDash) {
+                    if (isJumpDashing) {
                         vel.x -= VELOCITY_DASH_ADDITION * direction;
                     }
                 }
@@ -171,7 +171,7 @@ public abstract class PlayerBase extends MovingObject {
                 if (vel.x > VELOCITY_WALK * direction) {
                     vel.x += VELOCITY_WALK * direction * deltaTime * 4;
                 }
-                if (isHoldingDash) {
+                if (isJumpDashing) {
                     vel.x += VELOCITY_DASH_ADDITION * direction * deltaTime * 4;
                 }
             } else if (state != PlayerState.DASH){
@@ -186,7 +186,7 @@ public abstract class PlayerBase extends MovingObject {
                 if (vel.x < VELOCITY_WALK * direction) {
                     vel.x += VELOCITY_WALK * direction * deltaTime * 4;
                 }
-                if (isHoldingDash) {
+                if (isJumpDashing) {
                     vel.x += VELOCITY_DASH_ADDITION * direction * deltaTime * 4;
                 }
             } else if (state != PlayerState.DASH) {
@@ -227,7 +227,7 @@ public abstract class PlayerBase extends MovingObject {
             if (!grounded) {
                 vel.y = 0;
             }
-        } else if (isHoldingDash && !grounded && vel.x != 0 && state != PlayerState.WALLJUMP) {
+        } else if (isJumpDashing && !grounded && vel.x != 0 && state != PlayerState.WALLJUMP) {
             vel.x += VELOCITY_DASH_ADDITION * direction;
         }
 
@@ -245,7 +245,7 @@ public abstract class PlayerBase extends MovingObject {
                     }
                     canAirDash = true;
                     grounded = true;
-                    isHoldingDash = false;
+                    isJumpDashing = false;
                     pos.y = preCollide.y;
                     break;
                 case DOWN:
@@ -272,7 +272,7 @@ public abstract class PlayerBase extends MovingObject {
                         // TODO: Needs to find a way: In megaman X4, wall sliding starts after 50% of jump animation
                         setState(PlayerState.WALLSLIDE);
                         canAirDash = true;
-                        isHoldingDash = false;
+                        isJumpDashing = false;
                     }
                     break;
             }
