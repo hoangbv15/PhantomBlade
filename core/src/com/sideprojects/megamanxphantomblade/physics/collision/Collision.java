@@ -24,7 +24,7 @@ public class Collision {
     /**
      * The distance between this collision and the player's position before the movement
      */
-    private float dist;
+    float dist;
 
     /**
      * The position of the map tile

@@ -8,19 +8,25 @@ import java.util.List;
 public class CollisionList {
     public List<Collision> toList;
     private boolean isCollidingSide;
+    private float distanceToSideCollision;
 
     public CollisionList(List<Collision> collisionList) {
         this.toList = collisionList;
+        isCollidingSide = false;
         for (Collision collision: toList) {
             if (collision.side == Collision.Side.LEFT ||
                     collision.side == Collision.Side.RIGHT) {
                 isCollidingSide = true;
+                distanceToSideCollision = collision.dist;
             }
         }
-        isCollidingSide = false;
     }
 
     public boolean isCollidingSide() {
         return isCollidingSide;
+    }
+
+    public float distanceToSideCollision() {
+        return distanceToSideCollision;
     }
 }

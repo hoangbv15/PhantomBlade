@@ -111,6 +111,9 @@ public class Dash extends PlayerMovementStateBase {
                 input.isCommandPressed(Command.RIGHT))) {
             return new Run(input, player, player.state);
         }
+        if (collisionList.isCollidingSide() && collisionList.distanceToSideCollision() == 0) {
+            return new Idle(input, player, player.state);
+        }
         return new DashBreak(input, player, player.state);
     }
 
