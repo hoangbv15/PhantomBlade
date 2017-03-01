@@ -80,6 +80,7 @@ public class Dash extends PlayerMovementStateBase {
             }
         } else if (enterWhileIdle) {
             if (player.stateTime >= dashDuration
+                    || input.isCommandPressed(Command.JUMP)
                     || hasChangedDirection(player)
                     || player.vel.y < 0
                     || !input.isCommandPressed(Command.DASH) ||

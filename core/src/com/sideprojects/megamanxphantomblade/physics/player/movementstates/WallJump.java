@@ -19,10 +19,6 @@ public class WallJump extends Jump {
 
     @Override
     public boolean canWallGlide() {
-        return !hasChangedDirection(player);
-    }
-
-    private boolean hasChangedDirection(PlayerBase player) {
-        return player.direction != startingDirection;
+        return player.direction == startingDirection;
     }
 }
