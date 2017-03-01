@@ -85,7 +85,7 @@ public abstract class MapBase {
 
     public void update(float deltaTime) {
         playerPhysics.update(deltaTime, this);
-        player.update(deltaTime, this);
+        player.update();
     }
 
     public Rectangle getCollidableBox(int x, int y) {

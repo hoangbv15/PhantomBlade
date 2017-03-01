@@ -31,6 +31,7 @@ public class PlayerPhysics extends PhysicsBase {
         super(input);
         this.player = player;
         // Create the initial states
+        player.direction = MovingObject.RIGHT;
         movementState = new Idle(input, player, null);
         holdDashState = new NotJumpDashing(player);
     }
