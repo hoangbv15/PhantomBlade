@@ -16,7 +16,7 @@ public class Dash extends PlayerMovementStateBase {
     private boolean enterWhileRunning = false;
     private boolean enterWhileIdle = false;
     private boolean enterWhileAirborne = false;
-    private int startingDirection = 0;
+    private int startingDirection = MovingObject.NONEDIRECTION;
 
     public Dash(InputProcessor input, PlayerBase player) {
         super(player);

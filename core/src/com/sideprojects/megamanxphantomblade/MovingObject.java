@@ -13,6 +13,7 @@ public class MovingObject {
     // Directions
     public static final int LEFT = -1;
     public static final int RIGHT = 1;
+    public static final int NONEDIRECTION = 0;
 
     public int direction;
     public boolean grounded;

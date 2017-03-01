@@ -57,18 +57,9 @@ public class PlayerPhysics extends PhysicsBase {
         }
 
         // Running & direction
-        if (input.isCommandPressed(Command.LEFT)) {
+        if (input.isCommandPressed(Command.LEFT) || input.isCommandPressed(Command.RIGHT)) {
             if (movementState.canRun()) {
-                player.direction = MovingObject.LEFT;
-                if (movementState.canWallGlide()) {
-                    player.vel.x += VELOCITY_WALK * player.direction * delta * 4;
-                } else {
-                    player.vel.x = VELOCITY_WALK * player.direction;
-                }
-            }
-        } else if (input.isCommandPressed(Command.RIGHT)) {
-            if (movementState.canRun()) {
-                player.direction = MovingObject.RIGHT;
+                player.direction = input.isCommandPressed(Command.LEFT) ? MovingObject.LEFT : MovingObject.RIGHT;
                 if (movementState.canWallGlide()) {
                     player.vel.x += VELOCITY_WALK * player.direction * delta * 4;
                 } else {

@@ -60,7 +60,7 @@ public class Fall extends PlayerNonDashState {
             return new Touchdown(input, player, player.state);
         }
         if (collisionList.isCollidingSide()) {
-            return new WallSlide(player);
+            return new WallSlide(player, collisionList);
         }
         return this;
     }

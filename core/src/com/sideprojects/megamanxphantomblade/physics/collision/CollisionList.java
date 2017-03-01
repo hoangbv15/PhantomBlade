@@ -9,6 +9,7 @@ public class CollisionList {
     public List<Collision> toList;
     private boolean isCollidingSide;
     private float distanceToSideCollision;
+    private Collision.Side collidingSide;
 
     public CollisionList(List<Collision> collisionList) {
         this.toList = collisionList;
@@ -18,6 +19,7 @@ public class CollisionList {
                     collision.side == Collision.Side.RIGHT) {
                 isCollidingSide = true;
                 distanceToSideCollision = collision.dist;
+                collidingSide = collision.side;
             }
         }
     }
@@ -29,4 +31,6 @@ public class CollisionList {
     public float distanceToSideCollision() {
         return distanceToSideCollision;
     }
+
+    public Collision.Side collidingSide() { return collidingSide; }
 }
