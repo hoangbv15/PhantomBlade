@@ -6,6 +6,7 @@ import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerMovementStateBase;
+import com.sideprojects.megamanxphantomblade.physics.player.PlayerStateChangeHandler;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 
 /**
@@ -14,8 +15,8 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 public class WallSlide extends PlayerMovementStateBase {
     private Collision.Side collidingSlide;
 
-    public WallSlide(PlayerBase player, CollisionList collisionList) {
-        super(player);
+    public WallSlide(PlayerBase player, CollisionList collisionList, PlayerState lastState, PlayerStateChangeHandler stateChangeHandler) {
+        super(player, lastState, stateChangeHandler);
         this.collidingSlide = collisionList.collidingSide();
     }
 
@@ -59,13 +60,13 @@ public class WallSlide extends PlayerMovementStateBase {
     public PlayerMovementStateBase nextState(InputProcessor input, PlayerBase player, CollisionList collisionList) {
         if (player.vel.y > 0) {
             // Need to save the colliding side from state creation, and pass into wall jump
-            return new WallJump(input, player, player.state, collidingSlide);
+            return new WallJump(input, player, player.state, collidingSlide, stateChangeHandler);
         }
         if (player.grounded) {
-            return new Touchdown(input, player, player.state);
+            return new Touchdown(input, player, player.state, stateChangeHandler);
         }
         if (!collisionList.isCollidingSide()) {
-            return new Fall(input, player, player.state);
+            return new Fall(input, player, player.state, stateChangeHandler);
         }
         return this;
     }

@@ -8,11 +8,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.sideprojects.megamanxphantomblade.input.PlayerInputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.map.maps.IntroStage;
-import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
 import com.sideprojects.megamanxphantomblade.player.x.PlayerXFactory;
+import com.sideprojects.megamanxphantomblade.player.x.PlayerXSounds;
 import com.sideprojects.megamanxphantomblade.renderers.DebugRenderer;
 import com.sideprojects.megamanxphantomblade.renderers.WorldRenderer;
+import com.sideprojects.megamanxphantomblade.sound.SoundPlayer;
 
 public class PhantomBladeGame extends ApplicationAdapter {
 	MapBase map;
@@ -20,6 +21,7 @@ public class PhantomBladeGame extends ApplicationAdapter {
 	DebugRenderer debugRenderer;
 	KeyMap keyMap;
 	ShapeRenderer shapeRenderer;
+	PlayerXSounds playerSounds;
 
 	@Override
 	public void resize(int width, int height) {
@@ -30,7 +32,8 @@ public class PhantomBladeGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		keyMap = new KeyMap();
-		map = new IntroStage(new PlayerXFactory(), new PlayerPhysicsFactory(new PlayerInputProcessor(keyMap)));
+		playerSounds = new PlayerXSounds(new SoundPlayer());
+		map = new IntroStage(new PlayerXFactory(), new PlayerPhysicsFactory(new PlayerInputProcessor(keyMap), playerSounds));
 		mapRenderer = new WorldRenderer(map);
 		debugRenderer = new DebugRenderer(mapRenderer);
 		shapeRenderer = new ShapeRenderer();
@@ -69,5 +72,6 @@ public class PhantomBladeGame extends ApplicationAdapter {
 		shapeRenderer.dispose();
 		mapRenderer.dispose();
 		debugRenderer.dispose();
+		playerSounds.dispose();
 	}
 }

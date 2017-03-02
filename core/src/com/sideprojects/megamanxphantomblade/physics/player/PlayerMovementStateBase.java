@@ -10,8 +10,12 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
  * Created by buivuhoang on 22/02/17.
  */
 public abstract class PlayerMovementStateBase implements State {
-    public PlayerMovementStateBase(PlayerBase player) {
+    protected PlayerStateChangeHandler stateChangeHandler;
+
+    public PlayerMovementStateBase(PlayerBase player, PlayerState lastState, PlayerStateChangeHandler stateChangeHandler) {
         player.state = enter(player);
+        this.stateChangeHandler = stateChangeHandler;
+        stateChangeHandler.callback(lastState, player.state);
     }
 
     /**
