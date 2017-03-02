@@ -9,7 +9,7 @@ import com.sideprojects.megamanxphantomblade.sound.Sounds;
  * Created by buivuhoang on 02/03/17.
  */
 public abstract class PlayerSounds implements PlayerStateChangeHandler {
-    private SoundPlayerBase soundPlayer;
+    protected SoundPlayerBase soundPlayer;
 
     public PlayerSounds(SoundPlayerBase soundPlayer) {
         this.soundPlayer = soundPlayer;
@@ -22,23 +22,33 @@ public abstract class PlayerSounds implements PlayerStateChangeHandler {
             case RUN:
             case IDLE:
                 if (previousState == PlayerState.FALL || previousState == PlayerState.WALLSLIDE) {
-                    soundPlayer.play(Sounds.XLand);
+                    playLand();
                 }
                 break;
             case DASH:
-                soundPlayer.play(Sounds.XDash);
+                playDash();
                 break;
             case DASHBREAK:
-                soundPlayer.play(Sounds.XDashBreak);
+                playDashBreak();
+                break;
+            case WALLJUMP:
+                playWallJump();
                 break;
             case JUMP:
-                soundPlayer.play(Sounds.XJump);
+                playJump();
                 break;
             case WALLSLIDE:
-                soundPlayer.play(Sounds.XWallSlide);
+                playWallSlide();
                 break;
         }
     }
+
+    protected abstract void playDash();
+    protected abstract void playLand();
+    protected abstract void playDashBreak();
+    protected abstract void playJump();
+    protected abstract void playWallSlide();
+    protected abstract void playWallJump();
 
     public void dispose() {
         soundPlayer.dispose();

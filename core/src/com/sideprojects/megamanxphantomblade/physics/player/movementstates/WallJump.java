@@ -21,6 +21,12 @@ public class WallJump extends Jump {
     }
 
     @Override
+    public PlayerState enter(MovingObject object) {
+        super.enter(object);
+        return PlayerState.WALLJUMP;
+    }
+
+    @Override
     public boolean canWallGlide() {
         return player.direction == startingDirection;
     }

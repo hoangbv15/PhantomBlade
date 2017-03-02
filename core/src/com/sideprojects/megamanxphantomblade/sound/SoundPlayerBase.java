@@ -5,5 +5,8 @@ package com.sideprojects.megamanxphantomblade.sound;
  */
 public interface SoundPlayerBase {
     void play(String file);
+    void playInParallel(String file);
+    void playInParallelAndStopPreviousSound(String file);
+    void playOneRandomly(String... files);
     void dispose();
 }
