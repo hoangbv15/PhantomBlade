@@ -4,9 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by buivuhoang on 02/03/17.
  */
@@ -17,6 +14,13 @@ public class SoundPlayer implements SoundPlayerBase {
 
     public SoundPlayer() {
         soundCache = new LRUCache<String, Sound>(10);
+        // Dispose of sounds that are removed from the cache automatically
+        soundCache.setEntryRemovedListener(new LRUCache.CacheEntryRemovedListener<String, Sound>() {
+            @Override
+            public void notifyEntryRemoved(String key, Sound value) {
+                value.dispose();
+            }
+        });
     }
 
     /***
