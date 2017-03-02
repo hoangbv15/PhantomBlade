@@ -17,6 +17,7 @@ public class Dash extends PlayerMovementStateBase {
     private boolean enterWhileIdle = false;
     private boolean enterWhileAirborne = false;
     private int startingDirection = MovingObject.NONEDIRECTION;
+    private Command directionKeyBeingPressed = Command.LEFT;
 
     public Dash(InputProcessor input, PlayerBase player) {
         super(player);
@@ -24,6 +25,11 @@ public class Dash extends PlayerMovementStateBase {
                 input.isCommandPressed(Command.LEFT) ||
                 input.isCommandPressed(Command.RIGHT))) {
             enterWhileRunning = true;
+            if (input.isCommandPressed(Command.LEFT)) {
+                directionKeyBeingPressed = Command.LEFT;
+            } else {
+                directionKeyBeingPressed = Command.RIGHT;
+            }
         } else if (player.grounded) {
             enterWhileIdle = true;
         } else {
@@ -73,6 +79,7 @@ public class Dash extends PlayerMovementStateBase {
         if (enterWhileRunning) {
             if (player.stateTime >= dashDuration
                     || input.isCommandPressed(Command.JUMP)
+                    || !input.isCommandPressed(directionKeyBeingPressed)
                     || hasChangedDirection(player)
                     || player.vel.y < 0
                     || collisionList.isCollidingSide()) {
@@ -104,7 +111,7 @@ public class Dash extends PlayerMovementStateBase {
         if (player.vel.y > 0) {
             return new Jump(input, player, player.state);
         }
-        if (!player.grounded) {
+        if (player.vel.y < 0 || !player.grounded) {
             return new Fall(input, player, player.state);
         }
         if (!collisionList.isCollidingSide() &&

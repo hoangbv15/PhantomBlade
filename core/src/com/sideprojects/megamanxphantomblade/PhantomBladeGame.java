@@ -20,7 +20,12 @@ public class PhantomBladeGame extends ApplicationAdapter {
 	DebugRenderer debugRenderer;
 	KeyMap keyMap;
 	ShapeRenderer shapeRenderer;
-	PlayerPhysics playerPhysics;
+
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		mapRenderer.resize(width, height);
+	}
 
 	@Override
 	public void create () {
