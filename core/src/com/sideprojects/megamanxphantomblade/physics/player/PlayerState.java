@@ -1,4 +1,4 @@
-package com.sideprojects.megamanxphantomblade.player;
+package com.sideprojects.megamanxphantomblade.physics.player;
 
 /**
  * Created by buivuhoang on 20/02/17.

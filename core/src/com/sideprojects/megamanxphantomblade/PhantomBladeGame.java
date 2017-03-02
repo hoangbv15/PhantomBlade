@@ -5,8 +5,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.sideprojects.megamanxphantomblade.input.PlayerInputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.map.maps.IntroStage;
+import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
+import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
 import com.sideprojects.megamanxphantomblade.player.x.PlayerXFactory;
 import com.sideprojects.megamanxphantomblade.renderers.DebugRenderer;
 import com.sideprojects.megamanxphantomblade.renderers.WorldRenderer;
@@ -19,9 +22,15 @@ public class PhantomBladeGame extends ApplicationAdapter {
 	ShapeRenderer shapeRenderer;
 
 	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		mapRenderer.resize(width, height);
+	}
+
+	@Override
 	public void create () {
 		keyMap = new KeyMap();
-		map = new IntroStage(new PlayerXFactory(keyMap));
+		map = new IntroStage(new PlayerXFactory(), new PlayerPhysicsFactory(new PlayerInputProcessor(keyMap)));
 		mapRenderer = new WorldRenderer(map);
 		debugRenderer = new DebugRenderer(mapRenderer);
 		shapeRenderer = new ShapeRenderer();
@@ -36,7 +45,7 @@ public class PhantomBladeGame extends ApplicationAdapter {
 		map.update(delta);
 		renderGradientBackground();
 		mapRenderer.render();
-//		debugRenderer.render(delta, map.collisions);
+//		debugRenderer.render(delta, playerPhysics.collisions);
 	}
 
 	private void renderGradientBackground() {

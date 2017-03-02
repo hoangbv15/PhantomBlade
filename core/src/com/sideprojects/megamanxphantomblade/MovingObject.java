@@ -13,12 +13,14 @@ public class MovingObject {
     // Directions
     public static final int LEFT = -1;
     public static final int RIGHT = 1;
+    public static final int NONEDIRECTION = 0;
 
     public int direction;
+    public boolean grounded;
 
     public Vector2 pos;
     public Vector2 vel;
     public Rectangle bounds;
 
-
+    public float stateTime;
 }
