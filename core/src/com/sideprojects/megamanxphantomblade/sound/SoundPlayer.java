@@ -53,7 +53,8 @@ public class SoundPlayer implements SoundPlayerBase {
         playInParallel(files[randomlyChosenIndex]);
     }
 
-    private Sound loadSound(String file) {
+    @Override
+    public Sound loadSound(String file) {
         if (!soundCache.containsKey(file)) {
             soundCache.put(file, Gdx.audio.newSound(Gdx.files.internal(file)));
         }

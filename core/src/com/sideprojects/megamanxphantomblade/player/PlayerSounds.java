@@ -50,6 +50,8 @@ public abstract class PlayerSounds implements PlayerStateChangeHandler {
     protected abstract void playWallSlide();
     protected abstract void playWallJump();
 
+    public abstract void preload();
+
     public void dispose() {
         soundPlayer.dispose();
     }

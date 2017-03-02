@@ -62,4 +62,17 @@ public class PlayerXSounds extends PlayerSounds {
     protected void playWallJump() {
         soundPlayer.playInParallelAndStopPreviousSound(Sounds.XWallJump);
     }
+
+    @Override
+    public void preload() {
+        soundPlayer.loadSound(Sounds.XJumpShout1);
+        soundPlayer.loadSound(Sounds.XJumpShout2);
+        soundPlayer.loadSound(Sounds.XJumpShout3);
+        soundPlayer.loadSound(Sounds.XDash);
+        soundPlayer.loadSound(Sounds.XLand);
+        soundPlayer.loadSound(Sounds.XDashBreak);
+        soundPlayer.loadSound(Sounds.XJump);
+        soundPlayer.loadSound(Sounds.XWallSlide);
+        soundPlayer.loadSound(Sounds.XWallJump);
+    }
 }
