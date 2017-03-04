@@ -7,10 +7,10 @@ import com.sideprojects.megamanxphantomblade.sound.SoundPlayerBase;
 /**
  * Created by buivuhoang on 02/03/17.
  */
-public abstract class PlayerSounds implements PlayerStateChangeHandler {
+public abstract class PlayerSound implements PlayerStateChangeHandler {
     protected SoundPlayerBase soundPlayer;
 
-    public PlayerSounds(SoundPlayerBase soundPlayer) {
+    public PlayerSound(SoundPlayerBase soundPlayer) {
         this.soundPlayer = soundPlayer;
     }
 

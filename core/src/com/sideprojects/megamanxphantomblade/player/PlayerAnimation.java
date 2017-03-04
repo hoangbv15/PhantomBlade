@@ -1,12 +1,13 @@
-package com.sideprojects.megamanxphantomblade.animation;
+package com.sideprojects.megamanxphantomblade.player;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.sideprojects.megamanxphantomblade.animation.AnimationLoader;
 
 /**
  * Created by buivuhoang on 05/02/17.
  */
-public abstract class AnimationFactory {
+public abstract class PlayerAnimation {
     private Animation<TextureRegion> instanceIdleLeft;
     private Animation<TextureRegion> instanceIdleRight;
     private Animation<TextureRegion> instanceRunLeft;
@@ -28,126 +29,126 @@ public abstract class AnimationFactory {
 
     public Animation<TextureRegion> getIdleLeft() {
         if (instanceIdleLeft == null) {
-            instanceIdleLeft = AnimationHelper.create(getTextureIdleAtlas(), getAnimationIdle(), true, 0.1f);
+            instanceIdleLeft = AnimationLoader.load(getTextureIdleAtlas(), getAnimationIdle(), true, 0.1f);
         }
         return instanceIdleLeft;
     }
 
     public Animation<TextureRegion> getIdleRight() {
         if (instanceIdleRight == null) {
-            instanceIdleRight = AnimationHelper.create(getTextureIdleAtlas(), getAnimationIdle(), false, 0.1f);
+            instanceIdleRight = AnimationLoader.load(getTextureIdleAtlas(), getAnimationIdle(), false, 0.1f);
         }
         return instanceIdleRight;
     }
 
     public Animation<TextureRegion> getRunLeft() {
         if (instanceRunLeft == null) {
-            instanceRunLeft = AnimationHelper.create(getTextureRunAtlas(), getAnimationRun(), true, 0.05f);
+            instanceRunLeft = AnimationLoader.load(getTextureRunAtlas(), getAnimationRun(), true, 0.05f);
         }
         return instanceRunLeft;
     }
 
     public Animation<TextureRegion> getRunRight() {
         if (instanceRunRight == null) {
-            instanceRunRight = AnimationHelper.create(getTextureRunAtlas(), getAnimationRun(), false, 0.05f);
+            instanceRunRight = AnimationLoader.load(getTextureRunAtlas(), getAnimationRun(), false, 0.05f);
         }
         return instanceRunRight;
     }
 
     public Animation<TextureRegion> getJumpLeft() {
         if (instanceJumpLeft == null) {
-            instanceJumpLeft = AnimationHelper.create(getTextureJumpAtlas(), getAnimationJump(), true, 0.10f);
+            instanceJumpLeft = AnimationLoader.load(getTextureJumpAtlas(), getAnimationJump(), true, 0.10f);
         }
         return instanceJumpLeft;
     }
 
     public Animation<TextureRegion> getJumpRight() {
         if (instanceJumpRight == null) {
-            instanceJumpRight = AnimationHelper.create(getTextureJumpAtlas(), getAnimationJump(), false, 0.10f);
+            instanceJumpRight = AnimationLoader.load(getTextureJumpAtlas(), getAnimationJump(), false, 0.10f);
         }
         return instanceJumpRight;
     }
 
     public Animation<TextureRegion> getFallLeft() {
         if (instanceFallLeft == null) {
-            instanceFallLeft = AnimationHelper.create(getTextureFallAtlas(), getAnimationFall(), true, 0.05f);
+            instanceFallLeft = AnimationLoader.load(getTextureFallAtlas(), getAnimationFall(), true, 0.05f);
         }
         return instanceFallLeft;
     }
 
     public Animation<TextureRegion> getFallRight() {
         if (instanceFallRight == null) {
-            instanceFallRight = AnimationHelper.create(getTextureFallAtlas(), getAnimationFall(), false, 0.05f);
+            instanceFallRight = AnimationLoader.load(getTextureFallAtlas(), getAnimationFall(), false, 0.05f);
         }
         return instanceFallRight;
     }
 
     public Animation<TextureRegion> getTouchdownLeft() {
         if (instanceTouchdownLeft == null) {
-            instanceTouchdownLeft = AnimationHelper.create(getTextureTouchdownAtlas(), getAnimationTouchdown(), true, 0.05f);
+            instanceTouchdownLeft = AnimationLoader.load(getTextureTouchdownAtlas(), getAnimationTouchdown(), true, 0.05f);
         }
         return instanceTouchdownLeft;
     }
 
     public Animation<TextureRegion> getTouchdownRight() {
         if (instanceTouchdownRight == null) {
-            instanceTouchdownRight = AnimationHelper.create(getTextureTouchdownAtlas(), getAnimationTouchdown(), false, 0.05f);
+            instanceTouchdownRight = AnimationLoader.load(getTextureTouchdownAtlas(), getAnimationTouchdown(), false, 0.05f);
         }
         return instanceTouchdownRight;
     }
 
     public Animation<TextureRegion> getWallSlideLeft() {
         if (instanceWallSlideLeft == null) {
-            instanceWallSlideLeft = AnimationHelper.create(getTextureWallSlideAtlas(), getAnimationWallSlide(), true, 0.05f);
+            instanceWallSlideLeft = AnimationLoader.load(getTextureWallSlideAtlas(), getAnimationWallSlide(), true, 0.05f);
         }
         return instanceWallSlideLeft;
     }
 
     public Animation<TextureRegion> getWallSlideRight() {
         if (instanceWallSlideRight == null) {
-            instanceWallSlideRight = AnimationHelper.create(getTextureWallSlideAtlas(), getAnimationWallSlide(), false, 0.05f);
+            instanceWallSlideRight = AnimationLoader.load(getTextureWallSlideAtlas(), getAnimationWallSlide(), false, 0.05f);
         }
         return instanceWallSlideRight;
     }
 
     public Animation<TextureRegion> getWallJumpLeft() {
         if (instanceWallJumpLeft == null) {
-            instanceWallJumpLeft = AnimationHelper.create(getTextureWallJumpAtlas(), getAnimationWallJump(), true, 0.10f);
+            instanceWallJumpLeft = AnimationLoader.load(getTextureWallJumpAtlas(), getAnimationWallJump(), true, 0.10f);
         }
         return instanceWallJumpLeft;
     }
 
     public Animation<TextureRegion> getWallJumpRight() {
         if (instanceWallJumpRight == null) {
-            instanceWallJumpRight = AnimationHelper.create(getTextureWallJumpAtlas(), getAnimationWallJump(), false, 0.10f);
+            instanceWallJumpRight = AnimationLoader.load(getTextureWallJumpAtlas(), getAnimationWallJump(), false, 0.10f);
         }
         return instanceWallJumpRight;
     }
 
     public Animation<TextureRegion> getDashRight() {
         if (instanceDashRight == null) {
-            instanceDashRight = AnimationHelper.create(getTextureDashAtlas(), getAnimationDash(), false, 0.05f);
+            instanceDashRight = AnimationLoader.load(getTextureDashAtlas(), getAnimationDash(), false, 0.05f);
         }
         return instanceDashRight;
     }
 
     public Animation<TextureRegion> getDashLeft() {
         if (instanceDashLeft == null) {
-            instanceDashLeft = AnimationHelper.create(getTextureDashAtlas(), getAnimationDash(), true, 0.05f);
+            instanceDashLeft = AnimationLoader.load(getTextureDashAtlas(), getAnimationDash(), true, 0.05f);
         }
         return instanceDashLeft;
     }
 
     public Animation<TextureRegion> getDashBreakRight() {
         if (instanceDashBreakRight == null) {
-            instanceDashBreakRight = AnimationHelper.create(getTextureDashBreakAtlas(), getAnimationDashBreak(), false, 0.08f);
+            instanceDashBreakRight = AnimationLoader.load(getTextureDashBreakAtlas(), getAnimationDashBreak(), false, 0.08f);
         }
         return instanceDashBreakRight;
     }
 
     public Animation<TextureRegion> getDashBreakLeft() {
         if (instanceDashBreakLeft == null) {
-            instanceDashBreakLeft = AnimationHelper.create(getTextureDashBreakAtlas(), getAnimationDashBreak(), true, 0.08f);
+            instanceDashBreakLeft = AnimationLoader.load(getTextureDashBreakAtlas(), getAnimationDashBreak(), true, 0.08f);
         }
         return instanceDashBreakLeft;
     }

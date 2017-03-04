@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
-import com.sideprojects.megamanxphantomblade.animation.AnimationFactory;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 
@@ -19,7 +18,7 @@ public abstract class PlayerBase extends MovingObject {
     // If the player is holding dash button
     public boolean isJumpDashing;
 
-    public AnimationFactory animations;
+    public PlayerAnimation animations;
     public TextureRegion currentFrame;
 
     public PlayerBase(float x, float y) {

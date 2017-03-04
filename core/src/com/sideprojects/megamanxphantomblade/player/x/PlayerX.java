@@ -1,6 +1,5 @@
 package com.sideprojects.megamanxphantomblade.player.x;
 
-import com.sideprojects.megamanxphantomblade.animation.XAnimationFactory;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.player.TraceColour;
 
@@ -14,7 +13,7 @@ public class PlayerX extends PlayerBase {
 
     @Override
     public void createAnimations() {
-        animations = new XAnimationFactory();
+        animations = new PlayerXAnimation();
     }
 
     @Override

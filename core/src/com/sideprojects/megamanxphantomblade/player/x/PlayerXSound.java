@@ -1,15 +1,15 @@
 package com.sideprojects.megamanxphantomblade.player.x;
 
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
-import com.sideprojects.megamanxphantomblade.player.PlayerSounds;
+import com.sideprojects.megamanxphantomblade.player.PlayerSound;
 import com.sideprojects.megamanxphantomblade.sound.SoundPlayerBase;
 import com.sideprojects.megamanxphantomblade.sound.Sounds;
 
 /**
  * Created by buivuhoang on 02/03/17.
  */
-public class PlayerXSounds extends PlayerSounds {
-    public PlayerXSounds(SoundPlayerBase soundPlayer) {
+public class PlayerXSound extends PlayerSound {
+    public PlayerXSound(SoundPlayerBase soundPlayer) {
         super(soundPlayer);
     }
 
