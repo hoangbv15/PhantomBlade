@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
  * It stores the ratio at which the layer has to scroll relatively. You can extend this class and implement its internal modal and rendering logic. This has an advantage over using just TextureRegions as layers of ParallaxBackground. 
  * Also see {@link TextureRegionParallaxLayer} as it is the direct extension of this class and ready to use if you want to render single texture region per layer repeatedly. 
  * <p>
- * As an example, consider you need to render 20 colored dots per camera viewport width over background. The balls need to scroll with the world camera, but with the parallax effect . Now you can extend this class to create your own balls layer with internal logic to maintain the balls(logically) and render them.
+ * As an example, consider you need to render 20 colored dots per camera viewport width over background. The balls need to scroll with the world camera, but with the parallax effect . Now you can extend this class to load your own balls layer with internal logic to maintain the balls(logically) and render them.
  * @author Rahul Verma
  *
  */

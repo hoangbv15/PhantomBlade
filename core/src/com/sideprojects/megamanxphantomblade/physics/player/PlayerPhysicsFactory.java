@@ -8,12 +8,14 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
  */
 public class PlayerPhysicsFactory {
     private InputProcessor input;
+    private PlayerStateChangeHandler stateChangeHandler;
 
-    public PlayerPhysicsFactory(InputProcessor input) {
+    public PlayerPhysicsFactory(InputProcessor input, PlayerStateChangeHandler stateChangeHandler) {
         this.input = input;
+        this.stateChangeHandler = stateChangeHandler;
     }
 
     public PlayerPhysics create(PlayerBase player) {
-        return new PlayerPhysics(input, player);
+        return new PlayerPhysics(input, player, stateChangeHandler);
     }
 }

@@ -30,7 +30,6 @@ public abstract class PhysicsBase {
 
     public CollisionList getMapCollision(MovingObject object, float deltaTime, MapBase map) {
         int direction = object.direction;
-        Vector2 pos = object.pos;
         Vector2 vel = object.vel;
         Rectangle bounds = object.bounds;
 
@@ -47,25 +46,25 @@ public abstract class PhysicsBase {
         if (stepY > 0) {
             paddingY = bounds.height;
         }
-        Vector2 endPosX = new Vector2(pos.x + stepX, pos.y);
-        Vector2 endPosY = new Vector2(pos.x, pos.y + stepY);
-        Vector2 endPos = new Vector2(pos.x + stepX, pos.y + stepY);
+        Vector2 endPosX = new Vector2(bounds.x + stepX, bounds.y);
+        Vector2 endPosY = new Vector2(bounds.x, bounds.y + stepY);
+        Vector2 endPos = new Vector2(bounds.x + stepX, bounds.y + stepY);
 
         // Setup collision detection rays
         List<CollisionDetectionRay> detectionRayList = new ArrayList<CollisionDetectionRay>(5);
-        detectionRayList.add(new CollisionDetectionRay(pos, endPosY, 0, paddingY));
-        detectionRayList.add(new CollisionDetectionRay(pos, endPosY, bounds.width, paddingY));
+        detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, 0, paddingY));
+        detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, bounds.width, paddingY));
         if (vel.x != 0) {
-            detectionRayList.add(new CollisionDetectionRay(pos, endPosX, paddingX, 0));
-            detectionRayList.add(new CollisionDetectionRay(pos, endPosX, paddingX, bounds.height));
+            detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, 0));
+            detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, bounds.height));
         }
         if (vel.x != 0 && vel.y != 0) {
-            detectionRayList.add(new CollisionDetectionRay(pos, endPos, paddingX, paddingY));
+            detectionRayList.add(new CollisionDetectionRay(bounds, endPos, paddingX, paddingY));
         }
 
         // Loop through map and use collision detection rays to detect...well..collisions.
-        int xStart = (int)pos.x;
-        int yStart = (int)pos.y;
+        int xStart = (int)bounds.x;
+        int yStart = (int)bounds.y;
         if (vel.y <= 0) {
             yStart += 1;
         }

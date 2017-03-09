@@ -6,6 +6,7 @@ import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerMovementStateBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
+import com.sideprojects.megamanxphantomblade.physics.player.PlayerStateChangeHandler;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 
 /**
@@ -19,8 +20,8 @@ public class Dash extends PlayerMovementStateBase {
     private int startingDirection = MovingObject.NONEDIRECTION;
     private Command directionKeyBeingPressed = Command.LEFT;
 
-    public Dash(InputProcessor input, PlayerBase player) {
-        super(player);
+    public Dash(InputProcessor input, PlayerBase player, PlayerState lastState, PlayerStateChangeHandler stateChangeHandler) {
+        super(player, lastState, stateChangeHandler);
         if (player.grounded && (
                 input.isCommandPressed(Command.LEFT) ||
                 input.isCommandPressed(Command.RIGHT))) {
@@ -109,20 +110,20 @@ public class Dash extends PlayerMovementStateBase {
 
     private PlayerMovementStateBase nextStateIfExit(InputProcessor input, PlayerBase player, CollisionList collisionList) {
         if (player.vel.y > 0) {
-            return new Jump(input, player, player.state);
+            return new Jump(input, player, player.state, stateChangeHandler);
         }
         if (player.vel.y < 0 || !player.grounded) {
-            return new Fall(input, player, player.state);
+            return new Fall(input, player, player.state, stateChangeHandler);
         }
         if (!collisionList.isCollidingSide() &&
                 (input.isCommandPressed(Command.LEFT) ||
                 input.isCommandPressed(Command.RIGHT))) {
-            return new Run(input, player, player.state);
+            return new Run(input, player, player.state, stateChangeHandler);
         }
         if (collisionList.isCollidingSide() && collisionList.distanceToSideCollision() == 0) {
-            return new Idle(input, player, player.state);
+            return new Idle(input, player, player.state, stateChangeHandler);
         }
-        return new DashBreak(input, player, player.state);
+        return new DashBreak(input, player, player.state, stateChangeHandler);
     }
 
     private boolean hasChangedDirection(PlayerBase player) {

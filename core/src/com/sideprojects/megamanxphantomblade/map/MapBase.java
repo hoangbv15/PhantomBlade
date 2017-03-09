@@ -66,7 +66,7 @@ public abstract class MapBase {
                 int pix = (pixmap.getPixel(x, pixmap.getHeight() - y - 1) >>> 8) & 0xffffff;
 
                 if (match(pix, START)) {
-                    // we create the player here
+                    // we load the player here
                     player = playerFactory.createPlayer(x, y);
                     playerPhysics = playerPhysicsFactory.create(player);
                 }

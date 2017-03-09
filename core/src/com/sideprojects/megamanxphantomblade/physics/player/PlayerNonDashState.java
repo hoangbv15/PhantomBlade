@@ -12,8 +12,8 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 public abstract class PlayerNonDashState extends PlayerMovementStateBase {
     private boolean canDash = true;
 
-    public PlayerNonDashState(InputProcessor input, PlayerBase player, PlayerState lastState) {
-        super(player);
+    public PlayerNonDashState(InputProcessor input, PlayerBase player, PlayerState lastState, PlayerStateChangeHandler stateChangeHandler) {
+        super(player, lastState, stateChangeHandler);
         if (lastState == PlayerState.DASH
                 || lastState == PlayerState.DASHBREAK
                 || input.isCommandPressed(Command.DASH)
