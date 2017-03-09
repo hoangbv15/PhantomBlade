@@ -125,22 +125,20 @@ public class PlayerPhysics extends PhysicsBase {
                         player.vel.y = map.WALLSLIDE_FALLSPEED;
                     }
                     player.vel.x = 0;
-                    player.pos.x = preCollide.x;
+                    player.bounds.x = preCollide.x;
                     break;
                 case UP:
                     player.grounded = true;
                 case DOWN:
                     player.vel.y = 0;
-                    player.pos.y = preCollide.y;
+                    player.bounds.y = preCollide.y;
                     break;
             }
         }
 
-        player.pos.x += player.vel.x * delta;
-        player.pos.y += player.vel.y * delta;
-        player.bounds.x = player.pos.x;
-        player.bounds.y = player.pos.y;
-
+        player.bounds.x += player.vel.x * delta;
+        player.bounds.y += player.vel.y * delta;
+        player.updatePos();
         return collisionList;
     }
 

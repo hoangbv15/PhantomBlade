@@ -9,6 +9,8 @@ import com.sideprojects.megamanxphantomblade.player.TraceColour;
 public class PlayerX extends PlayerBase {
     protected PlayerX(float x, float y) {
         super(x, y);
+        bounds.width = 0.5f;
+        bounds.height = 0.7f;
     }
 
     @Override
@@ -19,5 +21,11 @@ public class PlayerX extends PlayerBase {
     @Override
     public TraceColour getTraceColour() {
         return new TraceColour(0, 0, 1);
+    }
+
+    @Override
+    public void updatePos() {
+        super.updatePos();
+        pos.x -= 0.05f;
     }
 }

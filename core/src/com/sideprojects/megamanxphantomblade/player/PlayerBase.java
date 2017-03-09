@@ -22,8 +22,9 @@ public abstract class PlayerBase extends MovingObject {
     public TextureRegion currentFrame;
 
     public PlayerBase(float x, float y) {
+        bounds = new Rectangle(x, y, 0.1f, 0.1f);
         pos = new Vector2(x, y);
-        bounds = new Rectangle(x, y, 0.6f, 0.8f);
+        updatePos();
         vel = new Vector2(0, 0);
         createAnimations();
     }

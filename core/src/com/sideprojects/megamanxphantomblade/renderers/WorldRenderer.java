@@ -39,7 +39,7 @@ public class WorldRenderer {
     private Queue<TextureRegion> lastPlayerFrameQueue;
     private Queue<Vector2> lastPlayerPositionQueue;
     // Number of traces to render
-    private int numOfTraces = 4;
+    private int numOfTraces = 5;
     // Number of frame skip per trace
     private int traceFrameSkip = 1;
     // Flag to indicate when to start removing traces
