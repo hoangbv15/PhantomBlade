@@ -42,7 +42,7 @@ public class WorldRenderer {
     // Number of traces to render
     private int numOfTraces = 5;
     // Number of frame skip per trace
-    private int traceFrameSkip = 1;
+    private int traceFrameSkip = 2;
     // Flag to indicate when to start removing traces
     private boolean startRemovingTraces;
     // private count towards number of frame skip
