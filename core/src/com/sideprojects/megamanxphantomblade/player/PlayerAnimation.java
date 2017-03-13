@@ -43,14 +43,14 @@ public abstract class PlayerAnimation {
 
     public Animation<TextureRegion> getRunLeft() {
         if (instanceRunLeft == null) {
-            instanceRunLeft = AnimationLoader.load(getTextureRunAtlas(), getAnimationRun(), true, 0.05f);
+            instanceRunLeft = AnimationLoader.load(getTextureRunAtlas(), getAnimationRun(), true, 0.04f);
         }
         return instanceRunLeft;
     }
 
     public Animation<TextureRegion> getRunRight() {
         if (instanceRunRight == null) {
-            instanceRunRight = AnimationLoader.load(getTextureRunAtlas(), getAnimationRun(), false, 0.05f);
+            instanceRunRight = AnimationLoader.load(getTextureRunAtlas(), getAnimationRun(), false, 0.04f);
         }
         return instanceRunRight;
     }
