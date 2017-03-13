@@ -8,6 +8,8 @@ import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 
+import javax.xml.soap.Text;
+
 /**
  * Created by buivuhoang on 04/02/17.
  */
@@ -20,6 +22,7 @@ public abstract class PlayerBase extends MovingObject {
 
     public PlayerAnimation animations;
     public TextureRegion currentFrame;
+    public TextureRegion currentDashRocketFrame;
 
     public PlayerBase(float x, float y) {
         bounds = new Rectangle(x, y, 0.1f, 0.1f);
@@ -85,11 +88,15 @@ public abstract class PlayerBase extends MovingObject {
             }
             currentFrame = currentAnimation.getKeyFrame(stateTime, false);
         } else if (state == PlayerState.DASH) {
+            Animation<TextureRegion> dashRocketAnimation;
             if (direction == LEFT) {
                 currentAnimation = animations.getDashLeft();
+                dashRocketAnimation = animations.getDashRocketLeft();
             } else {
                 currentAnimation = animations.getDashRight();
+                dashRocketAnimation = animations.getDashRocketRight();
             }
+            currentDashRocketFrame = dashRocketAnimation.getKeyFrame(stateTime, false);
             currentFrame = currentAnimation.getKeyFrame(stateTime, false);
         } else if (state == PlayerState.DASHBREAK) {
             if (direction == LEFT) {

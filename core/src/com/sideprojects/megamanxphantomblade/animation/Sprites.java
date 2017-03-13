@@ -10,5 +10,6 @@ public class Sprites {
     public static String XJump = "sprites/x/jump.txt";
     public static String XDash = "sprites/x/dash.txt";
     public static String XWallSlide = "sprites/x/wallslide.txt";
+    public static String XDashRocket = "sprites/x/dash_rocket.txt";
 
 }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Queue;
 import com.rahul.libgdx.parallax.ParallaxBackground;
+import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
@@ -53,6 +54,10 @@ public class WorldRenderer {
     private float mapWidthMinusCamViewportHalfX;
     private float mapHeightMinusCamViewportHalfY;
 
+    // Parameters for rendering dash rockets
+    private float leftDashRocketPadding;
+    private float hardDashRocketPadding;
+
     public WorldRenderer(MapBase map) {
         this.map = map;
         this.background = map.getBackground();
@@ -69,6 +74,9 @@ public class WorldRenderer {
         startRemovingTraces = false;
         createBlocks();
         calculateCamClamps();
+        // Calculate dash rocket padding
+        leftDashRocketPadding = map.player.animations.getDashLeft().getKeyFrame(0).getRegionWidth();
+        hardDashRocketPadding = map.player.animations.getDashRocketLeft().getKeyFrame(0).getRegionWidth() / 5f;
     }
 
     private void createBlocks() {
@@ -131,6 +139,7 @@ public class WorldRenderer {
     // Pass posX and posY in so we don't have to recalculate them
     private void renderPlayer(float posX, float posY) {
         TextureRegion currentFrame = map.player.currentFrame;
+        float originPosX = posX;
         if (map.player.direction == PlayerBase.RIGHT) {
             // Pad the texture's start x because the engine is drawing from canLeft to canRight.
             // Without this the animation frames will be misaligned
@@ -140,8 +149,23 @@ public class WorldRenderer {
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
         renderPlayerTrace(currentFrame, posX, posY);
+        if (map.player.state == PlayerState.DASH) {
+            renderPlayerDashRocket(originPosX, posY);
+        }
         batch.draw(currentFrame, posX, posY);
         batch.end();
+    }
+
+    private void renderPlayerDashRocket(float posX, float posY) {
+        float y = posY;
+        float x = posX;
+        if (map.player.direction == MovingObject.RIGHT) {
+            x -= map.player.currentDashRocketFrame.getRegionWidth() + hardDashRocketPadding;
+        } else {
+            x += leftDashRocketPadding + hardDashRocketPadding;
+        }
+
+        batch.draw(map.player.currentDashRocketFrame, x, y);
     }
 
     private void renderPlayerTrace(TextureRegion currentFrame, float posX, float posY) {
