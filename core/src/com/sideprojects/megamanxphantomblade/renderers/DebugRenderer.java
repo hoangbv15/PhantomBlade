@@ -5,8 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
-import com.sideprojects.megamanxphantomblade.map.Collision;
-import com.sideprojects.megamanxphantomblade.renderers.WorldRenderer;
+import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 
 import java.util.List;
 
@@ -69,5 +68,9 @@ public class DebugRenderer {
         shapeDebugger.line(playerStart, playerEnd);
 
         shapeDebugger.end();
+    }
+
+    public void dispose() {
+        shapeDebugger.dispose();
     }
 }

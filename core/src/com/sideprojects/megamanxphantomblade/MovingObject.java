@@ -9,16 +9,23 @@ import com.badlogic.gdx.math.Vector2;
  * bounding box.
  * These objects can collide with the map and with each other.
  */
-public class MovingObject {
+public abstract class MovingObject {
     // Directions
     public static final int LEFT = -1;
     public static final int RIGHT = 1;
+    public static final int NONEDIRECTION = 0;
 
     public int direction;
+    public boolean grounded;
 
     public Vector2 pos;
     public Vector2 vel;
     public Rectangle bounds;
 
+    public float stateTime;
 
+    public void updatePos() {
+        pos.x = bounds.x;
+        pos.y = bounds.y;
+    };
 }

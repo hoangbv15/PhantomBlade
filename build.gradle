@@ -20,7 +20,6 @@ allprojects {
         appName = "Megaman X Phantom Blade"
         gdxVersion = '1.9.5'
         roboVMVersion = '2.3.0'
-        box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
     }

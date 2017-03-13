@@ -5,28 +5,31 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Queue;
+import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
-import com.sideprojects.megamanxphantomblade.player.PlayerState;
+import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.TraceShader;
 
 /**
  * Created by buivuhoang on 04/02/17.
  */
 public class WorldRenderer {
-    public MapBase map;
-    public OrthographicCamera cam;
-    private float camFixedHeight;
+    MapBase map;
+    OrthographicCamera cam;
+    private float camViewPortY = 540f;
+    private ParallaxBackground background;
     private SpriteCache cache;
     private SpriteBatch batch;
     private ShaderProgram traceShader;
 
     private int[][] blocks;
-    private float viewportHeight = 16f;
-    private float viewportWidth = 9f;
+    private float blockHeight = 16f;
+    private float blockWidth = 9f;
 
     private Vector3 lerpTarget;
 
@@ -36,7 +39,7 @@ public class WorldRenderer {
     private Queue<TextureRegion> lastPlayerFrameQueue;
     private Queue<Vector2> lastPlayerPositionQueue;
     // Number of traces to render
-    private int numOfTraces = 4;
+    private int numOfTraces = 5;
     // Number of frame skip per trace
     private int traceFrameSkip = 1;
     // Flag to indicate when to start removing traces
@@ -44,21 +47,28 @@ public class WorldRenderer {
     // private count towards number of frame skip
     private int traceFrameSkipCount = 0;
 
+    // Pre-calculated values to clamp camera position within the map's boundaries
+    private float camViewportHalfX;
+    private float camViewportHalfY;
+    private float mapWidthMinusCamViewportHalfX;
+    private float mapHeightMinusCamViewportHalfY;
+
     public WorldRenderer(MapBase map) {
         this.map = map;
-        this.cam = new OrthographicCamera(960, 540);
+        this.background = map.getBackground();
+        this.cam = new OrthographicCamera(camViewPortY * 16 / 9f, camViewPortY);
         this.cache = new SpriteCache(this.map.tiles.length * this.map.tiles[0].length, false);
         this.batch = new SpriteBatch(5460);
-        this.blocks = new int[(int)Math.ceil(this.map.tiles.length / viewportWidth)][(int)Math.ceil(this.map.tiles[0].length / viewportHeight)];
+        this.blocks = new int[(int)Math.ceil(this.map.tiles.length / blockWidth)][(int)Math.ceil(this.map.tiles[0].length / blockHeight)];
         lerpTarget = new Vector3();
         // Fixing the camera height for now.
-        camFixedHeight = cam.viewportHeight/2;
         playerYOffset = 1/5f * map.getTileHeight();
         traceShader = TraceShader.getShaderColor(map.player.getTraceColour());
         lastPlayerFrameQueue = new Queue<TextureRegion>(numOfTraces);
         lastPlayerPositionQueue = new Queue<Vector2>(numOfTraces);
         startRemovingTraces = false;
         createBlocks();
+        calculateCamClamps();
     }
 
     private void createBlocks() {
@@ -68,8 +78,8 @@ public class WorldRenderer {
         for (int blockY = 0; blockY < blocks[0].length; blockY++) {
             for (int blockX = 0; blockX < blocks.length; blockX++) {
                 cache.beginCache();
-                for (int y = blockY * (int) viewportHeight; y < blockY * viewportHeight + viewportHeight; y++) {
-                    for (int x = blockX * (int) viewportWidth; x < blockX * viewportWidth + viewportWidth; x++) {
+                for (int y = blockY * (int) blockHeight; y < blockY * blockHeight + blockHeight; y++) {
+                    for (int x = blockX * (int) blockWidth; x < blockX * blockWidth + blockWidth; x++) {
                         if (x >= width || y >= height) continue;
                         int posX = x * map.getTileWidth();
                         int posY = y * map.getTileHeight();
@@ -87,11 +97,22 @@ public class WorldRenderer {
     }
 
     public void render() {
-        cam.position.lerp(lerpTarget.set(map.player.pos.x * map.getTileWidth(), camFixedHeight, 0), 1);
+        // Calculate vertical padding for player's position
+        float posY = map.player.pos.y * map.getTileHeight() - playerYOffset;
+        float posX = map.player.pos.x * map.getTileWidth();
+
+        // Apply linear interpolation to the camera in order to smooth the camera movement
+        cam.position.lerp(lerpTarget.set(posX, posY, 0), 0.5f);
+        // Keep the camera within bounds
+        cam.position.x = MathUtils.clamp(cam.position.x, camViewportHalfX, mapWidthMinusCamViewportHalfX);
+        cam.position.y = MathUtils.clamp(cam.position.y, camViewportHalfY, mapHeightMinusCamViewportHalfY);
         cam.update();
         Gdx.gl.glDisable(GL20.GL_BLEND);
+        batch.begin();
+        background.draw(cam, batch);
+        batch.end();
         renderMap();
-        renderPlayer();
+        renderPlayer(posX, posY);
     }
 
     private void renderMap() {
@@ -107,13 +128,11 @@ public class WorldRenderer {
         cache.end();
     }
 
-    private void renderPlayer() {
+    // Pass posX and posY in so we don't have to recalculate them
+    private void renderPlayer(float posX, float posY) {
         TextureRegion currentFrame = map.player.currentFrame;
-        // Calculate vertical padding for player's position
-        float posY = map.player.pos.y * map.getTileHeight() - playerYOffset;
-        float posX = map.player.pos.x * map.getTileWidth();
         if (map.player.direction == PlayerBase.RIGHT) {
-            // Pad the texture's start x because the engine is drawing from left to right.
+            // Pad the texture's start x because the engine is drawing from canLeft to canRight.
             // Without this the animation frames will be misaligned
             posX += map.getTileWidth() * 0.6f - currentFrame.getRegionWidth();
         }
@@ -135,7 +154,7 @@ public class WorldRenderer {
             }
             traceFrameSkipCount = 0;
             // If player is dashing, draw a trace
-            if (map.player.state == PlayerState.DASH || map.player.isHoldingDash) {
+            if (map.player.state == PlayerState.DASH || map.player.isJumpDashing) {
                 lastPlayerFrameQueue.addLast(currentFrame);
                 lastPlayerPositionQueue.addLast(new Vector2(posX, posY));
             }
@@ -144,7 +163,7 @@ public class WorldRenderer {
             }
         }
 
-        if (map.player.state == PlayerState.DASH || map.player.isHoldingDash) {
+        if (map.player.state == PlayerState.DASH || map.player.isJumpDashing) {
             if (lastPlayerFrameQueue.size != numOfTraces) {
                 startRemovingTraces = false;
             }
@@ -170,5 +189,18 @@ public class WorldRenderer {
         cache.dispose();
         batch.dispose();
         traceShader.dispose();
+    }
+
+    public void resize(int width, int height) {
+        float aspectRatio = width / (float) height;
+        cam = new OrthographicCamera(camViewPortY * aspectRatio, camViewPortY);
+        calculateCamClamps();
+    }
+
+    private void calculateCamClamps() {
+        camViewportHalfX = cam.viewportWidth / 2;
+        camViewportHalfY = cam.viewportHeight / 2;
+        mapWidthMinusCamViewportHalfX = map.getWidth() - camViewportHalfX;
+        mapHeightMinusCamViewportHalfY = map.getHeight() - camViewportHalfY;
     }
 }
