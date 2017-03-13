@@ -56,7 +56,8 @@ public class WorldRenderer {
 
     // Parameters for rendering dash rockets
     private float leftDashRocketPadding;
-    private float hardDashRocketPadding;
+    private float xDashRocketPadding;
+    private float yDashRocketPadding;
 
     public WorldRenderer(MapBase map) {
         this.map = map;
@@ -76,7 +77,8 @@ public class WorldRenderer {
         calculateCamClamps();
         // Calculate dash rocket padding
         leftDashRocketPadding = map.player.animations.getDashLeft().getKeyFrame(0).getRegionWidth();
-        hardDashRocketPadding = map.player.animations.getDashRocketLeft().getKeyFrame(0).getRegionWidth() / 5f;
+        xDashRocketPadding = map.player.animations.getDashRocketLeft().getKeyFrame(0).getRegionWidth() / 5f;
+        yDashRocketPadding = map.player.animations.getDashRocketLeft().getKeyFrame(0).getRegionHeight() / 7f;
     }
 
     private void createBlocks() {
@@ -157,12 +159,12 @@ public class WorldRenderer {
     }
 
     private void renderPlayerDashRocket(float posX, float posY) {
-        float y = posY;
+        float y = posY - yDashRocketPadding;
         float x = posX;
         if (map.player.direction == MovingObject.RIGHT) {
-            x -= map.player.currentDashRocketFrame.getRegionWidth() + hardDashRocketPadding;
+            x -= map.player.currentDashRocketFrame.getRegionWidth() + xDashRocketPadding;
         } else {
-            x += leftDashRocketPadding + hardDashRocketPadding;
+            x += leftDashRocketPadding + xDashRocketPadding;
         }
 
         batch.draw(map.player.currentDashRocketFrame, x, y);
