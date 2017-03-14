@@ -8,8 +8,6 @@ import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 
-import javax.xml.soap.Text;
-
 /**
  * Created by buivuhoang on 04/02/17.
  */
