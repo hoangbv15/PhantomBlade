@@ -26,6 +26,8 @@ public abstract class PlayerAnimation {
     private Animation<TextureRegion> instanceDashRight;
     private Animation<TextureRegion> instanceDashBreakLeft;
     private Animation<TextureRegion> instanceDashBreakRight;
+    private Animation<TextureRegion> instanceDashRocketLeft;
+    private Animation<TextureRegion> instanceDashRocketRight;
 
     public Animation<TextureRegion> getIdleLeft() {
         if (instanceIdleLeft == null) {
@@ -153,6 +155,20 @@ public abstract class PlayerAnimation {
         return instanceDashBreakLeft;
     }
 
+    public Animation<TextureRegion> getDashRocketRight() {
+        if (instanceDashRocketRight == null) {
+            instanceDashRocketRight = AnimationLoader.load(getTextureDashRocketAtlas(), getAnimationDashRocket(), false, 0.05f);
+        }
+        return instanceDashRocketRight;
+    }
+
+    public Animation<TextureRegion> getDashRocketLeft() {
+        if (instanceDashRocketLeft == null) {
+            instanceDashRocketLeft = AnimationLoader.load(getTextureDashRocketAtlas(), getAnimationDashRocket(), true, 0.05f);
+        }
+        return instanceDashRocketLeft;
+    }
+
     protected abstract String getTextureIdleAtlas();
     protected abstract int[] getAnimationIdle();
 
@@ -179,4 +195,7 @@ public abstract class PlayerAnimation {
 
     protected abstract String getTextureDashBreakAtlas();
     protected abstract int[] getAnimationDashBreak();
+
+    protected abstract String getTextureDashRocketAtlas();
+    protected abstract int[] getAnimationDashRocket();
 }

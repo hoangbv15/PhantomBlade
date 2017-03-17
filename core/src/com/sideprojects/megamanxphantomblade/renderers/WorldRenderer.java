@@ -10,7 +10,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Queue;
 import com.rahul.libgdx.parallax.ParallaxBackground;
+import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
+import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.TraceShader;
@@ -41,7 +43,7 @@ public class WorldRenderer {
     // Number of traces to render
     private int numOfTraces = 5;
     // Number of frame skip per trace
-    private int traceFrameSkip = 1;
+    private int traceFrameSkip = 2;
     // Flag to indicate when to start removing traces
     private boolean startRemovingTraces;
     // private count towards number of frame skip
@@ -52,6 +54,11 @@ public class WorldRenderer {
     private float camViewportHalfY;
     private float mapWidthMinusCamViewportHalfX;
     private float mapHeightMinusCamViewportHalfY;
+
+    // Parameters for rendering dash rockets
+    private float leftDashRocketPadding;
+    private float xDashRocketPadding;
+    private float yDashRocketPadding;
 
     public WorldRenderer(MapBase map) {
         this.map = map;
@@ -69,6 +76,10 @@ public class WorldRenderer {
         startRemovingTraces = false;
         createBlocks();
         calculateCamClamps();
+        // Calculate dash rocket padding
+        leftDashRocketPadding = map.player.animations.getDashLeft().getKeyFrame(0).getRegionWidth();
+        xDashRocketPadding = map.player.animations.getDashRocketLeft().getKeyFrame(0).getRegionWidth() / 5f;
+        yDashRocketPadding = map.player.animations.getDashRocketLeft().getKeyFrame(0).getRegionHeight() / 7f;
     }
 
     private void createBlocks() {
@@ -96,13 +107,20 @@ public class WorldRenderer {
         }
     }
 
+    private Vector2 applyCameraLerp(Vector2 pos) {
+        Vector2 newPos = new Vector2(
+                pos.x * map.getTileWidth(),
+                pos.y * map.getTileHeight() - playerYOffset
+        );
+        return newPos;
+    }
+
     public void render() {
         // Calculate vertical padding for player's position
-        float posY = map.player.pos.y * map.getTileHeight() - playerYOffset;
-        float posX = map.player.pos.x * map.getTileWidth();
+        Vector2 pos = applyCameraLerp(map.player.pos);
 
         // Apply linear interpolation to the camera in order to smooth the camera movement
-        cam.position.lerp(lerpTarget.set(posX, posY, 0), 0.5f);
+        cam.position.lerp(lerpTarget.set(pos.x, pos.y, 0), 0.5f);
         // Keep the camera within bounds
         cam.position.x = MathUtils.clamp(cam.position.x, camViewportHalfX, mapWidthMinusCamViewportHalfX);
         cam.position.y = MathUtils.clamp(cam.position.y, camViewportHalfY, mapHeightMinusCamViewportHalfY);
@@ -112,7 +130,8 @@ public class WorldRenderer {
         background.draw(cam, batch);
         batch.end();
         renderMap();
-        renderPlayer(posX, posY);
+        renderPlayer(pos.x, pos.y);
+        renderParticles();
     }
 
     private void renderMap() {
@@ -128,9 +147,25 @@ public class WorldRenderer {
         cache.end();
     }
 
+    private void renderParticles() {
+        if (map.particles.size() == 0) {
+            return;
+        }
+
+        batch.setProjectionMatrix(cam.combined);
+        batch.begin();
+        for (int i = 0; i < map.particles.size(); i++) {
+            Particle particle = map.particles.get(i);
+            Vector2 pos = applyCameraLerp(particle.pos);
+            batch.draw(particle.currentFrame, pos.x, pos.y);
+        }
+        batch.end();
+    }
+
     // Pass posX and posY in so we don't have to recalculate them
     private void renderPlayer(float posX, float posY) {
         TextureRegion currentFrame = map.player.currentFrame;
+        float originPosX = posX;
         if (map.player.direction == PlayerBase.RIGHT) {
             // Pad the texture's start x because the engine is drawing from canLeft to canRight.
             // Without this the animation frames will be misaligned
@@ -140,8 +175,23 @@ public class WorldRenderer {
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
         renderPlayerTrace(currentFrame, posX, posY);
+        if (map.player.state == PlayerState.DASH) {
+            renderPlayerDashRocket(originPosX, posY);
+        }
         batch.draw(currentFrame, posX, posY);
         batch.end();
+    }
+
+    private void renderPlayerDashRocket(float posX, float posY) {
+        float y = posY - yDashRocketPadding;
+        float x = posX;
+        if (map.player.direction == MovingObject.RIGHT) {
+            x -= map.player.currentDashRocketFrame.getRegionWidth() + xDashRocketPadding;
+        } else {
+            x += leftDashRocketPadding + xDashRocketPadding;
+        }
+
+        batch.draw(map.player.currentDashRocketFrame, x, y);
     }
 
     private void renderPlayerTrace(TextureRegion currentFrame, float posX, float posY) {

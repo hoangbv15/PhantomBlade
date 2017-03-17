@@ -1,0 +1,17 @@
+{
+  "platform": "windows32",
+  "jdk": "/home/buivuhoang/Downloads/openjdk-1.7.0-u80-unofficial-windows-i586-image.zip",
+  "executable": "PhantomBlade",
+  "classpath": [
+    "./build/libs/desktop-1.0.jar"
+  ],
+  "mainclass": "com.sideprojects.megamanxphantomblade.desktop.DesktopLauncher",
+  "vmargs": [
+    "Xmx1G"
+  ],
+  "resources": [
+    "../core/assets"
+  ],
+  "minimizejre": "hard",
+  "output": "./build/out-windows32"
+}

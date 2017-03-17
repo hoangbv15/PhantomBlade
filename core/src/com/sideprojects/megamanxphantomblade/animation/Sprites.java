@@ -10,5 +10,10 @@ public class Sprites {
     public static String XJump = "sprites/x/jump.txt";
     public static String XDash = "sprites/x/dash.txt";
     public static String XWallSlide = "sprites/x/wallslide.txt";
+    public static String XDashRocket = "sprites/x/dash_rocket.txt";
 
+    // Particle effects
+    public static String Wallslide = "sprites/wallslide_dust.txt";
+    public static String WallKick = "sprites/wallslide_kick.txt";
+    public static String DashDust = "sprites/dash_dust.txt";
 }

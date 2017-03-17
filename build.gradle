@@ -18,7 +18,7 @@ allprojects {
     version = '1.0'
     ext {
         appName = "Megaman X Phantom Blade"
-        gdxVersion = '1.9.5'
+        gdxVersion = '1.9.6'
         roboVMVersion = '2.3.0'
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'

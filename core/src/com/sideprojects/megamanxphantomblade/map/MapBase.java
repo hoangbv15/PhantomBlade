@@ -4,6 +4,9 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.rahul.libgdx.parallax.ParallaxBackground;
+import com.sideprojects.megamanxphantomblade.MovingObject;
+import com.sideprojects.megamanxphantomblade.animation.Particle;
+import com.sideprojects.megamanxphantomblade.animation.Particles;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
@@ -34,9 +37,12 @@ public abstract class MapBase {
     protected TextureRegion wall;
     public abstract TextureRegion getWall();
 
+    public Particles particles;
+
     public MapBase(PlayerFactory playerFactory, PlayerPhysicsFactory playerPhysicsFactory) {
         this.playerFactory = playerFactory;
         this.playerPhysicsFactory = playerPhysicsFactory;
+        particles = new Particles(20);
         loadMap();
     }
 
@@ -85,7 +91,8 @@ public abstract class MapBase {
 
     public void update(float deltaTime) {
         playerPhysics.update(deltaTime, this);
-        player.update();
+        player.update(this);
+        particles.update(deltaTime);
     }
 
     public Rectangle getCollidableBox(int x, int y) {
@@ -93,5 +100,9 @@ public abstract class MapBase {
             return new Rectangle(x, y, 1, 1);
         }
         return bounds[x][y];
+    }
+
+    public void addParticle(Particle.ParticleType type, float x, float y, boolean isSingletonParticle) {
+        particles.add(type, x, y, isSingletonParticle, playerPhysics.movementState.startingDirection);
     }
 }

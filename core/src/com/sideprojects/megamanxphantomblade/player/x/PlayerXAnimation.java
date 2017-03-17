@@ -68,4 +68,10 @@ public class PlayerXAnimation extends PlayerAnimation {
 
     @Override
     protected int[] getAnimationDashBreak() { return new int[] {4, 5, 6, 7}; }
+
+    @Override
+    protected String getTextureDashRocketAtlas() { return Sprites.XDashRocket; }
+
+    @Override
+    protected int[] getAnimationDashRocket() { return null; }
 }

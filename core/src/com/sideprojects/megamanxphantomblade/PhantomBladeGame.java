@@ -49,7 +49,7 @@ public class PhantomBladeGame extends ApplicationAdapter {
 		map.update(delta);
 		renderGradientBackground();
 		mapRenderer.render();
-//		debugRenderer.render(delta, playerPhysics.collisions);
+//		debugRenderer.render(delta, playerPhysics.collisions.toList);
 	}
 
 	private void renderGradientBackground() {

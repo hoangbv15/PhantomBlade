@@ -11,7 +11,6 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
  * Created by buivuhoang on 25/02/17.
  */
 public class WallJump extends Jump {
-    private int startingDirection = MovingObject.NONEDIRECTION;
     private PlayerBase player;
 
     public WallJump(InputProcessor input, PlayerBase player, PlayerState lastState, Collision.Side sideOfCollision, PlayerStateChangeHandler stateChangeHandler) {
