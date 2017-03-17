@@ -25,14 +25,12 @@ task dist(type: Jar) {
     }
 }
 
-task packr(dependsOn: dist) {
-    javaexec {
-        main = '-jar'
-        args = [
-                'packr.jar',
-                'packrconfig.json'
-        ]
-    }
+task packr(dependsOn: dist, type: JavaExec) {
+    main = '-jar'
+    args = [
+            'packr.jar',
+            'packrconfig.json'
+    ]
 }
 
 dist.dependsOn classes
