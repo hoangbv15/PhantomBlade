@@ -10,12 +10,14 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
  * Created by buivuhoang on 22/02/17.
  */
 public abstract class PlayerMovementStateBase implements State {
+    public int startingDirection = MovingObject.NONEDIRECTION;
     protected PlayerStateChangeHandler stateChangeHandler;
 
     public PlayerMovementStateBase(PlayerBase player, PlayerState lastState, PlayerStateChangeHandler stateChangeHandler) {
         player.state = enter(player);
         this.stateChangeHandler = stateChangeHandler;
         stateChangeHandler.callback(lastState, player.state);
+        startingDirection = player.direction;
     }
 
     /**

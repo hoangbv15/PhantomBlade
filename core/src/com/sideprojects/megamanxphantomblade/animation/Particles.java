@@ -18,18 +18,33 @@ public class Particles {
         animationCache = new LRUCache<ParticleKey, Animation<TextureRegion>>(initialSize);
     }
 
-    public void add(Particle.ParticleType type, float x, float y, int direction) {
+    /**
+     * Add particle effect
+     * @param type Type of the particle effect
+     * @param x x
+     * @param y y
+     * @param isSingletonParticle Whether multiple instances of the effect can be spanwed in a row
+     * @param direction The direction which the particle effect should have
+     */
+    public void add(Particle.ParticleType type, float x, float y, boolean isSingletonParticle, int direction) {
         ParticleKey key = new ParticleKey(type, direction);
         if (!animationCache.containsKey(key)) {
             loadParticleAnimation(key);
         }
         Animation<TextureRegion> animation = animationCache.get(key);
         if (animation != null) {
-            if (particleQueue.size != 0 && type == Particle.ParticleType.WALLSLIDE &&
-                    particleQueue.last().type == Particle.ParticleType.WALLSLIDE) {
+            if (particleQueue.size != 0 && isSingletonParticle &&
+                    particleQueue.last().type == type) {
                 Particle p = particleQueue.last();
                 p.pos.x = x;
                 p.pos.y = y;
+
+                // TODO: Hack to loop the middle frames of wall sliding animation
+                if (type == Particle.ParticleType.WALLSLIDE) {
+                    if (p.currentFrameIndex() == 4) {
+                        p.setToFrameIndex(1);
+                    }
+                }
             } else {
                 Particle p = new Particle(type, x, y, direction, animation);
                 particleQueue.addLast(p);

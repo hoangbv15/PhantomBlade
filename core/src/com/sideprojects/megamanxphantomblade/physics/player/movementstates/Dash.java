@@ -17,7 +17,6 @@ public class Dash extends PlayerMovementStateBase {
     private boolean enterWhileRunning = false;
     private boolean enterWhileIdle = false;
     private boolean enterWhileAirborne = false;
-    private int startingDirection = MovingObject.NONEDIRECTION;
     private Command directionKeyBeingPressed = Command.LEFT;
 
     public Dash(InputProcessor input, PlayerBase player, PlayerState lastState, PlayerStateChangeHandler stateChangeHandler) {
@@ -36,7 +35,6 @@ public class Dash extends PlayerMovementStateBase {
         } else {
             enterWhileAirborne = true;
         }
-        startingDirection = player.direction;
     }
 
     @Override

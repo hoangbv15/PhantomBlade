@@ -32,4 +32,12 @@ public class Particle {
         stateTime += deltaTime;
         currentFrame = animation.getKeyFrame(stateTime, false);
     }
+
+    public int currentFrameIndex() {
+        return animation.getKeyFrameIndex(stateTime);
+    }
+
+    public void setToFrameIndex(int index) {
+        stateTime = index * animation.getFrameDuration();
+    }
 }

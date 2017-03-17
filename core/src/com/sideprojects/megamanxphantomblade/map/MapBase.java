@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.rahul.libgdx.parallax.ParallaxBackground;
+import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.animation.Particles;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
@@ -101,7 +102,7 @@ public abstract class MapBase {
         return bounds[x][y];
     }
 
-    public void addParticle(Particle.ParticleType type, float x, float y) {
-        particles.add(type, x, y, player.direction);
+    public void addParticle(Particle.ParticleType type, float x, float y, boolean isSingletonParticle) {
+        particles.add(type, x, y, isSingletonParticle, playerPhysics.movementState.startingDirection);
     }
 }

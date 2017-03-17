@@ -23,7 +23,7 @@ public class PlayerPhysics extends PhysicsBase {
     private static final float VELOCITY_DASH_ADDITION = 3f;
     private static final float VELOCITY_WALLBOUNCE_MULTIPLIER = 5f;
 
-    private PlayerMovementStateBase movementState;
+    public PlayerMovementStateBase movementState;
     private PlayerJumpDashStateBase holdDashState;
 
     public PlayerBase player;

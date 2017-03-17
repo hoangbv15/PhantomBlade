@@ -19,13 +19,13 @@ import java.util.List;
  */
 public abstract class PhysicsBase {
     // Debug property, used for rendering collisions to the screen. Needs to be public
-    public List<Collision> collisions;
+    public CollisionList collisions;
 
     protected InputProcessor input;
 
     public PhysicsBase(InputProcessor input) {
         this.input = input;
-        collisions = new ArrayList<Collision>();
+        collisions = new CollisionList(new ArrayList<Collision>());
     }
 
     public CollisionList getMapCollision(MovingObject object, float deltaTime, MapBase map) {
@@ -33,7 +33,7 @@ public abstract class PhysicsBase {
         Vector2 vel = object.vel;
         Rectangle bounds = object.bounds;
 
-        collisions.clear();
+        collisions.toList.clear();
         // From inside out, find the first tile that collides with the player
         float stepX = vel.x * deltaTime;
         float stepY = vel.y * deltaTime;
@@ -99,7 +99,7 @@ public abstract class PhysicsBase {
                             tileUp, tileDown, tileLeft, tileRight);
                     if (collision != null) {
                         collisionList.add(collision);
-                        collisions.add(collision);
+                        collisions.toList.add(collision);
                     }
                 }
             }

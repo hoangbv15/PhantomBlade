@@ -14,8 +14,6 @@ import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
  * Created by buivuhoang on 04/02/17.
  */
 public abstract class PlayerBase extends MovingObject {
-    protected PlayerPhysics physics;
-
     public PlayerState state;
     public PlayerState previousState;
     // If the player is holding dash button
@@ -83,7 +81,7 @@ public abstract class PlayerBase extends MovingObject {
             currentFrame = currentAnimation.getKeyFrame(stateTime, false);
             float paddingX = direction == RIGHT ? (bounds.getWidth() - 0.15f) : - 0.1f;
             float paddingY = -0.1f;
-            map.addParticle(Particle.ParticleType.WALLSLIDE, pos.x + paddingX, pos.y + paddingY);
+            map.addParticle(Particle.ParticleType.WALLSLIDE, pos.x + paddingX, pos.y + paddingY, true);
         } else if (state == PlayerState.WALLJUMP) {
             if (direction == LEFT) {
                 currentAnimation = animations.getWallJumpLeft();
@@ -92,9 +90,9 @@ public abstract class PlayerBase extends MovingObject {
             }
             currentFrame = currentAnimation.getKeyFrame(stateTime, false);
             if (previousState != state) {
-                float paddingX = direction == RIGHT ? (bounds.getWidth() - 0.1f) : - 0.3f;
+                float paddingX = map.playerPhysics.movementState.startingDirection == RIGHT ? (bounds.getWidth() - 0.1f) : - 0.3f;
                 float paddingY = 0f;
-                map.addParticle(Particle.ParticleType.WALLKICK, pos.x + paddingX, pos.y + paddingY);
+                map.addParticle(Particle.ParticleType.WALLKICK, pos.x + paddingX, pos.y + paddingY, false);
             }
         } else if (state == PlayerState.DASH) {
             Animation<TextureRegion> dashRocketAnimation;
@@ -109,7 +107,7 @@ public abstract class PlayerBase extends MovingObject {
             currentFrame = currentAnimation.getKeyFrame(stateTime, false);
             if (previousState != state && grounded) {
                 float padding = - bounds.getWidth() * direction;
-                map.addParticle(Particle.ParticleType.DASH, pos.x + padding, pos.y);
+                map.addParticle(Particle.ParticleType.DASH, pos.x + padding, pos.y, false);
             }
         } else if (state == PlayerState.DASHBREAK) {
             if (direction == LEFT) {
