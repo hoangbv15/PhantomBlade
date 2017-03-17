@@ -59,3 +59,10 @@ repeat: none
   orig: 21, 41
   offset: 0, 0
   index: -1
+8
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1

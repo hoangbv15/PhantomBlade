@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Queue;
 import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
+import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.TraceShader;
@@ -106,13 +107,20 @@ public class WorldRenderer {
         }
     }
 
+    private Vector2 applyCameraLerp(Vector2 pos) {
+        Vector2 newPos = new Vector2(
+                pos.x * map.getTileWidth(),
+                pos.y * map.getTileHeight() - playerYOffset
+        );
+        return newPos;
+    }
+
     public void render() {
         // Calculate vertical padding for player's position
-        float posY = map.player.pos.y * map.getTileHeight() - playerYOffset;
-        float posX = map.player.pos.x * map.getTileWidth();
+        Vector2 pos = applyCameraLerp(map.player.pos);
 
         // Apply linear interpolation to the camera in order to smooth the camera movement
-        cam.position.lerp(lerpTarget.set(posX, posY, 0), 0.5f);
+        cam.position.lerp(lerpTarget.set(pos.x, pos.y, 0), 0.5f);
         // Keep the camera within bounds
         cam.position.x = MathUtils.clamp(cam.position.x, camViewportHalfX, mapWidthMinusCamViewportHalfX);
         cam.position.y = MathUtils.clamp(cam.position.y, camViewportHalfY, mapHeightMinusCamViewportHalfY);
@@ -122,7 +130,8 @@ public class WorldRenderer {
         background.draw(cam, batch);
         batch.end();
         renderMap();
-        renderPlayer(posX, posY);
+        renderPlayer(pos.x, pos.y);
+        renderParticles();
     }
 
     private void renderMap() {
@@ -136,6 +145,21 @@ public class WorldRenderer {
         }
 
         cache.end();
+    }
+
+    private void renderParticles() {
+        if (map.particles.size() == 0) {
+            return;
+        }
+
+        batch.setProjectionMatrix(cam.combined);
+        batch.begin();
+        for (int i = 0; i < map.particles.size(); i++) {
+            Particle particle = map.particles.get(i);
+            Vector2 pos = applyCameraLerp(particle.pos);
+            batch.draw(particle.currentFrame, pos.x, pos.y);
+        }
+        batch.end();
     }
 
     // Pass posX and posY in so we don't have to recalculate them

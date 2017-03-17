@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
+import com.sideprojects.megamanxphantomblade.map.MapBase;
+import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 
@@ -15,6 +17,7 @@ public abstract class PlayerBase extends MovingObject {
     protected PlayerPhysics physics;
 
     public PlayerState state;
+    public PlayerState previousState;
     // If the player is holding dash button
     public boolean isJumpDashing;
 
@@ -30,11 +33,11 @@ public abstract class PlayerBase extends MovingObject {
         createAnimations();
     }
 
-    public void update() {
-        updateAnimation();
+    public void update(MapBase map) {
+        updateAnimation(map);
     }
 
-    private void updateAnimation() {
+    private void updateAnimation(MapBase map) {
         Animation<TextureRegion> currentAnimation;
         if (state == PlayerState.IDLE) {
             if (direction == LEFT) {
@@ -78,6 +81,9 @@ public abstract class PlayerBase extends MovingObject {
                 currentAnimation = animations.getWallSlideRight();
             }
             currentFrame = currentAnimation.getKeyFrame(stateTime, false);
+            float paddingX = direction == RIGHT ? (bounds.getWidth() - 0.15f) : - 0.1f;
+            float paddingY = -0.1f;
+            map.addParticle(Particle.ParticleType.WALLSLIDE, pos.x + paddingX, pos.y + paddingY);
         } else if (state == PlayerState.WALLJUMP) {
             if (direction == LEFT) {
                 currentAnimation = animations.getWallJumpLeft();
@@ -85,6 +91,11 @@ public abstract class PlayerBase extends MovingObject {
                 currentAnimation = animations.getWallJumpRight();
             }
             currentFrame = currentAnimation.getKeyFrame(stateTime, false);
+            if (previousState != state) {
+                float paddingX = direction == RIGHT ? (bounds.getWidth() - 0.1f) : - 0.3f;
+                float paddingY = 0f;
+                map.addParticle(Particle.ParticleType.WALLKICK, pos.x + paddingX, pos.y + paddingY);
+            }
         } else if (state == PlayerState.DASH) {
             Animation<TextureRegion> dashRocketAnimation;
             if (direction == LEFT) {
@@ -96,6 +107,10 @@ public abstract class PlayerBase extends MovingObject {
             }
             currentDashRocketFrame = dashRocketAnimation.getKeyFrame(stateTime, false);
             currentFrame = currentAnimation.getKeyFrame(stateTime, false);
+            if (previousState != state && grounded) {
+                float padding = - bounds.getWidth() * direction;
+                map.addParticle(Particle.ParticleType.DASH, pos.x + padding, pos.y);
+            }
         } else if (state == PlayerState.DASHBREAK) {
             if (direction == LEFT) {
                 currentAnimation = animations.getDashBreakLeft();
@@ -104,6 +119,7 @@ public abstract class PlayerBase extends MovingObject {
             }
             currentFrame = currentAnimation.getKeyFrame(stateTime, false);
         }
+        previousState = state;
     }
 
     public abstract void createAnimations();
