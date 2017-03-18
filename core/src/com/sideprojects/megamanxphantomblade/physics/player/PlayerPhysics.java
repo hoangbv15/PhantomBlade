@@ -83,6 +83,11 @@ public class PlayerPhysics extends PhysicsBase {
             }
         }
 
+        if (player.state == PlayerState.UPDASH) {
+            player.vel.y = VELOCITY_JUMP + VELOCITY_DASH_ADDITION;
+            doNotApplyGravity = true;
+        }
+
         // Hold dash
         if (holdDashState.isJumpDashing()) {
             if (player.vel.x != 0) {

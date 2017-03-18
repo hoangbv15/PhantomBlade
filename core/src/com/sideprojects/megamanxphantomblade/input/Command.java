@@ -6,6 +6,7 @@ package com.sideprojects.megamanxphantomblade.input;
 public enum Command {
     LEFT,
     RIGHT,
+    UP,
     JUMP,
     DASH
 }

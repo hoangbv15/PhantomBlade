@@ -13,6 +13,7 @@ import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
+import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.TraceShader;
@@ -59,6 +60,8 @@ public class WorldRenderer {
     private float leftDashRocketPadding;
     private float xDashRocketPadding;
     private float yDashRocketPadding;
+    private float xUpDashRocketPadding;
+    private float yUpDashRocketPadding;
 
     public WorldRenderer(MapBase map) {
         this.map = map;
@@ -77,9 +80,11 @@ public class WorldRenderer {
         createBlocks();
         calculateCamClamps();
         // Calculate dash rocket padding
-        leftDashRocketPadding = map.player.animations.getDashLeft().getKeyFrame(0).getRegionWidth();
-        xDashRocketPadding = map.player.animations.getDashRocketLeft().getKeyFrame(0).getRegionWidth() / 5f;
-        yDashRocketPadding = map.player.animations.getDashRocketLeft().getKeyFrame(0).getRegionHeight() / 7f;
+        leftDashRocketPadding = map.player.animations.get(PlayerAnimation.Type.Dash).getKeyFrame(0).getRegionWidth();
+        xDashRocketPadding = map.player.animations.get(PlayerAnimation.Type.Dashrocket).getKeyFrame(0).getRegionWidth() / 5f;
+        yDashRocketPadding = map.player.animations.get(PlayerAnimation.Type.Dashrocket).getKeyFrame(0).getRegionHeight() / 7f;
+        xUpDashRocketPadding = map.player.animations.get(PlayerAnimation.Type.Updash).getKeyFrame(0).getRegionWidth() / 5f;
+        yUpDashRocketPadding = map.player.animations.get(PlayerAnimation.Type.Updashrocket).getKeyFrame(0).getRegionHeight();
     }
 
     private void createBlocks() {
@@ -167,7 +172,7 @@ public class WorldRenderer {
         TextureRegion currentFrame = map.player.currentFrame;
         float originPosX = posX;
         if (map.player.direction == PlayerBase.RIGHT) {
-            // Pad the texture's start x because the engine is drawing from canLeft to canRight.
+            // Pad the texture's start x because the engine is drawing from left to right.
             // Without this the animation frames will be misaligned
             posX += map.getTileWidth() * 0.6f - currentFrame.getRegionWidth();
         }
@@ -177,6 +182,9 @@ public class WorldRenderer {
         renderPlayerTrace(currentFrame, posX, posY);
         if (map.player.state == PlayerState.DASH) {
             renderPlayerDashRocket(originPosX, posY);
+        }
+        if (map.player.state == PlayerState.UPDASH) {
+            renderPlayerUpDashRocket(originPosX, posY);
         }
         batch.draw(currentFrame, posX, posY);
         batch.end();
@@ -194,6 +202,15 @@ public class WorldRenderer {
         batch.draw(map.player.currentDashRocketFrame, x, y);
     }
 
+    private void renderPlayerUpDashRocket(float posX, float posY) {
+        float y = posY - yUpDashRocketPadding;
+        float x = posX;
+        if (map.player.direction == MovingObject.RIGHT) {
+            x += xUpDashRocketPadding;
+        }
+        batch.draw(map.player.currentDashRocketFrame, x, y);
+    }
+
     private void renderPlayerTrace(TextureRegion currentFrame, float posX, float posY) {
         if (traceFrameSkipCount != traceFrameSkip) {
             traceFrameSkipCount++;
@@ -204,7 +221,7 @@ public class WorldRenderer {
             }
             traceFrameSkipCount = 0;
             // If player is dashing, draw a trace
-            if (map.player.state == PlayerState.DASH || map.player.isJumpDashing) {
+            if (map.player.state == PlayerState.DASH || map.player.state == PlayerState.UPDASH || map.player.isJumpDashing) {
                 lastPlayerFrameQueue.addLast(currentFrame);
                 lastPlayerPositionQueue.addLast(new Vector2(posX, posY));
             }
@@ -213,7 +230,7 @@ public class WorldRenderer {
             }
         }
 
-        if (map.player.state == PlayerState.DASH || map.player.isJumpDashing) {
+        if (map.player.state == PlayerState.DASH || map.player.state == PlayerState.UPDASH || map.player.isJumpDashing) {
             if (lastPlayerFrameQueue.size != numOfTraces) {
                 startRemovingTraces = false;
             }
