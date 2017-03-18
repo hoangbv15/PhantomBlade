@@ -24,6 +24,7 @@ public abstract class PlayerSound implements PlayerStateChangeHandler {
                     playLand();
                 }
                 break;
+            case UPDASH:
             case DASH:
                 playDash();
                 break;

@@ -53,6 +53,9 @@ public class Fall extends PlayerNonDashState {
     @Override
     public PlayerMovementStateBase nextState(InputProcessor input, PlayerBase player, CollisionList collisionList) {
         if (input.isCommandPressed(Command.DASH) && canDash(input)) {
+            if (input.isCommandPressed(Command.UP)) {
+                return new Updash(player, player.state, stateChangeHandler);
+            }
             return new Dash(input, player, player.state, stateChangeHandler);
         }
         if (player.vel.x != 0 && player.vel.y == 0) {

@@ -6,6 +6,7 @@ import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerMovementStateBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerStateChangeHandler;
+import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 
 /**
@@ -30,7 +31,7 @@ public class Touchdown extends Idle {
         if (player.vel.y > 0) {
             return new Jump(input, player, player.state, stateChangeHandler);
         }
-        if (player.stateTime >= player.animations.getTouchdownLeft().getAnimationDuration()) {
+        if (player.stateTime >= player.animations.get(PlayerAnimation.Type.Touchdown).getAnimationDuration()) {
             return new Idle(input, player, player.state, stateChangeHandler);
         }
         return this;

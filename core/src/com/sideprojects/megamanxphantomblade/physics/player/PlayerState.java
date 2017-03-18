@@ -9,6 +9,7 @@ public enum PlayerState {
     JUMP,
     FALL,
     DASH,
+    UPDASH,
     DASHBREAK,
     TOUCHDOWN,
     WALLSLIDE,
