@@ -35,7 +35,6 @@ task packr(dependsOn: dist, type: JavaExec) {
 
 task zip(dependsOn: packr, type: Zip) {
     from './build/out-windows32'
-    into './build'
 }
 
 dist.dependsOn classes
