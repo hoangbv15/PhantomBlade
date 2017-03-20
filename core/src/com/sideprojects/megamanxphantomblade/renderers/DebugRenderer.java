@@ -37,19 +37,19 @@ public class DebugRenderer {
                 continue;
             }
             switch(collision.side) {
-                case UP:
+                case Up:
                     start = new Vector2(collision.tile.x, collision.tile.y + collision.tile.height);
                     end = new Vector2(start.x + collision.tile.width, start.y);
                     break;
-                case DOWN:
+                case Down:
                     start = new Vector2(collision.tile.x, collision.tile.y);
                     end = new Vector2(start.x + collision.tile.width, start.y);
                     break;
-                case LEFT:
+                case Left:
                     start = new Vector2(collision.tile.x, collision.tile.y);
                     end = new Vector2(start.x, start.y + collision.tile.height);
                     break;
-                case RIGHT:
+                case Right:
                     start = new Vector2(collision.tile.x + collision.tile.width, collision.tile.y);
                     end = new Vector2(start.x, start.y + collision.tile.height);
                     break;

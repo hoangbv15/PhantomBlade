@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Queue;
 import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.sideprojects.megamanxphantomblade.MovingObject;
+import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
@@ -135,6 +136,7 @@ public class WorldRenderer {
         background.draw(cam, batch);
         batch.end();
         renderMap();
+        renderEnemies();
         renderPlayer(pos.x, pos.y);
         renderParticles();
     }
@@ -150,6 +152,16 @@ public class WorldRenderer {
         }
 
         cache.end();
+    }
+
+    private void renderEnemies() {
+        batch.setProjectionMatrix(cam.combined);
+        batch.begin();
+        for (EnemyBase enemy: map.enemyList) {
+            Vector2 pos = applyCameraLerp(enemy.pos);
+            batch.draw(enemy.currentFrame, pos.x, pos.y);
+        }
+        batch.end();
     }
 
     private void renderParticles() {

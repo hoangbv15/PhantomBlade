@@ -48,7 +48,7 @@ public class Collision {
     }
 
     public enum Side {
-        UP, DOWN, LEFT, RIGHT
+        Up, Down, Left, Right
     }
 
     public static Collision getCollisionNearestToStart(List<Collision> list, final Vector2 start) {

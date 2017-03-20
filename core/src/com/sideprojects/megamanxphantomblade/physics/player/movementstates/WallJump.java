@@ -15,7 +15,7 @@ public class WallJump extends Jump {
 
     public WallJump(InputProcessor input, PlayerBase player, PlayerState lastState, Collision.Side sideOfCollision, PlayerStateChangeHandler stateChangeHandler) {
         super(input, player, lastState, stateChangeHandler);
-        startingDirection = sideOfCollision == Collision.Side.LEFT ? MovingObject.RIGHT : MovingObject.LEFT;
+        startingDirection = sideOfCollision == Collision.Side.Left ? MovingObject.RIGHT : MovingObject.LEFT;
         this.player = player;
     }
 

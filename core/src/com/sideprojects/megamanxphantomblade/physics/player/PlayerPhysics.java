@@ -2,12 +2,14 @@ package com.sideprojects.megamanxphantomblade.physics.player;
 
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
+import com.sideprojects.megamanxphantomblade.enemies.EnemyDamage;
 import com.sideprojects.megamanxphantomblade.input.Command;
 import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 import com.sideprojects.megamanxphantomblade.physics.PhysicsBase;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
+import com.sideprojects.megamanxphantomblade.physics.player.damagestates.NotDamaged;
 import com.sideprojects.megamanxphantomblade.physics.player.jumpdashstate.NotJumpDashing;
 import com.sideprojects.megamanxphantomblade.physics.player.movementstates.Idle;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
@@ -24,6 +26,7 @@ public class PlayerPhysics extends PhysicsBase {
     private static final float VELOCITY_WALLBOUNCE_MULTIPLIER = 5f;
 
     public PlayerMovementStateBase movementState;
+    public PlayerDamageState damageState;
     private PlayerJumpDashStateBase holdDashState;
 
     public PlayerBase player;
@@ -35,6 +38,7 @@ public class PlayerPhysics extends PhysicsBase {
         player.direction = MovingObject.RIGHT;
         movementState = new Idle(input, player, null, stateChangeHandler);
         holdDashState = new NotJumpDashing(player);
+        damageState = new NotDamaged(player);
     }
 
     @Override
@@ -106,6 +110,10 @@ public class PlayerPhysics extends PhysicsBase {
             applyGravity(player, map.GRAVITY, map.MAX_FALLSPEED, delta);
         }
 
+        // Check for enemy damage
+        EnemyDamage damage = getEnemyCollision(player, delta, map);
+        damageState = damageState.nextState(player, damage, delta);
+
         // Check for collisions
         CollisionList collisions = calculateReaction(delta, map);
 
@@ -125,17 +133,17 @@ public class PlayerPhysics extends PhysicsBase {
         for (Collision collision: collisionList.toList) {
             Vector2 preCollide = collision.getPrecollidePos();
             switch (collision.side) {
-                case LEFT:
-                case RIGHT:
+                case Left:
+                case Right:
                     if (movementState.canWallSlide()) {
                         player.vel.y = map.WALLSLIDE_FALLSPEED;
                     }
                     player.vel.x = 0;
                     player.bounds.x = preCollide.x;
                     break;
-                case UP:
+                case Up:
                     player.grounded = true;
-                case DOWN:
+                case Down:
                     player.vel.y = 0;
                     player.bounds.y = preCollide.y;
                     break;

@@ -15,9 +15,9 @@ public class CollisionList {
         this.toList = collisionList;
         isCollidingSide = false;
         for (Collision collision: toList) {
-            if (collision.side == Collision.Side.LEFT ||
-                    collision.side == Collision.Side.RIGHT ||
-                    collision.side == Collision.Side.DOWN) {
+            if (collision.side == Collision.Side.Left ||
+                    collision.side == Collision.Side.Right ||
+                    collision.side == Collision.Side.Down) {
                 isCollidingSide = true;
                 distanceToSideCollision = collision.dist;
                 collidingSide = collision.side;

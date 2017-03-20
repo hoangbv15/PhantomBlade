@@ -39,7 +39,7 @@ public abstract class PlayerMovementStateBase implements State {
     public abstract boolean canWallSlide();
 
     /**
-     * Quick horizontall dash
+     * Quick horizontal dash
      * @return
      */
     public abstract boolean canDash(InputProcessor input);

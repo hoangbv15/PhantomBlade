@@ -7,10 +7,14 @@ import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.animation.Particles;
+import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by buivuhoang on 04/02/17.
@@ -21,6 +25,7 @@ public abstract class MapBase {
     public static int WALL = 0x0000A0;
     public static int START = 0xff0000;
     public static int DOOR = 0x00ffff;
+    public static int ENEMY = 0xff00ff;
     public float GRAVITY = 15f;
     public float MAX_FALLSPEED = -8f;
     public float WALLSLIDE_FALLSPEED = -2f;
@@ -31,6 +36,8 @@ public abstract class MapBase {
     public PlayerPhysics playerPhysics;
     public int[][] tiles;
     public Rectangle[][] bounds;
+
+    public List<EnemyBase> enemyList;
 
     protected TextureRegion ground;
     public abstract TextureRegion getGround();
@@ -43,6 +50,7 @@ public abstract class MapBase {
         this.playerFactory = playerFactory;
         this.playerPhysicsFactory = playerPhysicsFactory;
         particles = new Particles(20);
+        enemyList = new ArrayList<EnemyBase>();
         loadMap();
     }
 
@@ -80,6 +88,10 @@ public abstract class MapBase {
                 if (match(pix, GROUND) || match(pix, WALL)) {
                     // collision rectangles
                     bounds[x][y] = new Rectangle(x, y, 1, 1);
+                }
+                // basic enemy for testing
+                if (match(pix, ENEMY)) {
+                    enemyList.add(new EnemyBase(x, y));
                 }
             }
         }

@@ -100,7 +100,6 @@ public class Dash extends PlayerMovementStateBase {
                     collisionList.isCollidingSide()) {
                 return nextStateIfExit(input, player, collisionList);
             }
-
         }
 
         return this;

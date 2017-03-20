@@ -27,5 +27,5 @@ public abstract class MovingObject {
     public void updatePos() {
         pos.x = bounds.x;
         pos.y = bounds.y;
-    };
+    }
 }
