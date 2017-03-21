@@ -17,6 +17,10 @@ public class EnemyDamage {
         Light
     }
 
+    public enum Side {
+        Left, Right
+    }
+
     private static Map<Type, Integer> damage;
     static {
         damage = new HashMap<Type, Integer>() {{
@@ -28,11 +32,11 @@ public class EnemyDamage {
     }
 
     public Type type;
-    public Collision collision;
+    public Side side;
 
-    public EnemyDamage(Type type, Collision collision) {
+    public EnemyDamage(Type type, Side side) {
         this.type = type;
-        this.collision = collision;
+        this.side = side;
     }
 
     public int getDamage() {

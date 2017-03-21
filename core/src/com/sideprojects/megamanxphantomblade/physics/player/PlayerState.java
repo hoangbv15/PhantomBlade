@@ -13,5 +13,6 @@ public enum PlayerState {
     DASHBREAK,
     TOUCHDOWN,
     WALLSLIDE,
-    WALLJUMP
+    WALLJUMP,
+    DAMAGEDNORMAL
 }

@@ -31,6 +31,8 @@ public class PlayerXAnimation extends PlayerAnimation {
                 return Sprites.XUpDash;
             case Updashrocket:
                 return Sprites.XUpDashRocket;
+            case DamagedNormal:
+                return Sprites.XDamagedNormal;
             default:
                 return null;
         }
@@ -61,6 +63,7 @@ public class PlayerXAnimation extends PlayerAnimation {
                 return new int[] {4, 5, 6, 7};
             case Updash:
             case Updashrocket:
+            case DamagedNormal:
                 return null;
             default:
                 return null;

@@ -13,6 +13,6 @@ public class EnemyBase extends MovingObject {
     public TextureRegion currentFrame = new TextureRegion(new Texture("Favicon_16x16.png"));
     public EnemyBase(float x, float y) {
         pos = new Vector2(x, y);
-        bounds = new Rectangle(x, y, 0.3f, 0.3f);
+        bounds = new Rectangle(x, y, 0.25f, 0.25f);
     }
 }

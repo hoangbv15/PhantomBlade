@@ -81,12 +81,14 @@ public abstract class PlayerAnimation {
                 return 0.05f;
             case Dashbreak:
                 return 0.08f;
+            case DamagedNormal:
+                return 0.08f;
             default:
                 return 0.1f;
         }
     }
 
     public enum Type {
-        Idle, Run, Jump, Fall, Touchdown, Wallslide, Walljump, Dash, Dashbreak, Dashrocket, Updash, Updashrocket
+        Idle, Run, Jump, Fall, Touchdown, Wallslide, Walljump, Dash, Dashbreak, Dashrocket, Updash, Updashrocket, DamagedNormal
     }
 }

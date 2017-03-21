@@ -111,17 +111,19 @@ public class PlayerPhysics extends PhysicsBase {
         }
 
         // Check for enemy damage
-        EnemyDamage damage = getEnemyCollision(player, delta, map);
-        damageState = damageState.nextState(player, damage, delta);
+        EnemyDamage damage = getEnemyCollision(player, map);
+        damageState = damageState.nextState(player, damage, movementState, delta);
 
-        // Check for collisions
-        CollisionList collisions = calculateReaction(delta, map);
+        if (damageState.canControl()) {
+            // Check for collisions
+            CollisionList collisions = calculateReaction(delta, map);
 
-        // Assign next state
-        movementState = movementState.nextState(input, player, collisions);
+            // Assign next state
+            movementState = movementState.nextState(input, player, collisions);
 
-        // Do any optional update
-        movementState.update(input, player);
+            // Do any optional update
+            movementState.update(input, player);
+        }
     }
 
     private CollisionList calculateReaction(float delta, MapBase map) {

@@ -1,5 +1,6 @@
 package com.sideprojects.megamanxphantomblade.physics;
 
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
@@ -147,47 +148,10 @@ public abstract class PhysicsBase {
         return Collision.getCollisionNearestToStart(collisionList, start);
     }
 
-    public EnemyDamage getEnemyCollision(MovingObject object, float deltaTime, MapBase map) {
-        int direction = object.direction;
-        Vector2 vel = object.vel;
-        Rectangle bounds = object.bounds;
-
-        collisions.toList.clear();
-        // From inside out, find the first tile that collides with the player
-        float stepX = vel.x * deltaTime;
-        float stepY = vel.y * deltaTime;
-        // Translate the start and end vectors depending on the direction of the movement
-        float paddingX = 0;
-        float paddingY = 0;
-        if (stepX > 0) {
-            paddingX = bounds.width;
-        }
-        if (stepY > 0) {
-            paddingY = bounds.height;
-        }
-        Vector2 endPosX = new Vector2(bounds.x + stepX, bounds.y);
-        Vector2 endPosY = new Vector2(bounds.x, bounds.y + stepY);
-        Vector2 endPos = new Vector2(bounds.x + stepX, bounds.y + stepY);
-
-        // Setup collision detection rays
-        List<CollisionDetectionRay> detectionRayList = new ArrayList<CollisionDetectionRay>(5);
-        detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, 0, paddingY));
-        detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, bounds.width, paddingY));
-        if (vel.x != 0) {
-            detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, 0));
-            detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, bounds.height));
-        }
-        if (vel.x != 0 && vel.y != 0) {
-            detectionRayList.add(new CollisionDetectionRay(bounds, endPos, paddingX, paddingY));
-        }
-
+    public EnemyDamage getEnemyCollision(MovingObject object, MapBase map) {
         for (EnemyBase enemy: map.enemyList) {
-            for (CollisionDetectionRay ray: detectionRayList) {
-                Collision collision = getSideOfCollisionWithTile(ray, enemy.bounds,
-                        null, null, null, null);
-                if (collision != null) {
-                    return new EnemyDamage(EnemyDamage.Type.Normal, collision);
-                }
+            if (object.bounds.overlaps(enemy.bounds)) {
+                return new EnemyDamage(EnemyDamage.Type.Normal, EnemyDamage.Side.Left);
             }
         }
 

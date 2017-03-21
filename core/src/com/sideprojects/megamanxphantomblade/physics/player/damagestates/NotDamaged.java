@@ -2,6 +2,7 @@ package com.sideprojects.megamanxphantomblade.physics.player.damagestates;
 
 import com.sideprojects.megamanxphantomblade.enemies.EnemyDamage;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerDamageState;
+import com.sideprojects.megamanxphantomblade.physics.player.PlayerMovementStateBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 
 /**
@@ -14,11 +15,11 @@ public class NotDamaged extends PlayerDamageState {
 
     @Override
     public boolean canControl() {
-        return false;
+        return true;
     }
 
     @Override
-    public PlayerDamageState nextState(PlayerBase player, EnemyDamage damage, float delta) {
+    public PlayerDamageState nextState(PlayerBase player, EnemyDamage damage, PlayerMovementStateBase currentMovementState, float delta) {
         if (damage != null) {
             return new Damaged(player, damage);
         }
