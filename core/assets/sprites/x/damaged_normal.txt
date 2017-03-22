@@ -1,7 +1,7 @@
 damaged_normal.png
 size: 136, 58
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 0
   rotate: false

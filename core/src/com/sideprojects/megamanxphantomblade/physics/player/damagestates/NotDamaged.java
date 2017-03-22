@@ -21,7 +21,7 @@ public class NotDamaged extends PlayerDamageState {
     @Override
     public PlayerDamageState nextState(PlayerBase player, EnemyDamage damage, PlayerPhysics physics, float delta) {
         if (damage != null) {
-            return new Damaged(player, damage);
+            return new Damaged(player, damage, physics);
         }
         return this;
     }
