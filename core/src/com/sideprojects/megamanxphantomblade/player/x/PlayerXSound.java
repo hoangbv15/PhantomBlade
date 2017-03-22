@@ -23,6 +23,9 @@ public class PlayerXSound extends PlayerSound {
             case JUMP:
                 playRandomJumpShout();
                 break;
+            case DAMAGEDNORMAL:
+                playerRandomDamagedShout();
+                break;
         }
     }
 
@@ -31,6 +34,10 @@ public class PlayerXSound extends PlayerSound {
                 Sounds.XJumpShout1,
                 Sounds.XJumpShout2,
                 Sounds.XJumpShout3);
+    }
+
+    private void playerRandomDamagedShout() {
+        // TODO: Add X damaged sounds
     }
 
     @Override

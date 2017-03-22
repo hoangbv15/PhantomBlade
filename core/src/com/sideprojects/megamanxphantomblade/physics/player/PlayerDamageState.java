@@ -12,6 +12,6 @@ public abstract class PlayerDamageState {
     }
 
     public abstract boolean canControl();
-    public abstract PlayerDamageState nextState(PlayerBase player, EnemyDamage damage, PlayerMovementStateBase currentMovementState, float delta);
+    public abstract PlayerDamageState nextState(PlayerBase player, EnemyDamage damage, PlayerPhysics physics, float delta);
     public abstract void enter(PlayerBase player);
 }

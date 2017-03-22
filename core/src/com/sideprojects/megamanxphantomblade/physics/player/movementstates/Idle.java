@@ -44,6 +44,9 @@ public class Idle extends PlayerNonDashState {
         if (player.vel.y > 0) {
             return new Jump(input, player, player.state, stateChangeHandler);
         }
+        if (player.vel.y < 0) {
+            return new Fall(input, player, player.state, stateChangeHandler);
+        }
         if (input.isCommandPressed(Command.DASH) && canDash(input)) {
             if (input.isCommandPressed(Command.UP)) {
                 return new Updash(player, player.state, stateChangeHandler);

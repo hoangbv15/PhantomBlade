@@ -18,6 +18,7 @@ public abstract class PlayerBase extends MovingObject {
     public PlayerState previousState;
     // If the player is holding dash button
     public boolean isJumpDashing;
+    public boolean invincible;
 
     public PlayerAnimation animations;
     public TextureRegion currentFrame;

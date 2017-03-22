@@ -2,17 +2,18 @@ package com.sideprojects.megamanxphantomblade.physics.player.damagestates;
 
 import com.sideprojects.megamanxphantomblade.enemies.EnemyDamage;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerDamageState;
-import com.sideprojects.megamanxphantomblade.physics.player.PlayerMovementStateBase;
+import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 
 /**
  * Created by buivuhoang on 20/03/17.
  */
 public class Invincible extends PlayerDamageState {
-    private float invincibleTime = 2f;
+    private float invincibleTime = 1f;
     private float stateTime;
-    public Invincible(PlayerBase player) {
+    public Invincible(PlayerBase player, PlayerPhysics physics) {
         super(player);
+        physics.setStateToIdle();
     }
 
     @Override
@@ -21,7 +22,7 @@ public class Invincible extends PlayerDamageState {
     }
 
     @Override
-    public PlayerDamageState nextState(PlayerBase player, EnemyDamage damage, PlayerMovementStateBase currentMovementState, float delta) {
+    public PlayerDamageState nextState(PlayerBase player, EnemyDamage damage, PlayerPhysics physics, float delta) {
         if (stateTime >= invincibleTime) {
             return new NotDamaged(player);
         }
@@ -32,5 +33,6 @@ public class Invincible extends PlayerDamageState {
     @Override
     public void enter(PlayerBase player) {
         stateTime = 0;
+        player.invincible = true;
     }
 }

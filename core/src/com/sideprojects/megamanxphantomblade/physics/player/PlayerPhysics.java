@@ -29,11 +29,14 @@ public class PlayerPhysics extends PhysicsBase {
     public PlayerDamageState damageState;
     private PlayerJumpDashStateBase holdDashState;
 
+    public PlayerStateChangeHandler stateChangeHandler;
+
     public PlayerBase player;
 
     PlayerPhysics(InputProcessor input, PlayerBase player, PlayerStateChangeHandler stateChangeHandler) {
         super(input);
         this.player = player;
+        this.stateChangeHandler = stateChangeHandler;
         // Create the initial states
         player.direction = MovingObject.RIGHT;
         movementState = new Idle(input, player, null, stateChangeHandler);
@@ -112,7 +115,7 @@ public class PlayerPhysics extends PhysicsBase {
 
         // Check for enemy damage
         EnemyDamage damage = getEnemyCollision(player, map);
-        damageState = damageState.nextState(player, damage, movementState, delta);
+        damageState = damageState.nextState(player, damage, this, delta);
 
         if (damageState.canControl()) {
             // Check for collisions
@@ -124,6 +127,10 @@ public class PlayerPhysics extends PhysicsBase {
             // Do any optional update
             movementState.update(input, player);
         }
+    }
+
+    public void setStateToIdle() {
+        movementState = new Idle(input, player, player.state, stateChangeHandler);
     }
 
     private CollisionList calculateReaction(float delta, MapBase map) {

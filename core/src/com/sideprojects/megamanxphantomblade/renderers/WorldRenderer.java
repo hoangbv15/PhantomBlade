@@ -1,6 +1,7 @@
 package com.sideprojects.megamanxphantomblade.renderers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -14,9 +15,11 @@ import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
+import com.sideprojects.megamanxphantomblade.physics.player.damagestates.Damaged;
 import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
+import com.sideprojects.megamanxphantomblade.renderers.shaders.DamagedShader;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.TraceShader;
 
 /**
@@ -30,6 +33,7 @@ public class WorldRenderer {
     private SpriteCache cache;
     private SpriteBatch batch;
     private ShaderProgram traceShader;
+    private ShaderProgram damagedShader;
 
     private int[][] blocks;
     private float blockHeight = 16f;
@@ -50,6 +54,10 @@ public class WorldRenderer {
     private boolean startRemovingTraces;
     // private count towards number of frame skip
     private int traceFrameSkipCount = 0;
+
+    // invincible state flickering duration
+    private float flickerDuration = 0.05f;
+    private float flickerStateTime = 0;
 
     // Pre-calculated values to clamp camera position within the map's boundaries
     private float camViewportHalfX;
@@ -86,6 +94,8 @@ public class WorldRenderer {
         yDashRocketPadding = map.player.animations.get(PlayerAnimation.Type.Dashrocket).getKeyFrame(0).getRegionHeight() / 7f;
         xUpDashRocketPadding = map.player.animations.get(PlayerAnimation.Type.Updash).getKeyFrame(0).getRegionWidth() / 5f;
         yUpDashRocketPadding = map.player.animations.get(PlayerAnimation.Type.Updashrocket).getKeyFrame(0).getRegionHeight();
+
+        damagedShader = DamagedShader.getShader();
     }
 
     private void createBlocks() {
@@ -121,7 +131,7 @@ public class WorldRenderer {
         return newPos;
     }
 
-    public void render() {
+    public void render(float delta) {
         // Calculate vertical padding for player's position
         Vector2 pos = applyCameraLerp(map.player.pos);
 
@@ -137,7 +147,7 @@ public class WorldRenderer {
         batch.end();
         renderMap();
         renderEnemies();
-        renderPlayer(pos.x, pos.y);
+        renderPlayer(pos.x, pos.y, delta);
         renderParticles();
     }
 
@@ -180,7 +190,12 @@ public class WorldRenderer {
     }
 
     // Pass posX and posY in so we don't have to recalculate them
-    private void renderPlayer(float posX, float posY) {
+    private void renderPlayer(float posX, float posY, float delta) {
+        flickerStateTime += delta;
+        if (flickerStateTime >= flickerDuration * 2) {
+            flickerStateTime = 0;
+        }
+
         TextureRegion currentFrame = map.player.currentFrame;
         float originPosX = posX;
         if (map.player.direction == PlayerBase.RIGHT) {
@@ -198,7 +213,13 @@ public class WorldRenderer {
         if (map.player.state == PlayerState.UPDASH) {
             renderPlayerUpDashRocket(originPosX, posY);
         }
+        if (map.player.invincible && flickerStateTime <= flickerDuration) {
+            batch.setShader(damagedShader);
+        }
         batch.draw(currentFrame, posX, posY);
+        if (map.player.invincible) {
+            batch.setShader(null);
+        }
         batch.end();
     }
 
@@ -268,6 +289,7 @@ public class WorldRenderer {
         cache.dispose();
         batch.dispose();
         traceShader.dispose();
+        damagedShader.dispose();
     }
 
     public void resize(int width, int height) {

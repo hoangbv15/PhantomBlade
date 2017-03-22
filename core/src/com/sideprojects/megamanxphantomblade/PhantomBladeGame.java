@@ -48,7 +48,7 @@ public class PhantomBladeGame extends ApplicationAdapter {
 		float delta = Gdx.graphics.getRawDeltaTime();
 		map.update(delta);
 		renderGradientBackground();
-		mapRenderer.render();
+		mapRenderer.render(delta);
 //		debugRenderer.render(delta, playerPhysics.collisions.toList);
 	}
 
