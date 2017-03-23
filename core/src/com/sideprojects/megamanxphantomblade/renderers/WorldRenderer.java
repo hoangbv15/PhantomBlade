@@ -32,8 +32,6 @@ public class WorldRenderer {
     private ParallaxBackground background;
     private SpriteCache cache;
     private SpriteBatch batch;
-    private ShaderProgram traceShader;
-    private ShaderProgram damagedShader;
 
     private int[][] blocks;
     private float blockHeight = 16f;
@@ -41,23 +39,7 @@ public class WorldRenderer {
 
     private Vector3 lerpTarget;
 
-    private float playerYOffset;
-
-    // Keep the last frames of the player to draw a trace
-    private Queue<TextureRegion> lastPlayerFrameQueue;
-    private Queue<Vector2> lastPlayerPositionQueue;
-    // Number of traces to render
-    private int numOfTraces = 5;
-    // Number of frame skip per trace
-    private int traceFrameSkip = 2;
-    // Flag to indicate when to start removing traces
-    private boolean startRemovingTraces;
-    // private count towards number of frame skip
-    private int traceFrameSkipCount = 0;
-
-    // invincible state flickering duration
-    private float flickerDuration = 0.05f;
-    private float flickerStateTime = 0;
+    private PlayerRenderer playerRenderer;
 
     // Pre-calculated values to clamp camera position within the map's boundaries
     private float camViewportHalfX;
@@ -65,37 +47,17 @@ public class WorldRenderer {
     private float mapWidthMinusCamViewportHalfX;
     private float mapHeightMinusCamViewportHalfY;
 
-    // Parameters for rendering dash rockets
-    private float leftDashRocketPadding;
-    private float xDashRocketPadding;
-    private float yDashRocketPadding;
-    private float xUpDashRocketPadding;
-    private float yUpDashRocketPadding;
-
     public WorldRenderer(MapBase map) {
         this.map = map;
-        this.background = map.getBackground();
-        this.cam = new OrthographicCamera(camViewPortY * 16 / 9f, camViewPortY);
-        this.cache = new SpriteCache(this.map.tiles.length * this.map.tiles[0].length, false);
-        this.batch = new SpriteBatch(5460);
-        this.blocks = new int[(int)Math.ceil(this.map.tiles.length / blockWidth)][(int)Math.ceil(this.map.tiles[0].length / blockHeight)];
+        background = map.getBackground();
+        batch = new SpriteBatch(5460);
+        cam = new OrthographicCamera(camViewPortY * 16 / 9f, camViewPortY);
+        playerRenderer = new PlayerRenderer(map.player, map.getTileWidth(), cam, batch);
+        cache = new SpriteCache(this.map.tiles.length * this.map.tiles[0].length, false);
+        blocks = new int[(int)Math.ceil(this.map.tiles.length / blockWidth)][(int)Math.ceil(this.map.tiles[0].length / blockHeight)];
         lerpTarget = new Vector3();
-        // Fixing the camera height for now.
-        playerYOffset = 1/5f * map.getTileHeight();
-        traceShader = TraceShader.getShaderColor(map.player.getTraceColour());
-        lastPlayerFrameQueue = new Queue<TextureRegion>(numOfTraces);
-        lastPlayerPositionQueue = new Queue<Vector2>(numOfTraces);
-        startRemovingTraces = false;
         createBlocks();
         calculateCamClamps();
-        // Calculate dash rocket padding
-        leftDashRocketPadding = map.player.animations.get(PlayerAnimation.Type.Dash).getKeyFrame(0).getRegionWidth();
-        xDashRocketPadding = map.player.animations.get(PlayerAnimation.Type.Dashrocket).getKeyFrame(0).getRegionWidth() / 5f;
-        yDashRocketPadding = map.player.animations.get(PlayerAnimation.Type.Dashrocket).getKeyFrame(0).getRegionHeight() / 7f;
-        xUpDashRocketPadding = map.player.animations.get(PlayerAnimation.Type.Updash).getKeyFrame(0).getRegionWidth() / 5f;
-        yUpDashRocketPadding = map.player.animations.get(PlayerAnimation.Type.Updashrocket).getKeyFrame(0).getRegionHeight();
-
-        damagedShader = DamagedShader.getShader();
     }
 
     private void createBlocks() {
@@ -124,6 +86,7 @@ public class WorldRenderer {
     }
 
     private Vector2 applyCameraLerp(Vector2 pos) {
+        float playerYOffset = 1/5f * map.getTileHeight();
         Vector2 newPos = new Vector2(
                 pos.x * map.getTileWidth(),
                 pos.y * map.getTileHeight() - playerYOffset
@@ -146,9 +109,12 @@ public class WorldRenderer {
         background.draw(cam, batch);
         batch.end();
         renderMap();
+        batch.setProjectionMatrix(cam.combined);
+        batch.begin();
         renderEnemies();
-        renderPlayer(pos.x, pos.y, delta);
+        playerRenderer.render(pos.x, pos.y, delta);
         renderParticles();
+        batch.end();
     }
 
     private void renderMap() {
@@ -165,13 +131,10 @@ public class WorldRenderer {
     }
 
     private void renderEnemies() {
-        batch.setProjectionMatrix(cam.combined);
-        batch.begin();
         for (EnemyBase enemy: map.enemyList) {
             Vector2 pos = applyCameraLerp(enemy.pos);
             batch.draw(enemy.currentFrame, pos.x, pos.y);
         }
-        batch.end();
     }
 
     private void renderParticles() {
@@ -179,117 +142,17 @@ public class WorldRenderer {
             return;
         }
 
-        batch.setProjectionMatrix(cam.combined);
-        batch.begin();
         for (int i = 0; i < map.particles.size(); i++) {
             Particle particle = map.particles.get(i);
             Vector2 pos = applyCameraLerp(particle.pos);
             batch.draw(particle.currentFrame, pos.x, pos.y);
         }
-        batch.end();
-    }
-
-    // Pass posX and posY in so we don't have to recalculate them
-    private void renderPlayer(float posX, float posY, float delta) {
-        flickerStateTime += delta;
-        if (flickerStateTime >= flickerDuration * 2) {
-            flickerStateTime = 0;
-        }
-
-        TextureRegion currentFrame = map.player.currentFrame;
-        float originPosX = posX;
-        if (map.player.direction == PlayerBase.RIGHT) {
-            // Pad the texture's start x because the engine is drawing from left to right.
-            // Without this the animation frames will be misaligned
-            posX += map.getTileWidth() * 0.6f - currentFrame.getRegionWidth();
-        }
-
-        batch.setProjectionMatrix(cam.combined);
-        batch.begin();
-        renderPlayerTrace(currentFrame, posX, posY);
-        if (map.player.state == PlayerState.DASH) {
-            renderPlayerDashRocket(originPosX, posY);
-        }
-        if (map.player.state == PlayerState.UPDASH) {
-            renderPlayerUpDashRocket(originPosX, posY);
-        }
-        if (map.player.invincible && flickerStateTime <= flickerDuration) {
-            batch.setShader(damagedShader);
-        }
-        batch.draw(currentFrame, posX, posY);
-        if (map.player.invincible) {
-            batch.setShader(null);
-        }
-        batch.end();
-    }
-
-    private void renderPlayerDashRocket(float posX, float posY) {
-        float y = posY - yDashRocketPadding;
-        float x = posX;
-        if (map.player.direction == MovingObject.RIGHT) {
-            x -= map.player.currentDashRocketFrame.getRegionWidth() + xDashRocketPadding;
-        } else {
-            x += leftDashRocketPadding + xDashRocketPadding;
-        }
-
-        batch.draw(map.player.currentDashRocketFrame, x, y);
-    }
-
-    private void renderPlayerUpDashRocket(float posX, float posY) {
-        float y = posY - yUpDashRocketPadding;
-        float x = posX;
-        if (map.player.direction == MovingObject.RIGHT) {
-            x += xUpDashRocketPadding;
-        }
-        batch.draw(map.player.currentDashRocketFrame, x, y);
-    }
-
-    private void renderPlayerTrace(TextureRegion currentFrame, float posX, float posY) {
-        if (traceFrameSkipCount != traceFrameSkip) {
-            traceFrameSkipCount++;
-        } else {
-            if (startRemovingTraces) {
-                lastPlayerFrameQueue.removeFirst();
-                lastPlayerPositionQueue.removeFirst();
-            }
-            traceFrameSkipCount = 0;
-            // If player is dashing, draw a trace
-            if (map.player.state == PlayerState.DASH || map.player.state == PlayerState.UPDASH || map.player.isJumpDashing) {
-                lastPlayerFrameQueue.addLast(currentFrame);
-                lastPlayerPositionQueue.addLast(new Vector2(posX, posY));
-            }
-            if (lastPlayerFrameQueue.size == numOfTraces) {
-                startRemovingTraces = true;
-            }
-        }
-
-        if (map.player.state == PlayerState.DASH || map.player.state == PlayerState.UPDASH || map.player.isJumpDashing) {
-            if (lastPlayerFrameQueue.size != numOfTraces) {
-                startRemovingTraces = false;
-            }
-        } else {
-            startRemovingTraces = true;
-        }
-
-
-        if (lastPlayerFrameQueue.size != 0) {
-            for (int i = 0; i < lastPlayerFrameQueue.size; i++) {
-                TextureRegion frame = lastPlayerFrameQueue.get(i);
-                Vector2 position = lastPlayerPositionQueue.get(i);
-                batch.setShader(traceShader);
-                batch.draw(frame, position.x, position.y);
-            }
-        } else {
-            startRemovingTraces = false;
-        }
-        batch.setShader(null);
     }
 
     public void dispose() {
         cache.dispose();
         batch.dispose();
-        traceShader.dispose();
-        damagedShader.dispose();
+        playerRenderer.dispose();
     }
 
     public void resize(int width, int height) {

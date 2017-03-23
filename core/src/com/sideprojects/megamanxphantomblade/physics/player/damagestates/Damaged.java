@@ -1,5 +1,6 @@
 package com.sideprojects.megamanxphantomblade.physics.player.damagestates;
 
+import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyDamage;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerDamageState;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
@@ -24,6 +25,11 @@ public class Damaged extends PlayerDamageState {
             case InstantDeath:
                 physics.stateChangeHandler.callback(player.state, PlayerState.DAMAGEDNORMAL);
                 player.state = PlayerState.DAMAGEDNORMAL;
+                if (damage.side == EnemyDamage.Side.Left) {
+                    player.direction = MovingObject.LEFT;
+                } else {
+                    player.direction = MovingObject.RIGHT;
+                }
                 break;
         }
     }

@@ -24,6 +24,18 @@ public abstract class MovingObject {
 
     public float stateTime;
 
+    public int healthPoints;
+    public int maxHealthPoints;
+
+    public void initialiseHealthPoints(int hp) {
+        maxHealthPoints = hp;
+        healthPoints = hp;
+    }
+
+    public void takeDamage(int damage) {
+        healthPoints -= damage;
+    }
+
     public void updatePos() {
         pos.x = bounds.x;
         pos.y = bounds.y;

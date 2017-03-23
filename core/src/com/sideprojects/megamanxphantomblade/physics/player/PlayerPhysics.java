@@ -49,6 +49,14 @@ public class PlayerPhysics extends PhysicsBase {
         player.stateTime += delta;
         holdDashState = holdDashState.nextState(input, player);
 
+        // Check for enemy damage
+        EnemyDamage damage = getEnemyCollision(player, map);
+        damageState = damageState.nextState(player, damage, this, delta);
+
+        if (!damageState.canControl()) {
+            return;
+        }
+
         // Jumping
         if (input.isCommandPressed(Command.JUMP)) {
             if (input.isCommandJustPressed(Command.JUMP)) {
@@ -98,7 +106,7 @@ public class PlayerPhysics extends PhysicsBase {
         // Hold dash
         if (holdDashState.isJumpDashing()) {
             if (player.vel.x != 0) {
-                if (movementState.canWallJump()){
+                if (movementState.canWallJump()) {
                     player.vel.x -= VELOCITY_DASH_ADDITION * player.direction;
                 } else if (movementState.canWallGlide()) {
                     player.vel.x += VELOCITY_DASH_ADDITION * player.direction * delta * VELOCITY_WALLBOUNCE_MULTIPLIER;
@@ -113,20 +121,14 @@ public class PlayerPhysics extends PhysicsBase {
             applyGravity(player, map.GRAVITY, map.MAX_FALLSPEED, delta);
         }
 
-        // Check for enemy damage
-        EnemyDamage damage = getEnemyCollision(player, map);
-        damageState = damageState.nextState(player, damage, this, delta);
+        // Check for collisions
+        CollisionList collisions = calculateReaction(delta, map);
 
-        if (damageState.canControl()) {
-            // Check for collisions
-            CollisionList collisions = calculateReaction(delta, map);
+        // Assign next state
+        movementState = movementState.nextState(input, player, collisions);
 
-            // Assign next state
-            movementState = movementState.nextState(input, player, collisions);
-
-            // Do any optional update
-            movementState.update(input, player);
-        }
+        // Do any optional update
+        movementState.update(input, player);
     }
 
     public void setStateToIdle() {

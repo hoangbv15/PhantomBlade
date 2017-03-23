@@ -151,7 +151,13 @@ public abstract class PhysicsBase {
     public EnemyDamage getEnemyCollision(MovingObject object, MapBase map) {
         for (EnemyBase enemy: map.enemyList) {
             if (object.bounds.overlaps(enemy.bounds)) {
-                return new EnemyDamage(EnemyDamage.Type.Normal, EnemyDamage.Side.Left);
+                float playerX = object.bounds.x + object.bounds.width / 2;
+                float enemyX = enemy.bounds.x + enemy.bounds.width / 2;
+                EnemyDamage.Side side = EnemyDamage.Side.Left;
+                if (playerX < enemyX) {
+                    side = EnemyDamage.Side.Right;
+                }
+                return new EnemyDamage(EnemyDamage.Type.Normal, side);
             }
         }
 

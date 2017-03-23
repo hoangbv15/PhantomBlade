@@ -29,6 +29,7 @@ public abstract class PlayerBase extends MovingObject {
         pos = new Vector2(x, y);
         updatePos();
         vel = new Vector2(0, 0);
+        initialiseHealthPoints(100);
         createAnimations();
     }
 

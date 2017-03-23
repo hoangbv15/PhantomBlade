@@ -37,7 +37,10 @@ public class PlayerXSound extends PlayerSound {
     }
 
     private void playerRandomDamagedShout() {
-        // TODO: Add X damaged sounds
+        soundPlayer.playOneRandomly(
+                Sounds.XDamagedShout1,
+                Sounds.XDamagedShout2
+        );
     }
 
     @Override
