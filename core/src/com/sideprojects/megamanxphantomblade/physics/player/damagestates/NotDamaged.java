@@ -19,6 +19,11 @@ public class NotDamaged extends PlayerDamageState {
     }
 
     @Override
+    public boolean isPushedBack() {
+        return false;
+    }
+
+    @Override
     public PlayerDamageState nextState(PlayerBase player, EnemyDamage damage, PlayerPhysics physics, float delta) {
         if (damage != null) {
             return new Damaged(player, damage, physics);

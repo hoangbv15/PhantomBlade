@@ -53,82 +53,84 @@ public class PlayerPhysics extends PhysicsBase {
         EnemyDamage damage = getEnemyCollision(player, map);
         damageState = damageState.nextState(player, damage, this, delta);
 
-        if (!damageState.canControl()) {
-            return;
-        }
-
-        // Jumping
-        if (input.isCommandPressed(Command.JUMP)) {
-            if (input.isCommandJustPressed(Command.JUMP)) {
-                if (movementState.canJump()) {
-                    player.vel.y = VELOCITY_JUMP;
+        if (damageState.canControl()) {
+            // Jumping
+            if (input.isCommandPressed(Command.JUMP)) {
+                if (input.isCommandJustPressed(Command.JUMP)) {
+                    if (movementState.canJump()) {
+                        player.vel.y = VELOCITY_JUMP;
+                    }
+                    if (movementState.canWallJump()) {
+                        player.vel.x = VELOCITY_X_WALLJUMP * player.direction;
+                    }
                 }
-                if (movementState.canWallJump()) {
-                    player.vel.x = VELOCITY_X_WALLJUMP * player.direction;
+            } else {
+                if (player.vel.y > 0) {
+                    player.vel.y = 0;
                 }
             }
-        } else {
-            if (player.vel.y > 0) {
-                player.vel.y = 0;
-            }
-        }
 
-        // Running & direction
-        if (input.isCommandPressed(Command.LEFT) || input.isCommandPressed(Command.RIGHT)) {
-            if (movementState.canRun()) {
-                player.direction = input.isCommandPressed(Command.LEFT) ? MovingObject.LEFT : MovingObject.RIGHT;
-                if (movementState.canWallGlide()) {
-                    player.vel.x += VELOCITY_WALK * player.direction * delta * VELOCITY_WALLBOUNCE_MULTIPLIER;
-                } else {
-                    player.vel.x = VELOCITY_WALK * player.direction;
+            // Running & direction
+            if (input.isCommandPressed(Command.LEFT) || input.isCommandPressed(Command.RIGHT)) {
+                if (movementState.canRun()) {
+                    player.direction = input.isCommandPressed(Command.LEFT) ? MovingObject.LEFT : MovingObject.RIGHT;
+                    if (movementState.canWallGlide()) {
+                        player.vel.x += VELOCITY_WALK * player.direction * delta * VELOCITY_WALLBOUNCE_MULTIPLIER;
+                    } else {
+                        player.vel.x = VELOCITY_WALK * player.direction;
+                    }
                 }
+            } else {
+                player.vel.x = 0;
+            }
+
+            // Dashing
+            boolean doNotApplyGravity = false;
+            if (player.state == PlayerState.DASH) {
+                player.vel.x = (VELOCITY_WALK + VELOCITY_DASH_ADDITION) * player.direction;
+                // Air dash
+                if (!player.grounded) {
+                    player.vel.y = 0;
+                    doNotApplyGravity = true;
+                }
+            }
+
+            if (player.state == PlayerState.UPDASH) {
+                player.vel.y = VELOCITY_JUMP + VELOCITY_DASH_ADDITION;
+                doNotApplyGravity = true;
+            }
+
+            // Hold dash
+            if (holdDashState.isJumpDashing()) {
+                if (player.vel.x != 0) {
+                    if (movementState.canWallJump()) {
+                        player.vel.x -= VELOCITY_DASH_ADDITION * player.direction;
+                    } else if (movementState.canWallGlide()) {
+                        player.vel.x += VELOCITY_DASH_ADDITION * player.direction * delta * VELOCITY_WALLBOUNCE_MULTIPLIER;
+                    } else {
+                        player.vel.x += VELOCITY_DASH_ADDITION * player.direction;
+                    }
+                }
+            }
+
+            // Apply gravity
+            if (!doNotApplyGravity) {
+                applyGravity(player, map.GRAVITY, map.MAX_FALLSPEED, delta);
             }
         } else {
             player.vel.x = 0;
-        }
-
-        // Dashing
-        boolean doNotApplyGravity = false;
-        if (player.state == PlayerState.DASH) {
-            player.vel.x = (VELOCITY_WALK + VELOCITY_DASH_ADDITION) * player.direction;
-            // Air dash
-            if (!player.grounded) {
-                player.vel.y = 0;
-                doNotApplyGravity = true;
-            }
-        }
-
-        if (player.state == PlayerState.UPDASH) {
-            player.vel.y = VELOCITY_JUMP + VELOCITY_DASH_ADDITION;
-            doNotApplyGravity = true;
-        }
-
-        // Hold dash
-        if (holdDashState.isJumpDashing()) {
-            if (player.vel.x != 0) {
-                if (movementState.canWallJump()) {
-                    player.vel.x -= VELOCITY_DASH_ADDITION * player.direction;
-                } else if (movementState.canWallGlide()) {
-                    player.vel.x += VELOCITY_DASH_ADDITION * player.direction * delta * VELOCITY_WALLBOUNCE_MULTIPLIER;
-                } else {
-                    player.vel.x += VELOCITY_DASH_ADDITION * player.direction;
-                }
-            }
-        }
-
-        // Apply gravity
-        if (!doNotApplyGravity) {
-            applyGravity(player, map.GRAVITY, map.MAX_FALLSPEED, delta);
+            player.vel.y = 0;
         }
 
         // Check for collisions
         CollisionList collisions = calculateReaction(delta, map);
 
         // Assign next state
-        movementState = movementState.nextState(input, player, collisions);
-
-        // Do any optional update
-        movementState.update(input, player);
+        if (damageState.canControl()) {
+            movementState = movementState.nextState(input, player, collisions);
+            // Do any optional update
+            movementState.update(input, player);
+        }
     }
 
     public void setStateToIdle() {

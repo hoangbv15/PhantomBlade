@@ -22,6 +22,11 @@ public class Invincible extends PlayerDamageState {
     }
 
     @Override
+    public boolean isPushedBack() {
+        return false;
+    }
+
+    @Override
     public PlayerDamageState nextState(PlayerBase player, EnemyDamage damage, PlayerPhysics physics, float delta) {
         if (stateTime >= invincibleTime) {
             return new NotDamaged(player);
