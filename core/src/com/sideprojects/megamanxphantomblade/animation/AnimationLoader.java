@@ -10,15 +10,7 @@ import com.badlogic.gdx.utils.Array;
  */
 public class AnimationLoader {
     public static Animation<TextureRegion> load(String atlasFile, int[] animationIndex, boolean flipped, float frameDuration) {
-        TextureAtlas atlas = new TextureAtlas(atlasFile);
-
-        Array<TextureAtlas.AtlasRegion> regions = atlas.getRegions();
-
-        if (flipped) {
-            for (TextureRegion region: regions) {
-                region.flip(true, false);
-            }
-        }
+        Array<TextureAtlas.AtlasRegion> regions = load(atlasFile, flipped, false);
 
         Array<TextureAtlas.AtlasRegion> indexedRegions = new Array<TextureAtlas.AtlasRegion>();
 
@@ -31,5 +23,26 @@ public class AnimationLoader {
         }
 
         return new Animation<TextureRegion>(frameDuration, indexedRegions);
+    }
+
+    private static Array<TextureAtlas.AtlasRegion> load(String atlasFile, boolean xFlipped, boolean yFlipped) {
+        TextureAtlas atlas = new TextureAtlas(atlasFile);
+
+        Array<TextureAtlas.AtlasRegion> regions = atlas.getRegions();
+
+        if (xFlipped || yFlipped) {
+            for (TextureRegion region: regions) {
+                region.flip(xFlipped, yFlipped);
+            }
+        }
+
+        return regions;
+    }
+
+    /**
+     * GUI elements are rendered from the top to bottom so need to flip y
+     */
+    public static Array<TextureAtlas.AtlasRegion> loadGui(String atlasFile) {
+        return load(atlasFile, false, true);
     }
 }

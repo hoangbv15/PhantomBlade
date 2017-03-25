@@ -13,15 +13,13 @@ import java.util.List;
  * Created by buivuhoang on 11/02/17.
  */
 public class DebugRenderer {
-    private WorldRenderer mainRenderer;
     private OrthographicCamera cam;
     private MapBase map;
     ShapeRenderer shapeDebugger;
 
     public DebugRenderer(WorldRenderer mainRenderer) {
-        this.mainRenderer = mainRenderer;
         this.map = mainRenderer.map;
-        this.cam = mainRenderer.cam;
+        this.cam = mainRenderer.gameCam;
         shapeDebugger = new ShapeRenderer();
     }
 

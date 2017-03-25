@@ -1,33 +1,25 @@
 package com.sideprojects.megamanxphantomblade.renderers;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Queue;
 import com.rahul.libgdx.parallax.ParallaxBackground;
-import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
-import com.sideprojects.megamanxphantomblade.physics.player.damagestates.Damaged;
-import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
-import com.sideprojects.megamanxphantomblade.player.PlayerBase;
-import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
-import com.sideprojects.megamanxphantomblade.renderers.shaders.DamagedShader;
-import com.sideprojects.megamanxphantomblade.renderers.shaders.TraceShader;
 
 /**
  * Created by buivuhoang on 04/02/17.
  */
 public class WorldRenderer {
     MapBase map;
-    OrthographicCamera cam;
+    OrthographicCamera gameCam;
+    OrthographicCamera guiCam;
     private float camViewPortY = 540f;
     private ParallaxBackground background;
     private SpriteCache cache;
@@ -40,6 +32,7 @@ public class WorldRenderer {
     private Vector3 lerpTarget;
 
     private PlayerRenderer playerRenderer;
+    private PlayerHealthRenderer playerHealthRenderer;
 
     // Pre-calculated values to clamp camera position within the map's boundaries
     private float camViewportHalfX;
@@ -51,8 +44,11 @@ public class WorldRenderer {
         this.map = map;
         background = map.getBackground();
         batch = new SpriteBatch(5460);
-        cam = new OrthographicCamera(camViewPortY * 16 / 9f, camViewPortY);
-        playerRenderer = new PlayerRenderer(map.player, map.getTileWidth(), cam, batch);
+        gameCam = new OrthographicCamera(camViewPortY * 16 / 9f, camViewPortY);
+        guiCam = new OrthographicCamera(16, 9);
+        guiCam.zoom = 0.4f;
+        playerRenderer = new PlayerRenderer(map.player, map.getTileWidth(), gameCam, batch);
+        playerHealthRenderer = new PlayerHealthRenderer(batch);
         cache = new SpriteCache(this.map.tiles.length * this.map.tiles[0].length, false);
         blocks = new int[(int)Math.ceil(this.map.tiles.length / blockWidth)][(int)Math.ceil(this.map.tiles[0].length / blockHeight)];
         lerpTarget = new Vector3();
@@ -99,26 +95,36 @@ public class WorldRenderer {
         Vector2 pos = applyCameraLerp(map.player.pos);
 
         // Apply linear interpolation to the camera in order to smooth the camera movement
-        cam.position.lerp(lerpTarget.set(pos.x, pos.y, 0), 0.5f);
+        gameCam.position.lerp(lerpTarget.set(pos.x, pos.y, 0), 0.5f);
         // Keep the camera within bounds
-        cam.position.x = MathUtils.clamp(cam.position.x, camViewportHalfX, mapWidthMinusCamViewportHalfX);
-        cam.position.y = MathUtils.clamp(cam.position.y, camViewportHalfY, mapHeightMinusCamViewportHalfY);
-        cam.update();
+        gameCam.position.x = MathUtils.clamp(gameCam.position.x, camViewportHalfX, mapWidthMinusCamViewportHalfX);
+        gameCam.position.y = MathUtils.clamp(gameCam.position.y, camViewportHalfY, mapHeightMinusCamViewportHalfY);
+        gameCam.update();
         Gdx.gl.glDisable(GL20.GL_BLEND);
         batch.begin();
-        background.draw(cam, batch);
+        background.draw(gameCam, batch);
         batch.end();
         renderMap();
-        batch.setProjectionMatrix(cam.combined);
+        batch.setProjectionMatrix(gameCam.combined);
         batch.begin();
         renderEnemies();
         playerRenderer.render(pos.x, pos.y, delta);
         renderParticles();
+        renderGui(delta);
         batch.end();
+        // Need to draw things that use ShapeRenderer last
+        playerHealthRenderer.renderHealth(map.player.maxHealthPoints, map.player.healthPoints, map.player.isLowHealth(), delta);
+    }
+
+    private void renderGui(float delta) {
+        // Need to flip y to render gui from top down
+        guiCam.setToOrtho(true);
+        batch.setProjectionMatrix(guiCam.combined);
+        playerHealthRenderer.renderHealthContanier(map.player.maxHealthPoints);
     }
 
     private void renderMap() {
-        cache.setProjectionMatrix(cam.combined);
+        cache.setProjectionMatrix(gameCam.combined);
         cache.begin();
 
         for (int blockY = 0; blockY < blocks[0].length; blockY++) {
@@ -153,17 +159,18 @@ public class WorldRenderer {
         cache.dispose();
         batch.dispose();
         playerRenderer.dispose();
+        playerHealthRenderer.dispose();
     }
 
     public void resize(int width, int height) {
         float aspectRatio = width / (float) height;
-        cam = new OrthographicCamera(camViewPortY * aspectRatio, camViewPortY);
+        gameCam = new OrthographicCamera(camViewPortY * aspectRatio, camViewPortY);
         calculateCamClamps();
     }
 
     private void calculateCamClamps() {
-        camViewportHalfX = cam.viewportWidth / 2;
-        camViewportHalfY = cam.viewportHeight / 2;
+        camViewportHalfX = gameCam.viewportWidth / 2;
+        camViewportHalfY = gameCam.viewportHeight / 2;
         mapWidthMinusCamViewportHalfX = map.getWidth() - camViewportHalfX;
         mapHeightMinusCamViewportHalfY = map.getHeight() - camViewportHalfY;
     }

@@ -20,4 +20,7 @@ public class Sprites {
     public static String Wallslide = "sprites/wallslide_dust.txt";
     public static String WallKick = "sprites/wallslide_kick.txt";
     public static String DashDust = "sprites/dash_dust.txt";
+
+    // GUI elements
+    public static String GuiElements = "sprites/ingame_gui.txt";
 }

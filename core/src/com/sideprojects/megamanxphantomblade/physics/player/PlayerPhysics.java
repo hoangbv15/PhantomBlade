@@ -145,7 +145,7 @@ public class PlayerPhysics extends PhysicsBase {
     private CollisionList calculateReaction(float delta, MapBase map) {
         // Process the player input here
         CollisionList collisionList = getMapCollision(player, delta, map);
-
+        collisions = collisionList;
         // Apply collision-specific movement logic
         // Take current state into account if needed
         for (Collision collision: collisionList.toList) {
