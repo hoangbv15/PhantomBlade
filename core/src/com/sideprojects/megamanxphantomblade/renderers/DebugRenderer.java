@@ -21,11 +21,12 @@ public class DebugRenderer {
         this.map = mainRenderer.map;
         this.cam = mainRenderer.gameCam;
         shapeDebugger = new ShapeRenderer();
+        shapeDebugger.setAutoShapeType(true);
     }
 
     public void render(float delta, List<Collision> collisions) {
         Gdx.gl20.glLineWidth(2);
-        shapeDebugger.setProjectionMatrix(cam.combined);
+//        shapeDebugger.setProjectionMatrix(cam.combined);
         shapeDebugger.begin(ShapeRenderer.ShapeType.Line);
         shapeDebugger.setColor(0, 1, 0, 1);
         for (Collision collision: collisions) {

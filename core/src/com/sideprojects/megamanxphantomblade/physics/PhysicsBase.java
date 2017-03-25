@@ -61,8 +61,10 @@ public abstract class PhysicsBase {
 
         // Setup collision detection rays
         List<CollisionDetectionRay> detectionRayList = new ArrayList<CollisionDetectionRay>(5);
-        detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, 0, paddingY));
-        detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, bounds.width, paddingY));
+        if (vel.y != 0) {
+            detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, 0, paddingY));
+            detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, bounds.width, paddingY));
+        }
         if (vel.x != 0) {
             detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, 0));
             detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, bounds.height));

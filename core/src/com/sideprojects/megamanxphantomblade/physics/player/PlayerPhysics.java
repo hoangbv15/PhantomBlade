@@ -121,7 +121,7 @@ public class PlayerPhysics extends PhysicsBase {
 
             // Apply gravity
             if (!doNotApplyGravity) {
-                applyGravity(player, map.GRAVITY, map.MAX_FALLSPEED, delta);
+                applyGravity(player, map.GRAVITY, map.MAX_FALLSPEED, map.WALLSLIDE_FALLSPEED, delta);
             }
         } else {
             object.vel.y = 0;
@@ -153,9 +153,6 @@ public class PlayerPhysics extends PhysicsBase {
             switch (collision.side) {
                 case Left:
                 case Right:
-                    if (movementState.canWallSlide()) {
-                        player.vel.y = map.WALLSLIDE_FALLSPEED;
-                    }
                     player.vel.x = 0;
                     player.bounds.x = preCollide.x;
                     break;
@@ -174,9 +171,15 @@ public class PlayerPhysics extends PhysicsBase {
         return collisionList;
     }
 
-    private void applyGravity(MovingObject object, float gravity, float maxFallspeed, float delta) {
-        if (object.vel.y > maxFallspeed) {
+    private void applyGravity(MovingObject object, float gravity, float maxFallspeed, float wallslideFallspeed, float delta) {
+        float finalFallspeed = maxFallspeed;
+        if (player.state == PlayerState.WALLSLIDE) {
+            finalFallspeed = wallslideFallspeed;
+        }
+        if (object.vel.y > finalFallspeed) {
             object.vel.y -= gravity * delta;
+        } else {
+            object.vel.y = finalFallspeed;
         }
     }
 }
