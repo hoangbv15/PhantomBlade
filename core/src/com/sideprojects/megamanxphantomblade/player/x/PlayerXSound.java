@@ -29,6 +29,11 @@ public class PlayerXSound extends PlayerSound {
         }
     }
 
+    @Override
+    public void lowHealthWarning() {
+        soundPlayer.playInParallel(Sounds.XLowHealth);
+    }
+
     private void playRandomJumpShout() {
         soundPlayer.playOneRandomly(
                 Sounds.XJumpShout1,
@@ -71,6 +76,11 @@ public class PlayerXSound extends PlayerSound {
     @Override
     protected void playWallJump() {
         soundPlayer.playInParallelAndStopPreviousSound(Sounds.XWallJump);
+    }
+
+    @Override
+    protected void playDead() {
+        soundPlayer.playInParallel(Sounds.XDie);
     }
 
     @Override

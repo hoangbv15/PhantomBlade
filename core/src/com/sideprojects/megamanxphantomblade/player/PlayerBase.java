@@ -20,6 +20,11 @@ public abstract class PlayerBase extends MovingObject {
     public boolean isJumpDashing;
     public boolean invincible;
 
+    // Can only issue low health warning once
+    // Resets after health being restored to above threshold
+    public boolean canIssueLowHealthWarning;
+    public static int lowHealthThreshold = 30;
+
     public PlayerAnimation animations;
     public TextureRegion currentFrame;
     public TextureRegion currentDashRocketFrame;
@@ -30,11 +35,20 @@ public abstract class PlayerBase extends MovingObject {
         updatePos();
         vel = new Vector2(0, 0);
         initialiseHealthPoints(100);
+        canIssueLowHealthWarning = true;
         createAnimations();
     }
 
     public void update(MapBase map) {
         updateAnimation(map);
+    }
+
+    public boolean isLowHealth() {
+        boolean isLow = healthPoints <= lowHealthThreshold;
+        if (isLow) {
+            canIssueLowHealthWarning = false;
+        }
+        return isLow;
     }
 
     private void updateAnimation(MapBase map) {
@@ -80,6 +94,8 @@ public abstract class PlayerBase extends MovingObject {
             currentDashRocketFrame = dashRocketAnimation.getKeyFrame(stateTime, false);
         } else if (state == PlayerState.DAMAGEDNORMAL) {
             currentAnimation = animations.get(PlayerAnimation.Type.DamagedNormal, direction);
+        } else if (state == PlayerState.DEAD) {
+            // TODO: Add die animation here
         }
 
         if (currentAnimation != null) {

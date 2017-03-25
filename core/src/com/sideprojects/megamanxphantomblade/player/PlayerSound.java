@@ -40,6 +40,9 @@ public abstract class PlayerSound implements PlayerStateChangeHandler {
             case WALLSLIDE:
                 playWallSlide();
                 break;
+            case DEAD:
+                playDead();
+                break;
         }
     }
 
@@ -49,6 +52,7 @@ public abstract class PlayerSound implements PlayerStateChangeHandler {
     protected abstract void playJump();
     protected abstract void playWallSlide();
     protected abstract void playWallJump();
+    protected abstract void playDead();
 
     public abstract void preload();
 

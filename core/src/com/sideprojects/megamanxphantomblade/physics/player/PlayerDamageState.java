@@ -12,7 +12,6 @@ public abstract class PlayerDamageState {
     }
 
     public abstract boolean canControl();
-    public abstract boolean isPushedBack();
     public abstract PlayerDamageState nextState(PlayerBase player, EnemyDamage damage, PlayerPhysics physics, float delta);
     public abstract void enter(PlayerBase player);
 }

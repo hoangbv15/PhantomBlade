@@ -19,10 +19,10 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
  */
 public class PlayerPhysics extends PhysicsBase {
     // Velocities
-    private static final float VELOCITY_WALK = 3f;
+    private static final float VELOCITY_WALK = 2f;
     private static final float VELOCITY_JUMP = 6f;
     private static final float VELOCITY_X_WALLJUMP = -3f;
-    private static final float VELOCITY_DASH_ADDITION = 3f;
+    private static final float VELOCITY_DASH_ADDITION = 2.5f;
     private static final float VELOCITY_WALLBOUNCE_MULTIPLIER = 5f;
     @Override
     protected float getPushBackDuration() { return 0.08f; }
@@ -81,7 +81,7 @@ public class PlayerPhysics extends PhysicsBase {
                 if (movementState.canRun()) {
                     player.direction = input.isCommandPressed(Command.LEFT) ? MovingObject.LEFT : MovingObject.RIGHT;
                     if (movementState.canWallGlide()) {
-                        player.vel.x += VELOCITY_WALK * player.direction * delta * VELOCITY_WALLBOUNCE_MULTIPLIER;
+                        player.vel.x += - VELOCITY_X_WALLJUMP * player.direction * delta * VELOCITY_WALLBOUNCE_MULTIPLIER;
                     } else {
                         player.vel.x = VELOCITY_WALK * player.direction;
                     }

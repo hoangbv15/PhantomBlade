@@ -19,5 +19,8 @@ public class Sounds {
 
     public static String XDamagedShout1 = "sounds/PL00_U_00033.wav";
     public static String XDamagedShout2 = "sounds/PL00_U_00034.wav";
+    public static String XLowHealth = "sounds/PL00_U_00042.wav";
+    public static String XDie = "sounds/PL02_U_00044.wav";
+
     // BGM
 }

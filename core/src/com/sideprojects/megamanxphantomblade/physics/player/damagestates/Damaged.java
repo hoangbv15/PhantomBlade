@@ -5,6 +5,7 @@ import com.sideprojects.megamanxphantomblade.enemies.EnemyDamage;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerDamageState;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
+import com.sideprojects.megamanxphantomblade.physics.player.PlayerStateChangeHandler;
 import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 
@@ -23,14 +24,23 @@ public class Damaged extends PlayerDamageState {
             case Normal:
             case Light:
             case InstantDeath:
-                physics.stateChangeHandler.callback(player.state, PlayerState.DAMAGEDNORMAL);
-                player.state = PlayerState.DAMAGEDNORMAL;
-                if (damage.side == EnemyDamage.Side.Left) {
-                    player.direction = MovingObject.LEFT;
-                    physics.pushBack(MovingObject.RIGHT);
+                player.takeDamage(damage.getDamage());
+                if (player.isDead()) {
+                    physics.stateChangeHandler.callback(player.state, PlayerState.DEAD);
+                    player.state = PlayerState.DEAD;
                 } else {
-                    player.direction = MovingObject.RIGHT;
-                    physics.pushBack(MovingObject.LEFT);
+                    physics.stateChangeHandler.callback(player.state, PlayerState.DAMAGEDNORMAL);
+                    player.state = PlayerState.DAMAGEDNORMAL;
+                    if (player.canIssueLowHealthWarning && player.isLowHealth()) {
+                        physics.stateChangeHandler.lowHealthWarning();
+                    }
+                    if (damage.side == EnemyDamage.Side.Left) {
+                        player.direction = MovingObject.LEFT;
+                        physics.pushBack(MovingObject.RIGHT);
+                    } else {
+                        player.direction = MovingObject.RIGHT;
+                        physics.pushBack(MovingObject.LEFT);
+                    }
                 }
                 break;
         }
@@ -38,11 +48,6 @@ public class Damaged extends PlayerDamageState {
 
     @Override
     public boolean canControl() {
-        return false;
-    }
-
-    @Override
-    public boolean isPushedBack() {
         return false;
     }
 

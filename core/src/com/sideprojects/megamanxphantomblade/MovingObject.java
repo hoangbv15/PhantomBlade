@@ -40,4 +40,8 @@ public abstract class MovingObject {
         pos.x = bounds.x;
         pos.y = bounds.y;
     }
+
+    public boolean isDead() {
+        return healthPoints <= 0;
+    }
 }

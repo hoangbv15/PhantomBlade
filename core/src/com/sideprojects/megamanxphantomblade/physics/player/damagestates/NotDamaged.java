@@ -3,6 +3,7 @@ package com.sideprojects.megamanxphantomblade.physics.player.damagestates;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyDamage;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerDamageState;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
+import com.sideprojects.megamanxphantomblade.physics.player.PlayerStateChangeHandler;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 
 /**
@@ -16,11 +17,6 @@ public class NotDamaged extends PlayerDamageState {
     @Override
     public boolean canControl() {
         return true;
-    }
-
-    @Override
-    public boolean isPushedBack() {
-        return false;
     }
 
     @Override

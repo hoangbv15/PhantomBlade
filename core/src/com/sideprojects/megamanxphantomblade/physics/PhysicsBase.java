@@ -187,6 +187,9 @@ public abstract class PhysicsBase {
     }
 
     public final void update(MovingObject object, float delta, MapBase map) {
+        if (object.isDead()) {
+            return;
+        }
         if (isBeingPushedBack) {
             doesPushBack(object, delta);
         }

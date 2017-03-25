@@ -14,5 +14,6 @@ public enum PlayerState {
     TOUCHDOWN,
     WALLSLIDE,
     WALLJUMP,
-    DAMAGEDNORMAL
+    DAMAGEDNORMAL,
+    DEAD
 }
