@@ -102,7 +102,7 @@ public abstract class MapBase {
     }
 
     public void update(float deltaTime) {
-        playerPhysics.update(deltaTime, this);
+        playerPhysics.update(player, deltaTime, this);
         player.update(this);
         particles.update(deltaTime);
     }

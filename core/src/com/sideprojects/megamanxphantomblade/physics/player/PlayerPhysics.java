@@ -24,6 +24,12 @@ public class PlayerPhysics extends PhysicsBase {
     private static final float VELOCITY_X_WALLJUMP = -3f;
     private static final float VELOCITY_DASH_ADDITION = 3f;
     private static final float VELOCITY_WALLBOUNCE_MULTIPLIER = 5f;
+    @Override
+    protected float getPushBackDuration() { return 0.08f; }
+
+    @Override
+    protected float getPushBackSpeed() { return 3f; }
+
 
     public PlayerMovementStateBase movementState;
     public PlayerDamageState damageState;
@@ -45,7 +51,7 @@ public class PlayerPhysics extends PhysicsBase {
     }
 
     @Override
-    public void update(float delta, MapBase map) {
+    public void internalUpdate(MovingObject object, float delta, MapBase map) {
         player.stateTime += delta;
         holdDashState = holdDashState.nextState(input, player);
 
@@ -118,8 +124,7 @@ public class PlayerPhysics extends PhysicsBase {
                 applyGravity(player, map.GRAVITY, map.MAX_FALLSPEED, delta);
             }
         } else {
-            player.vel.x = 0;
-            player.vel.y = 0;
+            object.vel.y = 0;
         }
 
         // Check for collisions

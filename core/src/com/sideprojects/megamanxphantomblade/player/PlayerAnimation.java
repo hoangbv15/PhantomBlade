@@ -82,7 +82,7 @@ public abstract class PlayerAnimation {
             case Dashbreak:
                 return 0.08f;
             case DamagedNormal:
-                return 0.08f;
+                return 0.06f;
             default:
                 return 0.1f;
         }

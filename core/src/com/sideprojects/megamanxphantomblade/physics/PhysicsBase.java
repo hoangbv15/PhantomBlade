@@ -1,6 +1,5 @@
 package com.sideprojects.megamanxphantomblade.physics;
 
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
@@ -25,13 +24,20 @@ public abstract class PhysicsBase {
     public CollisionList collisions;
 
     protected InputProcessor input;
+    // Variables for push back
+    private float currentPushBackDurationToGo;
+    protected abstract float getPushBackDuration();
+    protected abstract float getPushBackSpeed();
+    private int pushBackDirection;
+    private boolean isBeingPushedBack;
 
     public PhysicsBase(InputProcessor input) {
         this.input = input;
         collisions = new CollisionList(new ArrayList<Collision>());
+        isBeingPushedBack = false;
     }
 
-    public CollisionList getMapCollision(MovingObject object, float deltaTime, MapBase map) {
+    public final CollisionList getMapCollision(MovingObject object, float deltaTime, MapBase map) {
         int direction = object.direction;
         Vector2 vel = object.vel;
         Rectangle bounds = object.bounds;
@@ -148,7 +154,7 @@ public abstract class PhysicsBase {
         return Collision.getCollisionNearestToStart(collisionList, start);
     }
 
-    public EnemyDamage getEnemyCollision(MovingObject object, MapBase map) {
+    public final EnemyDamage getEnemyCollision(MovingObject object, MapBase map) {
         for (EnemyBase enemy: map.enemyList) {
             if (object.bounds.overlaps(enemy.bounds)) {
                 float playerX = object.bounds.x + object.bounds.width / 2;
@@ -164,5 +170,28 @@ public abstract class PhysicsBase {
         return null;
     }
 
-    public abstract void update(float delta, MapBase map);
+    public void pushBack(int direction) {
+        pushBackDirection = direction;
+        currentPushBackDurationToGo = getPushBackDuration();
+        isBeingPushedBack = true;
+    }
+
+    private void doesPushBack(MovingObject object, float delta) {
+        if (currentPushBackDurationToGo > 0) {
+            object.vel.x = getPushBackSpeed() * pushBackDirection;
+            currentPushBackDurationToGo -= delta;
+        } else if (isBeingPushedBack) {
+            isBeingPushedBack = false;
+            object.vel.x = 0;
+        }
+    }
+
+    public final void update(MovingObject object, float delta, MapBase map) {
+        if (isBeingPushedBack) {
+            doesPushBack(object, delta);
+        }
+        internalUpdate(object, delta, map);
+    }
+
+    public abstract void internalUpdate(MovingObject object, float delta, MapBase map);
 }

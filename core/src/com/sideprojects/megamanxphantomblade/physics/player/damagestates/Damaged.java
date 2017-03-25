@@ -27,8 +27,10 @@ public class Damaged extends PlayerDamageState {
                 player.state = PlayerState.DAMAGEDNORMAL;
                 if (damage.side == EnemyDamage.Side.Left) {
                     player.direction = MovingObject.LEFT;
+                    physics.pushBack(MovingObject.RIGHT);
                 } else {
                     player.direction = MovingObject.RIGHT;
+                    physics.pushBack(MovingObject.LEFT);
                 }
                 break;
         }
