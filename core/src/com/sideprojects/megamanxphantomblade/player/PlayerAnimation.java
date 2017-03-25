@@ -13,12 +13,14 @@ import java.util.Map;
  */
 public abstract class PlayerAnimation {
     protected class AnimationKey {
-        protected Type type;
-        protected int direction;
+        private Type type;
+        private int direction;
+        private String texture;
 
-        public AnimationKey(Type type, int direction) {
+        public AnimationKey(Type type, int direction, String texture) {
             this.type = type;
             this.direction = direction;
+            this.texture = texture;
         }
 
         @Override
@@ -29,13 +31,15 @@ public abstract class PlayerAnimation {
             AnimationKey that = (AnimationKey) o;
 
             if (direction != that.direction) return false;
-            return type != null ? type.equals(that.type) : that.type == null;
+            if (type != that.type) return false;
+            return texture != null ? texture.equals(that.texture) : that.texture == null;
         }
 
         @Override
         public int hashCode() {
             int result = type != null ? type.hashCode() : 0;
             result = 31 * result + direction;
+            result = 31 * result + (texture != null ? texture.hashCode() : 0);
             return result;
         }
     }
@@ -46,26 +50,32 @@ public abstract class PlayerAnimation {
         animationCache = new HashMap<AnimationKey, Animation<TextureRegion>>();
     }
 
-    public Animation<TextureRegion> get(Type type, int direction) {
-        AnimationKey key = new AnimationKey(type, direction);
+    public Animation<TextureRegion> get(Type type, int direction, boolean lowHealth) {
+        String texture = getTextureAtlas(type, lowHealth);
+        AnimationKey key = new AnimationKey(type, direction, texture);
         if (!animationCache.containsKey(key)) {
             boolean flipped = direction == MovingObject.LEFT;
+            int[] index = getAnimationIndex(type, lowHealth);
+            float frameDuration = getFrameDuration(type, lowHealth);
             animationCache.put(key,
-                    AnimationLoader.load(getTextureAtlas(type), getAnimationIndex(type), flipped, getFrameDuration(type)));
+                    AnimationLoader.load(texture, index, flipped, frameDuration));
         }
 
         return animationCache.get(key);
     }
 
     public Animation<TextureRegion> get(Type type) {
-        return get(type, MovingObject.RIGHT);
+        return get(type, MovingObject.RIGHT, false);
     }
 
-    protected abstract String getTextureAtlas(Type type);
-    protected abstract int[] getAnimationIndex(Type type);
-    protected float getFrameDuration(Type type) {
+    protected abstract String getTextureAtlas(Type type, boolean lowHealth);
+    protected abstract int[] getAnimationIndex(Type type, boolean lowHealth);
+    protected float getFrameDuration(Type type, boolean lowHealth) {
         switch (type) {
             case Idle:
+                if (lowHealth) {
+                    return 0.22f;
+                }
             case Jump:
             case Walljump:
                 return 0.1f;

@@ -55,45 +55,45 @@ public abstract class PlayerBase extends MovingObject {
         Animation<TextureRegion> currentAnimation = null;
         boolean looping = false;
         if (state == PlayerState.IDLE) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Idle, direction);
+            currentAnimation = animations.get(PlayerAnimation.Type.Idle, direction, isLowHealth());
             looping = true;
         } else if (state == PlayerState.RUN) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Run, direction);
+            currentAnimation = animations.get(PlayerAnimation.Type.Run, direction, isLowHealth());
             looping = true;
         } else if (state == PlayerState.JUMP) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Jump, direction);
+            currentAnimation = animations.get(PlayerAnimation.Type.Jump, direction, isLowHealth());
         } else if (state == PlayerState.FALL) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Fall, direction);
+            currentAnimation = animations.get(PlayerAnimation.Type.Fall, direction, isLowHealth());
         } else if (state == PlayerState.TOUCHDOWN) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Touchdown, direction);
+            currentAnimation = animations.get(PlayerAnimation.Type.Touchdown, direction, isLowHealth());
         } else if (state == PlayerState.WALLSLIDE) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Wallslide, direction);
+            currentAnimation = animations.get(PlayerAnimation.Type.Wallslide, direction, isLowHealth());
             float paddingX = direction == RIGHT ? (bounds.getWidth() - 0.15f) : - 0.1f;
             float paddingY = -0.1f;
             map.addParticle(Particle.ParticleType.WALLSLIDE, pos.x + paddingX, pos.y + paddingY, true);
         } else if (state == PlayerState.WALLJUMP) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Walljump, direction);
+            currentAnimation = animations.get(PlayerAnimation.Type.Walljump, direction, isLowHealth());
             if (previousState != state) {
                 float paddingX = map.playerPhysics.movementState.startingDirection == RIGHT ? (bounds.getWidth() - 0.1f) : - 0.3f;
                 float paddingY = 0f;
                 map.addParticle(Particle.ParticleType.WALLKICK, pos.x + paddingX, pos.y + paddingY, false);
             }
         } else if (state == PlayerState.DASH) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Dash, direction);
-            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Dashrocket, direction);
+            currentAnimation = animations.get(PlayerAnimation.Type.Dash, direction, isLowHealth());
+            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Dashrocket, direction, isLowHealth());
             currentDashRocketFrame = dashRocketAnimation.getKeyFrame(stateTime, false);
             if (previousState != state && grounded) {
                 float padding = - bounds.getWidth() * direction;
                 map.addParticle(Particle.ParticleType.DASH, pos.x + padding, pos.y, false);
             }
         } else if (state == PlayerState.DASHBREAK) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Dashbreak, direction);
+            currentAnimation = animations.get(PlayerAnimation.Type.Dashbreak, direction, isLowHealth());
         } else if (state == PlayerState.UPDASH) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Updash, direction);
-            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Updashrocket, direction);
+            currentAnimation = animations.get(PlayerAnimation.Type.Updash, direction, isLowHealth());
+            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Updashrocket, direction, isLowHealth());
             currentDashRocketFrame = dashRocketAnimation.getKeyFrame(stateTime, false);
         } else if (state == PlayerState.DAMAGEDNORMAL) {
-            currentAnimation = animations.get(PlayerAnimation.Type.DamagedNormal, direction);
+            currentAnimation = animations.get(PlayerAnimation.Type.DamagedNormal, direction, isLowHealth());
         } else if (state == PlayerState.DEAD) {
             // TODO: Add die animation here
         }

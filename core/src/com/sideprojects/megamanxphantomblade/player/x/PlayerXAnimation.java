@@ -8,10 +8,10 @@ import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
  */
 public class PlayerXAnimation extends PlayerAnimation {
     @Override
-    protected String getTextureAtlas(Type type) {
+    protected String getTextureAtlas(Type type, boolean lowHealth) {
         switch (type) {
             case Idle:
-                return Sprites.XIdle;
+                return lowHealth ? Sprites.XIdleLowHealth : Sprites.XIdle;
             case Walljump:
                 return Sprites.XWallSlide;
             case Run:
@@ -39,9 +39,12 @@ public class PlayerXAnimation extends PlayerAnimation {
     }
 
     @Override
-    protected int[] getAnimationIndex(Type type) {
+    protected int[] getAnimationIndex(Type type, boolean lowHealth) {
         switch (type) {
             case Idle:
+                if (lowHealth) {
+                    return new int[] {1, 2, 1, 0, 1, 2, 1, 0, 4, 5, 4, 3, 4, 5, 4, 3};
+                }
                 return new int[] {1, 0, 0, 0, 1, 2, 2, 2, 1, 0, 0, 0, 1, 2, 2, 2, 1, 0, 0, 0, 1, 3, 4, 3};
             case Walljump:
                 return new int[] {4, 5, 6};
