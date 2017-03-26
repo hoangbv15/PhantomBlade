@@ -15,4 +15,8 @@ public class EnemyBase extends MovingObject {
         pos = new Vector2(x, y);
         bounds = new Rectangle(x, y, 0.25f, 0.25f);
     }
+
+    public EnemyDamage.Type getDamageType() {
+        return EnemyDamage.Type.Normal;
+    }
 }

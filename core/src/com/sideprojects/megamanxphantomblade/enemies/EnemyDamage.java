@@ -1,7 +1,5 @@
 package com.sideprojects.megamanxphantomblade.enemies;
 
-import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
-
 import java.util.HashMap;
 import java.util.Map;
 

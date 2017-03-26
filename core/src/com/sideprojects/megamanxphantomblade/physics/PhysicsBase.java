@@ -165,7 +165,7 @@ public abstract class PhysicsBase {
                 if (playerX < enemyX) {
                     side = EnemyDamage.Side.Right;
                 }
-                return new EnemyDamage(EnemyDamage.Type.Normal, side);
+                return new EnemyDamage(enemy.getDamageType(), side);
             }
         }
 
