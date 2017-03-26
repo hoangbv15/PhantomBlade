@@ -27,6 +27,7 @@ public class PlayerXAnimation extends PlayerAnimation {
             case Jump:
             case Fall:
             case Touchdown:
+            case Updash:
                 return withLight? Sprites.XJumpShootLight : Sprites.XJumpShootNoLight;
             case Dash:
                 return withLight? Sprites.XDashShootLight : Sprites.XDashShootNoLight;
@@ -147,6 +148,7 @@ public class PlayerXAnimation extends PlayerAnimation {
                 case Touchdown:
                 case Dash:
                 case Dashbreak:
+                case Updash:
                     return new Vector2(-8, 0);
             }
         }
