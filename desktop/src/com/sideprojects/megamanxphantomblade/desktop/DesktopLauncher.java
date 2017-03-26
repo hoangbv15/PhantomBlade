@@ -11,7 +11,7 @@ public class DesktopLauncher {
 		config.width = 1920;
 		config.height = 1080;
 		config.foregroundFPS = 60;
-		config.backgroundFPS = 60;
+		config.backgroundFPS = 0;
 		config.addIcon("Favicon_16x16.png", Files.FileType.Internal);
 		config.addIcon("Favicon_32x32.png", Files.FileType.Internal);
 		config.addIcon("Favicon_128x128.png", Files.FileType.Internal);

@@ -11,6 +11,7 @@ public class KeyMap {
     public int up;
     public int jump;
     public int dash;
+    public int attack;
     public int reset;
 
     public KeyMap() {
@@ -20,5 +21,6 @@ public class KeyMap {
         jump = Input.Keys.X;
         dash = Input.Keys.Z;
         reset = Input.Keys.S;
+        attack = Input.Keys.C;
     }
 }

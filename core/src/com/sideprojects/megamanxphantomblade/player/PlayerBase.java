@@ -19,6 +19,8 @@ public abstract class PlayerBase extends MovingObject {
     // If the player is holding dash button
     public boolean isJumpDashing;
     public boolean invincible;
+    public boolean isAttacking;
+    public boolean justBegunAttacking;
 
     // Can only issue low health warning once
     // Resets after health being restored to above threshold
@@ -28,6 +30,7 @@ public abstract class PlayerBase extends MovingObject {
     public PlayerAnimation animations;
     public TextureRegion currentFrame;
     public TextureRegion currentDashRocketFrame;
+    public Vector2 animationPadding;
 
     public PlayerBase(float x, float y) {
         bounds = new Rectangle(x, y, 0.1f, 0.1f);
@@ -36,6 +39,7 @@ public abstract class PlayerBase extends MovingObject {
         vel = new Vector2(0, 0);
         initialiseHealthPoints(100);
         canIssueLowHealthWarning = true;
+        animationPadding = new Vector2(0, 0);
         createAnimations();
     }
 
@@ -52,54 +56,59 @@ public abstract class PlayerBase extends MovingObject {
     }
 
     private void updateAnimation(MapBase map) {
-        Animation<TextureRegion> currentAnimation = null;
-        boolean looping = false;
+        PlayerAnimation.Type type = PlayerAnimation.Type.Idle;
         if (state == PlayerState.IDLE) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Idle, direction, isLowHealth());
-            looping = true;
+            type = PlayerAnimation.Type.Idle;
         } else if (state == PlayerState.RUN) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Run, direction, isLowHealth());
-            looping = true;
+            type = PlayerAnimation.Type.Run;
         } else if (state == PlayerState.JUMP) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Jump, direction, isLowHealth());
+            type = PlayerAnimation.Type.Jump;
         } else if (state == PlayerState.FALL) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Fall, direction, isLowHealth());
+            type = PlayerAnimation.Type.Fall;
         } else if (state == PlayerState.TOUCHDOWN) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Touchdown, direction, isLowHealth());
+            type = PlayerAnimation.Type.Touchdown;
         } else if (state == PlayerState.WALLSLIDE) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Wallslide, direction, isLowHealth());
+            type = PlayerAnimation.Type.Wallslide;
             float paddingX = direction == RIGHT ? (bounds.getWidth() - 0.15f) : - 0.1f;
             float paddingY = -0.1f;
             map.addParticle(Particle.ParticleType.WALLSLIDE, pos.x + paddingX, pos.y + paddingY, true);
         } else if (state == PlayerState.WALLJUMP) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Walljump, direction, isLowHealth());
+            type = PlayerAnimation.Type.Walljump;
             if (previousState != state) {
                 float paddingX = map.playerPhysics.movementState.startingDirection == RIGHT ? (bounds.getWidth() - 0.1f) : - 0.3f;
                 float paddingY = 0f;
                 map.addParticle(Particle.ParticleType.WALLKICK, pos.x + paddingX, pos.y + paddingY, false);
             }
         } else if (state == PlayerState.DASH) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Dash, direction, isLowHealth());
-            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Dashrocket, direction, isLowHealth());
-            currentDashRocketFrame = dashRocketAnimation.getKeyFrame(stateTime, false);
+            type = PlayerAnimation.Type.Dash;
+            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Dashrocket, direction, isLowHealth(), isAttacking, justBegunAttacking);
+            if (dashRocketAnimation != null) {
+                currentDashRocketFrame = dashRocketAnimation.getKeyFrame(stateTime, false);
+            }
             if (previousState != state && grounded) {
                 float padding = - bounds.getWidth() * direction;
                 map.addParticle(Particle.ParticleType.DASH, pos.x + padding, pos.y, false);
             }
         } else if (state == PlayerState.DASHBREAK) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Dashbreak, direction, isLowHealth());
+            type = PlayerAnimation.Type.Dashbreak;
         } else if (state == PlayerState.UPDASH) {
-            currentAnimation = animations.get(PlayerAnimation.Type.Updash, direction, isLowHealth());
-            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Updashrocket, direction, isLowHealth());
-            currentDashRocketFrame = dashRocketAnimation.getKeyFrame(stateTime, false);
+            type = PlayerAnimation.Type.Updash;
+            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Updashrocket, direction, isLowHealth(), isAttacking, justBegunAttacking);
+            if (dashRocketAnimation != null) {
+                currentDashRocketFrame = dashRocketAnimation.getKeyFrame(stateTime, false);
+            }
         } else if (state == PlayerState.DAMAGEDNORMAL) {
-            currentAnimation = animations.get(PlayerAnimation.Type.DamagedNormal, direction, isLowHealth());
+            type = PlayerAnimation.Type.DamagedNormal;
         } else if (state == PlayerState.DEAD) {
             // TODO: Add die animation here
+            type = PlayerAnimation.Type.DamagedNormal;
         }
 
+        Animation<TextureRegion> currentAnimation = animations.get(type, direction, isLowHealth(), isAttacking, justBegunAttacking);
+        boolean looping = animations.isLooping(type, isAttacking);
         if (currentAnimation != null) {
             currentFrame = currentAnimation.getKeyFrame(stateTime, looping);
+            animationPadding = animations.getAnimationPaddingX(type, direction, isAttacking);
         }
         previousState = state;
     }

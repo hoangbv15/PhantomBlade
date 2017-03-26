@@ -8,5 +8,6 @@ public enum Command {
     RIGHT,
     UP,
     JUMP,
-    DASH
+    DASH,
+    ATTACK
 }

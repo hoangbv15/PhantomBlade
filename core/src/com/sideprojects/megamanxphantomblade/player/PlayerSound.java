@@ -53,6 +53,9 @@ public abstract class PlayerSound implements PlayerStateChangeHandler {
     protected abstract void playWallSlide();
     protected abstract void playWallJump();
     protected abstract void playDead();
+    public abstract void playAttackLight();
+    public abstract void playAttackMedium();
+    public abstract void playAttackHeavy();
 
     public abstract void preload();
 

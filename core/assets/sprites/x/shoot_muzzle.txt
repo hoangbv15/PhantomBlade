@@ -1,0 +1,40 @@
+shoot_muzzle.png
+size: 100, 26
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+0
+  rotate: false
+  xy: 0, 0
+  size: 20, 26
+  orig: 20, 26
+  offset: 0, 0
+  index: -1
+1
+  rotate: false
+  xy: 20, 0
+  size: 20, 26
+  orig: 20, 26
+  offset: 0, 0
+  index: -1
+2
+  rotate: false
+  xy: 40, 0
+  size: 20, 26
+  orig: 20, 26
+  offset: 0, 0
+  index: -1
+3
+  rotate: false
+  xy: 60, 0
+  size: 20, 26
+  orig: 20, 26
+  offset: 0, 0
+  index: -1
+4
+  rotate: false
+  xy: 80, 0
+  size: 20, 26
+  orig: 20, 26
+  offset: 0, 0
+  index: -1

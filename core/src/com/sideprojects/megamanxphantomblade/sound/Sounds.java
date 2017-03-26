@@ -22,5 +22,9 @@ public class Sounds {
     public static String XLowHealth = "sounds/PL00_U_00042.wav";
     public static String XDie = "sounds/PL02_U_00044.wav";
 
+    public static String XAttackLight = "sounds/PL02_U_00020.wav";
+    public static String XAttackMedium = "sounds/PL00_U_00023.wav";
+    public static String XAttackHeavy = "sounds/PL00_U_00016.wav";
+
     // BGM
 }

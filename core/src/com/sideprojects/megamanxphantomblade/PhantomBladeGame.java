@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.sideprojects.megamanxphantomblade.input.PlayerInputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.map.maps.IntroStage;
-import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
+import com.sideprojects.megamanxphantomblade.physics.player.x.PlayerXPhysicsFactory;
 import com.sideprojects.megamanxphantomblade.player.x.PlayerXFactory;
 import com.sideprojects.megamanxphantomblade.player.x.PlayerXSound;
 import com.sideprojects.megamanxphantomblade.renderers.DebugRenderer;
@@ -34,7 +34,7 @@ public class PhantomBladeGame extends ApplicationAdapter {
 		keyMap = new KeyMap();
 		playerSounds = new PlayerXSound(new SoundPlayer());
 		playerSounds.preload();
-		map = new IntroStage(new PlayerXFactory(), new PlayerPhysicsFactory(new PlayerInputProcessor(keyMap), playerSounds));
+		map = new IntroStage(new PlayerXFactory(), new PlayerXPhysicsFactory(new PlayerInputProcessor(keyMap), playerSounds));
 		mapRenderer = new WorldRenderer(map);
 		debugRenderer = new DebugRenderer(mapRenderer);
 		shapeRenderer = new ShapeRenderer();

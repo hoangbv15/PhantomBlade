@@ -2,6 +2,7 @@ package com.sideprojects.megamanxphantomblade.player;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.animation.AnimationLoader;
 
@@ -50,26 +51,46 @@ public abstract class PlayerAnimation {
         animationCache = new HashMap<AnimationKey, Animation<TextureRegion>>();
     }
 
-    public Animation<TextureRegion> get(Type type, int direction, boolean lowHealth) {
+    public Animation<TextureRegion> get(Type type, int direction, boolean lowHealth, boolean isAttacking, boolean isFirstAttackFrame) {
+        if (isAttacking) {
+            Animation<TextureRegion> attack = getAttack(type, direction, isFirstAttackFrame);
+            if (attack != null) {
+                return attack;
+            }
+        }
         String texture = getTextureAtlas(type, lowHealth);
+        int[] index = getAnimationIndex(type, lowHealth);
+        float frameDuration = getFrameDuration(type, lowHealth);
+
+        return retrieveFromCache(type, direction, texture, index, frameDuration);
+    }
+
+    public Animation<TextureRegion> get(Type type) {
+        return get(type, MovingObject.RIGHT, false, false, false);
+    }
+
+    protected Animation<TextureRegion> retrieveFromCache(Type type, int direction, String texture, int[] animationIndex, float frameDuration) {
         AnimationKey key = new AnimationKey(type, direction, texture);
         if (!animationCache.containsKey(key)) {
             boolean flipped = direction == MovingObject.LEFT;
-            int[] index = getAnimationIndex(type, lowHealth);
-            float frameDuration = getFrameDuration(type, lowHealth);
             animationCache.put(key,
-                    AnimationLoader.load(texture, index, flipped, frameDuration));
+                    AnimationLoader.load(texture, animationIndex, flipped, frameDuration));
         }
 
         return animationCache.get(key);
     }
 
-    public Animation<TextureRegion> get(Type type) {
-        return get(type, MovingObject.RIGHT, false);
-    }
-
+    public abstract Animation<TextureRegion> getAttack(Type type, int direction, boolean isFirstAttackFrame);
     protected abstract String getTextureAtlas(Type type, boolean lowHealth);
     protected abstract int[] getAnimationIndex(Type type, boolean lowHealth);
+    protected abstract boolean isLooping(Type type, boolean isAttacking);
+
+    /**
+     * Padding to give the sprite for LEFT direction.
+     * RIGHT direction will be automatically mirrored.
+     */
+    protected abstract Vector2 getAnimationPaddingX(Type type, int direction, boolean isAttacking);
+
     protected float getFrameDuration(Type type, boolean lowHealth) {
         switch (type) {
             case Idle:

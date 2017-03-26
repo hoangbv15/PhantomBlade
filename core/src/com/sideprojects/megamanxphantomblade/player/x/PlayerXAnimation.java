@@ -1,5 +1,8 @@
 package com.sideprojects.megamanxphantomblade.player.x;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.animation.Sprites;
 import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
 
@@ -7,6 +10,53 @@ import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
  * Created by buivuhoang on 05/02/17.
  */
 public class PlayerXAnimation extends PlayerAnimation {
+
+    @Override
+    public Animation<TextureRegion> getAttack(Type type, int direction, boolean isFirstAttackFrame) {
+        String texture = getAttackTextureAtlas(type, isFirstAttackFrame);
+        if (texture == null) return null;
+        return retrieveFromCache(type, direction, texture, getAttackAnimationIndex(type), getAttackFrameDuration(type));
+    }
+
+    private String getAttackTextureAtlas(Type type, boolean withLight) {
+        switch(type) {
+            case Idle:
+                return Sprites.XIdleShoot;
+            case Run:
+                return withLight? Sprites.XRunShootLight : Sprites.XRunShootNoLight;
+            case Jump:
+            case Fall:
+            case Touchdown:
+                return withLight? Sprites.XJumpShootLight : Sprites.XJumpShootNoLight;
+            case Dash:
+                return withLight? Sprites.XDashShootLight : Sprites.XDashShootNoLight;
+            case Wallslide:
+            case Walljump:
+                return withLight? Sprites.XWallslideShootLight: Sprites.XWallslideShootNoLight;
+            default:
+                return null;
+
+        }
+    }
+
+    private int[] getAttackAnimationIndex(Type type) {
+        switch(type) {
+            case Idle:
+                return null;
+            default:
+                return getAnimationIndex(type, false);
+        }
+    }
+
+    private float getAttackFrameDuration(Type type) {
+        switch(type) {
+            case Idle:
+                return 0.04f;
+            default:
+                return getFrameDuration(type, false);
+        }
+    }
+
     @Override
     protected String getTextureAtlas(Type type, boolean lowHealth) {
         switch (type) {
@@ -71,5 +121,41 @@ public class PlayerXAnimation extends PlayerAnimation {
             default:
                 return null;
         }
+    }
+
+    @Override
+    protected boolean isLooping(Type type, boolean isAttacking) {
+        switch (type) {
+            case Idle:
+                return !isAttacking;
+            case Run:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    protected Vector2 getAnimationPaddingX(Type type, int direction, boolean isAttacking) {
+        if (isAttacking) {
+            switch (type) {
+                case Idle:
+                    return new Vector2(-15, 0);
+                case Run:
+                case Jump:
+                case Fall:
+                case Touchdown:
+                case Dash:
+                case Dashbreak:
+                    return new Vector2(-8, 0);
+            }
+        }
+
+        switch (type) {
+            case DamagedNormal:
+                return new Vector2(0, -5);
+        }
+
+        return new Vector2(0, 0);
     }
 }

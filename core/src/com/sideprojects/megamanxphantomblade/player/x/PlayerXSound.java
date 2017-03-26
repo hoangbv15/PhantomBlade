@@ -84,6 +84,21 @@ public class PlayerXSound extends PlayerSound {
     }
 
     @Override
+    public void playAttackLight() {
+        soundPlayer.playInParallel(Sounds.XAttackLight);
+    }
+
+    @Override
+    public void playAttackMedium() {
+        soundPlayer.playInParallel(Sounds.XAttackMedium);
+    }
+
+    @Override
+    public void playAttackHeavy() {
+        soundPlayer.playInParallel(Sounds.XAttackHeavy);
+    }
+
+    @Override
     public void preload() {
         soundPlayer.loadSound(Sounds.XJumpShout1);
         soundPlayer.loadSound(Sounds.XJumpShout2);

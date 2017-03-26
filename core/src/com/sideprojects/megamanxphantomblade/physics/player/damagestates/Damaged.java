@@ -5,7 +5,6 @@ import com.sideprojects.megamanxphantomblade.enemies.EnemyDamage;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerDamageState;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
-import com.sideprojects.megamanxphantomblade.physics.player.PlayerStateChangeHandler;
 import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 
@@ -25,14 +24,16 @@ public class Damaged extends PlayerDamageState {
             case Light:
             case InstantDeath:
                 player.takeDamage(damage.getDamage());
+                player.isAttacking = false;
+                player.justBegunAttacking = false;
                 if (player.isDead()) {
-                    physics.stateChangeHandler.callback(player.state, PlayerState.DEAD);
+                    physics.soundPlayer.callback(player.state, PlayerState.DEAD);
                     player.state = PlayerState.DEAD;
                 } else {
-                    physics.stateChangeHandler.callback(player.state, PlayerState.DAMAGEDNORMAL);
+                    physics.soundPlayer.callback(player.state, PlayerState.DAMAGEDNORMAL);
                     player.state = PlayerState.DAMAGEDNORMAL;
                     if (player.canIssueLowHealthWarning && player.isLowHealth()) {
-                        physics.stateChangeHandler.lowHealthWarning();
+                        physics.soundPlayer.lowHealthWarning();
                     }
                     if (damage.side == EnemyDamage.Side.Left) {
                         player.direction = MovingObject.LEFT;

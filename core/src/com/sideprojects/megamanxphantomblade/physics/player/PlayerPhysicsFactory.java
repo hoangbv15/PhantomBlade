@@ -2,20 +2,19 @@ package com.sideprojects.megamanxphantomblade.physics.player;
 
 import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
+import com.sideprojects.megamanxphantomblade.player.PlayerSound;
 
 /**
  * Created by buivuhoang on 25/02/17.
  */
-public class PlayerPhysicsFactory {
-    private InputProcessor input;
-    private PlayerStateChangeHandler stateChangeHandler;
+public abstract class PlayerPhysicsFactory {
+    protected InputProcessor input;
+    protected PlayerSound stateChangeHandler;
 
-    public PlayerPhysicsFactory(InputProcessor input, PlayerStateChangeHandler stateChangeHandler) {
+    public PlayerPhysicsFactory(InputProcessor input, PlayerSound stateChangeHandler) {
         this.input = input;
         this.stateChangeHandler = stateChangeHandler;
     }
 
-    public PlayerPhysics create(PlayerBase player) {
-        return new PlayerPhysics(input, player, stateChangeHandler);
-    }
+    public abstract PlayerPhysics create(PlayerBase player);
 }

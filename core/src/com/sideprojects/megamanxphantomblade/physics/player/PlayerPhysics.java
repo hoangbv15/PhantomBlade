@@ -13,11 +13,12 @@ import com.sideprojects.megamanxphantomblade.physics.player.damagestates.NotDama
 import com.sideprojects.megamanxphantomblade.physics.player.jumpdashstate.NotJumpDashing;
 import com.sideprojects.megamanxphantomblade.physics.player.movementstates.Idle;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
+import com.sideprojects.megamanxphantomblade.player.PlayerSound;
 
 /**
  * Created by buivuhoang on 21/02/17.
  */
-public class PlayerPhysics extends PhysicsBase {
+public abstract class PlayerPhysics extends PhysicsBase {
     // Velocities
     private static final float VELOCITY_WALK = 2f;
     private static final float VELOCITY_JUMP = 6f;
@@ -30,22 +31,21 @@ public class PlayerPhysics extends PhysicsBase {
     @Override
     protected float getPushBackSpeed() { return 3f; }
 
-
     public PlayerMovementStateBase movementState;
     public PlayerDamageState damageState;
     private PlayerJumpDashStateBase holdDashState;
 
-    public PlayerStateChangeHandler stateChangeHandler;
+    public PlayerSound soundPlayer;
 
     public PlayerBase player;
 
-    PlayerPhysics(InputProcessor input, PlayerBase player, PlayerStateChangeHandler stateChangeHandler) {
+    public PlayerPhysics(InputProcessor input, PlayerBase player, PlayerSound soundPlayer) {
         super(input);
         this.player = player;
-        this.stateChangeHandler = stateChangeHandler;
+        this.soundPlayer = soundPlayer;
         // Create the initial states
         player.direction = MovingObject.RIGHT;
-        movementState = new Idle(input, player, null, stateChangeHandler);
+        movementState = new Idle(input, player, null, soundPlayer);
         holdDashState = new NotJumpDashing(player);
         damageState = new NotDamaged(player);
     }
@@ -139,7 +139,7 @@ public class PlayerPhysics extends PhysicsBase {
     }
 
     public void setStateToIdle() {
-        movementState = new Idle(input, player, player.state, stateChangeHandler);
+        movementState = new Idle(input, player, player.state, soundPlayer);
     }
 
     private CollisionList calculateReaction(float delta, MapBase map) {

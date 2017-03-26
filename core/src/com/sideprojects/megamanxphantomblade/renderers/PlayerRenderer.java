@@ -82,8 +82,12 @@ public class PlayerRenderer {
         if (player.direction == PlayerBase.RIGHT) {
             // Pad the texture's start x because the engine is drawing from left to right.
             // Without this the animation frames will be misaligned
-            posX += mapTileWidth * 0.6f - currentFrame.getRegionWidth();
+            posX += mapTileWidth * 0.6f - currentFrame.getRegionWidth() - player.animationPadding.x;
+        } else {
+            posX += player.animationPadding.x;
         }
+
+        posY += player.animationPadding.y;
 
         renderPlayerTrace(currentFrame, posX, posY);
         if (player.state == PlayerState.DASH) {

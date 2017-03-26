@@ -15,6 +15,16 @@ public class Sprites {
     public static String XUpDashRocket = "sprites/x/updash_rocket.txt";
     public static String XDamagedNormal = "sprites/x/damaged_normal.txt";
     public static String XIdleLowHealth = "sprites/x/idle_lowhealth.txt";
+    public static String XIdleShoot = "sprites/x/idle_shoot.txt";
+    public static String XRunShootLight = "sprites/x/run_shoot_light.txt";
+    public static String XRunShootNoLight = "sprites/x/run_shoot_nolight.txt";
+    public static String XJumpShootLight = "sprites/x/jump_shoot_light.txt";
+    public static String XJumpShootNoLight = "sprites/x/jump_shoot_nolight.txt";
+    public static String XDashShootLight = "sprites/x/dash_shoot_light.txt";
+    public static String XDashShootNoLight = "sprites/x/dash_shoot_nolight.txt";
+    public static String XWallslideShootLight = "sprites/x/wallslide_shoot_light.txt";
+    public static String XWallslideShootNoLight = "sprites/x/wallslide_shoot_nolight.txt";
+    public static String XShootMuzzle = "sprites/x/shoot_muzzle.txt";
 
     // Particle effects
     public static String Wallslide = "sprites/wallslide_dust.txt";
