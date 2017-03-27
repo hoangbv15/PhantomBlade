@@ -1,4 +1,4 @@
-package com.sideprojects.megamanxphantomblade.enemies;
+package com.sideprojects.megamanxphantomblade;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +7,7 @@ import java.util.Map;
  * Created by buivuhoang on 19/03/17.
  * Damage that enemies do to the player
  */
-public class EnemyDamage {
+public class Damage {
     public enum Type {
         InstantDeath,
         Heavy,
@@ -32,7 +32,7 @@ public class EnemyDamage {
     public Type type;
     public Side side;
 
-    public EnemyDamage(Type type, Side side) {
+    public Damage(Type type, Side side) {
         this.type = type;
         this.side = side;
     }

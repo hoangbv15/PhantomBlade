@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 
 /**
@@ -16,7 +17,7 @@ public class EnemyBase extends MovingObject {
         bounds = new Rectangle(x, y, 0.25f, 0.25f);
     }
 
-    public EnemyDamage.Type getDamageType() {
-        return EnemyDamage.Type.Normal;
+    public Damage.Type getDamageType() {
+        return Damage.Type.Normal;
     }
 }

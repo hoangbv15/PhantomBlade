@@ -3,6 +3,7 @@ package com.sideprojects.megamanxphantomblade.player.x;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.animation.Sprites;
 import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
 
@@ -10,6 +11,14 @@ import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
  * Created by buivuhoang on 05/02/17.
  */
 public class PlayerXAnimation extends PlayerAnimation {
+
+    public Animation<TextureRegion> getBullet(Damage damage, int direction) {
+        switch(damage.type) {
+            case Light:
+                return retrieveFromCache(Type.BulletSmall, direction, Sprites.XBulletSmall, null, 0.04f);
+        }
+        return null;
+    }
 
     @Override
     public Animation<TextureRegion> getAttack(Type type, int direction, boolean isFirstAttackFrame) {

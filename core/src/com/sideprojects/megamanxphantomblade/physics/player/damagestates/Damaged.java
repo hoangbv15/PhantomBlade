@@ -1,7 +1,7 @@
 package com.sideprojects.megamanxphantomblade.physics.player.damagestates;
 
 import com.sideprojects.megamanxphantomblade.MovingObject;
-import com.sideprojects.megamanxphantomblade.enemies.EnemyDamage;
+import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerDamageState;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
@@ -14,7 +14,7 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 public class Damaged extends PlayerDamageState {
     private float stunTime;
 
-    public Damaged(PlayerBase player, EnemyDamage damage, PlayerPhysics physics) {
+    public Damaged(PlayerBase player, Damage damage, PlayerPhysics physics) {
         super(player);
         stunTime = player.animations.get(PlayerAnimation.Type.DamagedNormal).getAnimationDuration();
         // Reduce player's health here
@@ -25,7 +25,7 @@ public class Damaged extends PlayerDamageState {
             case InstantDeath:
                 player.takeDamage(damage.getDamage());
                 player.isAttacking = false;
-                player.justBegunAttacking = false;
+                player.firstFramesOfAttacking = false;
                 if (player.isDead()) {
                     physics.soundPlayer.callback(player.state, PlayerState.DEAD);
                     player.state = PlayerState.DEAD;
@@ -35,7 +35,7 @@ public class Damaged extends PlayerDamageState {
                     if (player.canIssueLowHealthWarning && player.isLowHealth()) {
                         physics.soundPlayer.lowHealthWarning();
                     }
-                    if (damage.side == EnemyDamage.Side.Left) {
+                    if (damage.side == Damage.Side.Left) {
                         player.direction = MovingObject.LEFT;
                         physics.pushBack(MovingObject.RIGHT);
                     } else {
@@ -53,7 +53,7 @@ public class Damaged extends PlayerDamageState {
     }
 
     @Override
-    public PlayerDamageState nextState(PlayerBase player, EnemyDamage damage, PlayerPhysics physics, float delta) {
+    public PlayerDamageState nextState(PlayerBase player, Damage damage, PlayerPhysics physics, float delta) {
         if (player.stateTime >= stunTime) {
             return new Invincible(player, physics);
         }

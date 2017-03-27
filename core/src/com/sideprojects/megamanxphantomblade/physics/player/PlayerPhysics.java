@@ -2,7 +2,7 @@ package com.sideprojects.megamanxphantomblade.physics.player;
 
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
-import com.sideprojects.megamanxphantomblade.enemies.EnemyDamage;
+import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.input.Command;
 import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
@@ -56,7 +56,7 @@ public abstract class PlayerPhysics extends PhysicsBase {
         holdDashState = holdDashState.nextState(input, player);
 
         // Check for enemy damage
-        EnemyDamage damage = getEnemyCollision(player, map);
+        Damage damage = getEnemyCollision(player, map);
         damageState = damageState.nextState(player, damage, this, delta);
 
         if (damageState.canControl()) {

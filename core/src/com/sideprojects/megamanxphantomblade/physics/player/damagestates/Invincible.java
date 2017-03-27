@@ -1,9 +1,8 @@
 package com.sideprojects.megamanxphantomblade.physics.player.damagestates;
 
-import com.sideprojects.megamanxphantomblade.enemies.EnemyDamage;
+import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerDamageState;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
-import com.sideprojects.megamanxphantomblade.physics.player.PlayerStateChangeHandler;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 
 /**
@@ -23,7 +22,7 @@ public class Invincible extends PlayerDamageState {
     }
 
     @Override
-    public PlayerDamageState nextState(PlayerBase player, EnemyDamage damage, PlayerPhysics physics, float delta) {
+    public PlayerDamageState nextState(PlayerBase player, Damage damage, PlayerPhysics physics, float delta) {
         if (stateTime >= invincibleTime) {
             return new NotDamaged(player);
         }

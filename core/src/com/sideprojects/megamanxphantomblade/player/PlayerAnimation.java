@@ -69,7 +69,7 @@ public abstract class PlayerAnimation {
         return get(type, MovingObject.RIGHT, false, false, false);
     }
 
-    protected Animation<TextureRegion> retrieveFromCache(Type type, int direction, String texture, int[] animationIndex, float frameDuration) {
+    public Animation<TextureRegion> retrieveFromCache(Type type, int direction, String texture, int[] animationIndex, float frameDuration) {
         AnimationKey key = new AnimationKey(type, direction, texture);
         if (!animationCache.containsKey(key)) {
             boolean flipped = direction == MovingObject.LEFT;
@@ -120,6 +120,20 @@ public abstract class PlayerAnimation {
     }
 
     public enum Type {
-        Idle, Run, Jump, Fall, Touchdown, Wallslide, Walljump, Dash, Dashbreak, Dashrocket, Updash, Updashrocket, DamagedNormal
+        Idle,
+        Run,
+        Jump,
+        Fall,
+        Touchdown,
+        Wallslide,
+        Walljump,
+        Dash,
+        Dashbreak,
+        Dashrocket,
+        Updash,
+        Updashrocket,
+        DamagedNormal,
+        // X
+        BulletSmall
     }
 }

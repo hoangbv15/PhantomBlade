@@ -4,10 +4,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
-import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 
 /**
@@ -19,8 +19,12 @@ public abstract class PlayerBase extends MovingObject {
     // If the player is holding dash button
     public boolean isJumpDashing;
     public boolean invincible;
+
+    // Properties for attack animation
     public boolean isAttacking;
+    public boolean firstFramesOfAttacking;
     public boolean justBegunAttacking;
+    public Damage.Type attackType;
 
     // Can only issue low health warning once
     // Resets after health being restored to above threshold
@@ -45,6 +49,7 @@ public abstract class PlayerBase extends MovingObject {
 
     public void update(MapBase map) {
         updateAnimation(map);
+        internalUpdate(map);
     }
 
     public boolean isLowHealth() {
@@ -81,7 +86,7 @@ public abstract class PlayerBase extends MovingObject {
             }
         } else if (state == PlayerState.DASH) {
             type = PlayerAnimation.Type.Dash;
-            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Dashrocket, direction, isLowHealth(), isAttacking, justBegunAttacking);
+            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Dashrocket, direction, isLowHealth(), isAttacking, firstFramesOfAttacking);
             if (dashRocketAnimation != null) {
                 currentDashRocketFrame = dashRocketAnimation.getKeyFrame(stateTime, false);
             }
@@ -93,7 +98,7 @@ public abstract class PlayerBase extends MovingObject {
             type = PlayerAnimation.Type.Dashbreak;
         } else if (state == PlayerState.UPDASH) {
             type = PlayerAnimation.Type.Updash;
-            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Updashrocket, direction, isLowHealth(), isAttacking, justBegunAttacking);
+            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Updashrocket, direction, isLowHealth(), isAttacking, firstFramesOfAttacking);
             if (dashRocketAnimation != null) {
                 currentDashRocketFrame = dashRocketAnimation.getKeyFrame(stateTime, false);
             }
@@ -104,7 +109,7 @@ public abstract class PlayerBase extends MovingObject {
             type = PlayerAnimation.Type.DamagedNormal;
         }
 
-        Animation<TextureRegion> currentAnimation = animations.get(type, direction, isLowHealth(), isAttacking, justBegunAttacking);
+        Animation<TextureRegion> currentAnimation = animations.get(type, direction, isLowHealth(), isAttacking, firstFramesOfAttacking);
         boolean looping = animations.isLooping(type, isAttacking);
         if (currentAnimation != null) {
             currentFrame = currentAnimation.getKeyFrame(stateTime, looping);
@@ -116,4 +121,6 @@ public abstract class PlayerBase extends MovingObject {
     public abstract void createAnimations();
 
     public abstract TraceColour getTraceColour();
+
+    protected abstract void internalUpdate(MapBase map);
 }

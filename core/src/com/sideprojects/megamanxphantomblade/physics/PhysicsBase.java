@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
-import com.sideprojects.megamanxphantomblade.enemies.EnemyDamage;
+import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.math.GeoMath;
@@ -156,16 +156,16 @@ public abstract class PhysicsBase {
         return Collision.getCollisionNearestToStart(collisionList, start);
     }
 
-    public final EnemyDamage getEnemyCollision(MovingObject object, MapBase map) {
+    public final Damage getEnemyCollision(MovingObject object, MapBase map) {
         for (EnemyBase enemy: map.enemyList) {
             if (object.bounds.overlaps(enemy.bounds)) {
                 float playerX = object.bounds.x + object.bounds.width / 2;
                 float enemyX = enemy.bounds.x + enemy.bounds.width / 2;
-                EnemyDamage.Side side = EnemyDamage.Side.Left;
+                Damage.Side side = Damage.Side.Left;
                 if (playerX < enemyX) {
-                    side = EnemyDamage.Side.Right;
+                    side = Damage.Side.Right;
                 }
-                return new EnemyDamage(enemy.getDamageType(), side);
+                return new Damage(enemy.getDamageType(), side);
             }
         }
 

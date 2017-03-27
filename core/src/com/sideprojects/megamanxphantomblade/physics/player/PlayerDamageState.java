@@ -1,6 +1,6 @@
 package com.sideprojects.megamanxphantomblade.physics.player;
 
-import com.sideprojects.megamanxphantomblade.enemies.EnemyDamage;
+import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 
 /**
@@ -12,6 +12,6 @@ public abstract class PlayerDamageState {
     }
 
     public abstract boolean canControl();
-    public abstract PlayerDamageState nextState(PlayerBase player, EnemyDamage damage, PlayerPhysics physics, float delta);
+    public abstract PlayerDamageState nextState(PlayerBase player, Damage damage, PlayerPhysics physics, float delta);
     public abstract void enter(PlayerBase player);
 }

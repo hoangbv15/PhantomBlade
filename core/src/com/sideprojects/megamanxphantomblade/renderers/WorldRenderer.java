@@ -12,6 +12,7 @@ import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
+import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
 
 /**
  * Created by buivuhoang on 04/02/17.
@@ -109,6 +110,7 @@ public class WorldRenderer {
         batch.begin();
         renderEnemies();
         playerRenderer.render(pos.x, pos.y, delta);
+        renderPlayerAttack();
         renderParticles();
         renderGui(delta);
         batch.end();
@@ -140,6 +142,13 @@ public class WorldRenderer {
         for (EnemyBase enemy: map.enemyList) {
             Vector2 pos = applyCameraLerp(enemy.pos);
             batch.draw(enemy.currentFrame, pos.x, pos.y);
+        }
+    }
+
+    private void renderPlayerAttack() {
+        for (PlayerAttack attack: map.playerAttackList) {
+            Vector2 pos = applyCameraLerp(attack.pos);
+            batch.draw(attack.currentFrame, pos.x, pos.y);
         }
     }
 

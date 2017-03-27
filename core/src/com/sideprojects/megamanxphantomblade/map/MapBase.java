@@ -3,6 +3,7 @@ package com.sideprojects.megamanxphantomblade.map;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Queue;
 import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
@@ -10,6 +11,7 @@ import com.sideprojects.megamanxphantomblade.animation.Particles;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
+import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerFactory;
 
@@ -29,6 +31,7 @@ public abstract class MapBase {
     public float GRAVITY = 15f;
     public float MAX_FALLSPEED = -8f;
     public float WALLSLIDE_FALLSPEED = -2f;
+    private static int MAX_PLAYERATTACK = 20;
 
     private PlayerFactory playerFactory;
     private PlayerPhysicsFactory playerPhysicsFactory;
@@ -38,6 +41,7 @@ public abstract class MapBase {
     public Rectangle[][] bounds;
 
     public List<EnemyBase> enemyList;
+    public Queue<PlayerAttack> playerAttackList;
 
     protected TextureRegion ground;
     public abstract TextureRegion getGround();
@@ -51,6 +55,7 @@ public abstract class MapBase {
         this.playerPhysicsFactory = playerPhysicsFactory;
         particles = new Particles(20);
         enemyList = new ArrayList<EnemyBase>();
+        playerAttackList = new Queue<PlayerAttack>(MAX_PLAYERATTACK);
         loadMap();
     }
 
@@ -105,6 +110,16 @@ public abstract class MapBase {
         playerPhysics.update(player, deltaTime, this);
         player.update(this);
         particles.update(deltaTime);
+        for (PlayerAttack attack: playerAttackList) {
+            attack.update(deltaTime);
+        }
+    }
+
+    public void addPlayerAttack(PlayerAttack attack) {
+        playerAttackList.addLast(attack);
+        if (playerAttackList.size >= MAX_PLAYERATTACK) {
+            playerAttackList.removeFirst();
+        }
     }
 
     public Rectangle getCollidableBox(int x, int y) {
