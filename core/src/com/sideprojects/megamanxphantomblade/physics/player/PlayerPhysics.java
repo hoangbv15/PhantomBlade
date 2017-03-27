@@ -176,6 +176,9 @@ public abstract class PlayerPhysics extends PhysicsBase {
         if (player.state == PlayerState.WALLSLIDE) {
             finalFallspeed = wallslideFallspeed;
         }
+        if (player.state == PlayerState.FALL && object.vel.y > 0) {
+            object.vel.y = 0;
+        }
         if (object.vel.y > finalFallspeed) {
             object.vel.y -= gravity * delta;
         } else {

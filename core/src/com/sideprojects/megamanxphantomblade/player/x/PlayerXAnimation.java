@@ -153,6 +153,7 @@ public class PlayerXAnimation extends PlayerAnimation {
                     return new Vector2(-15, 0);
                 case Run:
                 case Jump:
+                case Walljump:
                 case Fall:
                 case Touchdown:
                 case Dash:
