@@ -16,7 +16,7 @@ public class Damage {
     }
 
     public enum Side {
-        Left, Right
+        Left, Right, None
     }
 
     private static Map<Type, Integer> damage;
@@ -38,6 +38,10 @@ public class Damage {
     }
 
     public int getDamage() {
+        return damage.get(type);
+    }
+
+    public static int getDamage(Type type) {
         return damage.get(type);
     }
 }

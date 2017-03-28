@@ -12,12 +12,20 @@ import com.sideprojects.megamanxphantomblade.MovingObject;
  */
 public class EnemyBase extends MovingObject {
     public TextureRegion currentFrame = new TextureRegion(new Texture("Favicon_16x16.png"));
+    public Damage damage;
+    public boolean shouldBeRemoved;
     public EnemyBase(float x, float y) {
         pos = new Vector2(x, y);
-        bounds = new Rectangle(x, y, 0.25f, 0.25f);
+//        bounds = new Rectangle(x, y, 0.25f, 0.25f);
+        bounds = new Rectangle(x, y, 1f, 1f);
+        initialiseHealthPoints(30);
+        damage = new Damage(Damage.Type.Normal, Damage.Side.None);
+        shouldBeRemoved = false;
     }
 
-    public Damage.Type getDamageType() {
-        return Damage.Type.Normal;
+    public void update(float delta) {
+        if (isDead()) {
+            shouldBeRemoved = true;
+        }
     }
 }

@@ -40,11 +40,7 @@ public class PlayerX extends PlayerBase {
             Vector2 padding = getBulletPositionPadding(bulletDirection);
             pos.x += padding.x;
             pos.y += padding.y;
-            switch(attackType) {
-                case Light:
-                    map.addPlayerAttack(new Bullet(pos, damage, bulletDirection, animations));
-                    break;
-            }
+            map.addPlayerAttack(new Bullet(pos, damage, bulletDirection, animations));
         }
     }
 

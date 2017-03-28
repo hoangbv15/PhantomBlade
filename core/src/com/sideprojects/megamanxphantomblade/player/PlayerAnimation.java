@@ -134,6 +134,7 @@ public abstract class PlayerAnimation {
         Updashrocket,
         DamagedNormal,
         // X
-        BulletSmall
+        BulletSmall,
+        BulletSmallExplode
     }
 }

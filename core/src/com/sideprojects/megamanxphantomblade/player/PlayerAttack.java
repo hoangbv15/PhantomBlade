@@ -11,10 +11,12 @@ public abstract class PlayerAttack extends MovingObject {
     public int direction;
     public Damage damage;
     public TextureRegion currentFrame;
+    public boolean shouldBeRemoved;
 
     public PlayerAttack(Damage damage, int direction) {
         this.damage = damage;
         this.direction = direction;
+        shouldBeRemoved = false;
     }
 
     public abstract void update(float delta);

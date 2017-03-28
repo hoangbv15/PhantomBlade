@@ -16,6 +16,7 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerFactory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -110,8 +111,23 @@ public abstract class MapBase {
         playerPhysics.update(player, deltaTime, this);
         player.update(this);
         particles.update(deltaTime);
-        for (PlayerAttack attack: playerAttackList) {
+        Iterator<PlayerAttack> i = playerAttackList.iterator();
+        while (i.hasNext()) {
+            PlayerAttack attack = i.next();
             attack.update(deltaTime);
+            playerPhysics.dealPlayerAttackDamage(attack, this);
+            if (attack.shouldBeRemoved) {
+                i.remove();
+            }
+        }
+
+        Iterator<EnemyBase> j = enemyList.iterator();
+        while (j.hasNext()) {
+            EnemyBase enemy = j.next();
+            enemy.update(deltaTime);
+            if (enemy.shouldBeRemoved) {
+                j.remove();
+            }
         }
     }
 

@@ -23,7 +23,7 @@ public class Damaged extends PlayerDamageState {
             case Normal:
             case Light:
             case InstantDeath:
-                player.takeDamage(damage.getDamage());
+                player.takeDamage(damage);
                 player.isAttacking = false;
                 player.firstFramesOfAttacking = false;
                 if (player.isDead()) {

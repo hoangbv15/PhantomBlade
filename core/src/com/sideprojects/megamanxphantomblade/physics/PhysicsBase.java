@@ -12,6 +12,7 @@ import com.sideprojects.megamanxphantomblade.math.NumberMath;
 import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
+import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -156,19 +157,42 @@ public abstract class PhysicsBase {
         return Collision.getCollisionNearestToStart(collisionList, start);
     }
 
-    public final Damage getEnemyCollision(MovingObject object, MapBase map) {
+    public final Damage getEnemyCollisionDamage(MovingObject object, MapBase map) {
+        EnemyBase enemy = getCollidingEnemy(object, map);
+        if (enemy == null) {
+            return null;
+        }
+        float playerX = object.bounds.x + object.bounds.width / 2;
+        float enemyX = enemy.bounds.x + enemy.bounds.width / 2;
+        Damage.Side side = Damage.Side.Left;
+        if (playerX < enemyX) {
+            side = Damage.Side.Right;
+        }
+        enemy.damage.side = side;
+        return enemy.damage;
+    }
+
+    public final void dealPlayerAttackDamage(PlayerAttack attack, MapBase map) {
+        if (attack.isDead()) {
+            return;
+        }
+        EnemyBase enemy = getCollidingEnemy(attack, map);
+        if (enemy == null) {
+            return;
+        }
+        attack.takeDamage(enemy.damage);
+        enemy.takeDamage(attack.damage);
+    }
+
+    private EnemyBase getCollidingEnemy(MovingObject object, MapBase map) {
         for (EnemyBase enemy: map.enemyList) {
+            if (enemy.isDead()) {
+                continue;
+            }
             if (object.bounds.overlaps(enemy.bounds)) {
-                float playerX = object.bounds.x + object.bounds.width / 2;
-                float enemyX = enemy.bounds.x + enemy.bounds.width / 2;
-                Damage.Side side = Damage.Side.Left;
-                if (playerX < enemyX) {
-                    side = Damage.Side.Right;
-                }
-                return new Damage(enemy.getDamageType(), side);
+                return enemy;
             }
         }
-
         return null;
     }
 

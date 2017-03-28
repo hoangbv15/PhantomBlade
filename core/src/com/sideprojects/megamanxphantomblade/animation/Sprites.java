@@ -26,6 +26,7 @@ public class Sprites {
     public static String XWallslideShootNoLight = "sprites/x/wallslide_shoot_nolight.txt";
     public static String XShootMuzzle = "sprites/x/shoot_muzzle.txt";
     public static String XBulletSmall = "sprites/x/bullet_small.txt";
+    public static String XBulletSmallExplode = "sprites/x/bullet_small_explode.txt";
 
     // Particle effects
     public static String Wallslide = "sprites/wallslide_dust.txt";

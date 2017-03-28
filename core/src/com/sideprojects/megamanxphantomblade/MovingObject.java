@@ -32,8 +32,8 @@ public abstract class MovingObject {
         healthPoints = hp;
     }
 
-    public void takeDamage(int damage) {
-        healthPoints -= damage;
+    public void takeDamage(Damage damage) {
+        healthPoints -= damage.getDamage();
     }
 
     public void updatePos() {
