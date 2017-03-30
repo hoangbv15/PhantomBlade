@@ -25,6 +25,7 @@ public class Bullet extends PlayerAttack {
         bounds = new Rectangle(pos.x, pos.y, 0.1f, 0.1f);
         initialiseHealthPoints(10);
         explode = false;
+        stateTime = 0;
     }
 
     private void createAnimation(PlayerAnimation animations) {

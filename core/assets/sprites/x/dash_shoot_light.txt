@@ -1,5 +1,5 @@
 dash_shoot_light.png
-size: 414, 44
+size: 229, 85
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -33,29 +33,29 @@ repeat: none
   index: -1
 6
   rotate: false
-  xy: 229, 0
-  size: 45, 44
-  orig: 45, 44
+  xy: 0, 42
+  size: 57, 43
+  orig: 57, 43
   offset: 0, 0
   index: -1
 7
   rotate: false
-  xy: 274, 0
-  size: 48, 43
-  orig: 48, 43
+  xy: 57, 42
+  size: 57, 43
+  orig: 57, 43
   offset: 0, 0
   index: -1
 8
   rotate: false
-  xy: 322, 0
-  size: 44, 43
-  orig: 44, 43
+  xy: 114, 42
+  size: 57, 43
+  orig: 57, 43
   offset: 0, 0
   index: -1
 9
   rotate: false
-  xy: 366, 0
-  size: 48, 43
-  orig: 48, 43
+  xy: 171, 42
+  size: 57, 43
+  orig: 57, 43
   offset: 0, 0
   index: -1

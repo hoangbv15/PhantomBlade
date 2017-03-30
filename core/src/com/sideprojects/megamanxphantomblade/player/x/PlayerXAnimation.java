@@ -3,22 +3,14 @@ package com.sideprojects.megamanxphantomblade.player.x;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.animation.Sprites;
 import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
+import com.sideprojects.megamanxphantomblade.math.VectorPool;
 
 /**
  * Created by buivuhoang on 05/02/17.
  */
 public class PlayerXAnimation extends PlayerAnimation {
-
-    public Animation<TextureRegion> getBullet(Damage damage, int direction) {
-        switch(damage.type) {
-            case Light:
-                return retrieveFromCache(Type.BulletSmall, direction, Sprites.XBulletSmall, null, 0.04f);
-        }
-        return null;
-    }
 
     @Override
     public Animation<TextureRegion> getAttack(Type type, int direction, boolean isFirstAttackFrame) {
@@ -39,6 +31,7 @@ public class PlayerXAnimation extends PlayerAnimation {
             case Updash:
                 return withLight? Sprites.XJumpShootLight : Sprites.XJumpShootNoLight;
             case Dash:
+            case Dashbreak:
                 return withLight? Sprites.XDashShootLight : Sprites.XDashShootNoLight;
             case Wallslide:
             case Walljump:
@@ -150,24 +143,26 @@ public class PlayerXAnimation extends PlayerAnimation {
         if (isAttacking) {
             switch (type) {
                 case Idle:
-                    return new Vector2(-15, 0);
+                    return VectorPool.get(-15, 0);
                 case Run:
                 case Jump:
                 case Walljump:
                 case Fall:
                 case Touchdown:
                 case Dash:
-                case Dashbreak:
                 case Updash:
-                    return new Vector2(-8, 0);
+                    return VectorPool.get(-8, 0);
+                case Dashbreak:
+                    return VectorPool.get(-19, 0);
             }
         }
 
         switch (type) {
             case DamagedNormal:
-                return new Vector2(0, -5);
+                return VectorPool.get(0, -5);
+
         }
 
-        return new Vector2(0, 0);
+        return VectorPool.get(0, 0);
     }
 }

@@ -49,7 +49,6 @@ public abstract class PlayerBase extends MovingObject {
 
     public void update(MapBase map) {
         updateAnimation(map);
-        internalUpdate(map);
     }
 
     public boolean isLowHealth() {
@@ -121,6 +120,4 @@ public abstract class PlayerBase extends MovingObject {
     public abstract void createAnimations();
 
     public abstract TraceColour getTraceColour();
-
-    protected abstract void internalUpdate(MapBase map);
 }
