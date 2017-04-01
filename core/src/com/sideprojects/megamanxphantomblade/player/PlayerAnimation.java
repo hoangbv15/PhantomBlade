@@ -56,9 +56,9 @@ public abstract class PlayerAnimation {
         animationCache = new HashMap<AnimationKey, Animation<TextureRegion>>();
     }
 
-    public Animation<TextureRegion> get(Type type, int direction, boolean lowHealth, boolean isAttacking, boolean isFirstAttackFrame, boolean changeDirectionDuringAttack) {
+    public Animation<TextureRegion> get(Type type, int direction, boolean lowHealth, boolean isAttacking, boolean isFirstAttackFrame, boolean changeStateDuringAttack) {
         if (isAttacking) {
-            Animation<TextureRegion> attack = getAttack(type, direction, isFirstAttackFrame, changeDirectionDuringAttack);
+            Animation<TextureRegion> attack = getAttack(type, direction, isFirstAttackFrame, changeStateDuringAttack);
             if (attack != null) {
                 return attack;
             }
@@ -85,7 +85,7 @@ public abstract class PlayerAnimation {
         return animationCache.get(key);
     }
 
-    public abstract Animation<TextureRegion> getAttack(Type type, int direction, boolean isFirstAttackFrame, boolean changeDirectionDuringAttack);
+    public abstract Animation<TextureRegion> getAttack(Type type, int direction, boolean isFirstAttackFrame, boolean changeStateDuringAttack);
     protected abstract String getTextureAtlas(Type type, boolean lowHealth);
     protected abstract List<Integer> getAnimationIndex(Type type, boolean lowHealth);
     protected abstract boolean isLooping(Type type, boolean isAttacking);

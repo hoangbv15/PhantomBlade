@@ -16,10 +16,10 @@ import java.util.List;
 public class PlayerXAnimation extends PlayerAnimation {
 
     @Override
-    public Animation<TextureRegion> getAttack(Type type, int direction, boolean isFirstAttackFrame, boolean changeDirectionDuringAttack) {
+    public Animation<TextureRegion> getAttack(Type type, int direction, boolean isFirstAttackFrame, boolean changeStateDuringAttack) {
         String texture = getAttackTextureAtlas(type, isFirstAttackFrame);
         if (texture == null) return null;
-        return retrieveFromCache(type, direction, texture, getAttackAnimationIndex(type, changeDirectionDuringAttack), getAttackFrameDuration(type));
+        return retrieveFromCache(type, direction, texture, getAttackAnimationIndex(type, changeStateDuringAttack), getAttackFrameDuration(type));
     }
 
     private String getAttackTextureAtlas(Type type, boolean withLight) {
@@ -45,10 +45,10 @@ public class PlayerXAnimation extends PlayerAnimation {
         }
     }
 
-    private List<Integer> getAttackAnimationIndex(Type type, boolean changeDirectionDuringAttack) {
+    private List<Integer> getAttackAnimationIndex(Type type, boolean changeStateDuringAttack) {
         switch(type) {
             case Idle:
-                if (changeDirectionDuringAttack) {
+                if (changeStateDuringAttack) {
                     return Arrays.asList(5, 5, 5, 5, 5, 5, 6, 7);
                 }
                 return Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7);

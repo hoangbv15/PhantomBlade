@@ -44,7 +44,7 @@ public class PlayerXPhysics extends PlayerPhysics {
                 // set state time to after the first attack frames
                 // in order to play the ending animation
                 if (prevState != player.state) {
-                    player.changeDirectionDuringAttack = true;
+                    player.changeStateDuringAttack = true;
                 }
                 prevState = player.state;
             } else {
@@ -80,6 +80,6 @@ public class PlayerXPhysics extends PlayerPhysics {
 
     private void resetAttackStatus() {
         player.isAttacking = false;
-        player.changeDirectionDuringAttack = false;
+        player.changeStateDuringAttack = false;
     }
 }

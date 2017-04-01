@@ -20,8 +20,8 @@ public class WallJump extends Jump {
     }
 
     @Override
-    public PlayerState enter(MovingObject object) {
-        super.enter(object);
+    public PlayerState enter(PlayerBase player) {
+        super.enter(player);
         return PlayerState.WALLJUMP;
     }
 

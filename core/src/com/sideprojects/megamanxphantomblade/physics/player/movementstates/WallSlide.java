@@ -1,6 +1,5 @@
 package com.sideprojects.megamanxphantomblade.physics.player.movementstates;
 
-import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
@@ -46,8 +45,8 @@ public class WallSlide extends PlayerMovementStateBase {
     }
 
     @Override
-    public PlayerState enter(MovingObject object) {
-        object.stateTime = 0;
+    public PlayerState enter(PlayerBase player) {
+        player.stateTime = 0;
         return PlayerState.WALLSLIDE;
     }
 

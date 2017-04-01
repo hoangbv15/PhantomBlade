@@ -25,7 +25,7 @@ public abstract class PlayerBase extends MovingObject {
     public boolean firstFramesOfAttacking;
     public boolean justBegunAttacking;
     // This is probably only applicable for shooting characters such as X
-    public boolean changeDirectionDuringAttack;
+    public boolean changeStateDuringAttack;
     public Damage.Type attackType;
 
     // Can only issue low health warning once
@@ -88,7 +88,7 @@ public abstract class PlayerBase extends MovingObject {
             }
         } else if (state == PlayerState.DASH) {
             type = PlayerAnimation.Type.Dash;
-            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Dashrocket, direction, isLowHealth(), isAttacking, firstFramesOfAttacking, changeDirectionDuringAttack);
+            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Dashrocket, direction, isLowHealth(), isAttacking, firstFramesOfAttacking, changeStateDuringAttack);
             if (dashRocketAnimation != null) {
                 currentDashRocketFrame = dashRocketAnimation.getKeyFrame(stateTime, false);
             }
@@ -100,7 +100,7 @@ public abstract class PlayerBase extends MovingObject {
             type = PlayerAnimation.Type.Dashbreak;
         } else if (state == PlayerState.UPDASH) {
             type = PlayerAnimation.Type.Updash;
-            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Updashrocket, direction, isLowHealth(), isAttacking, firstFramesOfAttacking, changeDirectionDuringAttack);
+            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Updashrocket, direction, isLowHealth(), isAttacking, firstFramesOfAttacking, changeStateDuringAttack);
             if (dashRocketAnimation != null) {
                 currentDashRocketFrame = dashRocketAnimation.getKeyFrame(stateTime, false);
             }
@@ -111,7 +111,7 @@ public abstract class PlayerBase extends MovingObject {
             type = PlayerAnimation.Type.DamagedNormal;
         }
 
-        currentAnimation = animations.get(type, direction, isLowHealth(), isAttacking, firstFramesOfAttacking, changeDirectionDuringAttack);
+        currentAnimation = animations.get(type, direction, isLowHealth(), isAttacking, firstFramesOfAttacking, changeStateDuringAttack);
         boolean looping = animations.isLooping(type, isAttacking);
         if (currentAnimation != null) {
             currentFrame = currentAnimation.getKeyFrame(stateTime, looping);

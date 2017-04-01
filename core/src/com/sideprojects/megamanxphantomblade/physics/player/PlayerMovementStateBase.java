@@ -38,7 +38,7 @@ public abstract class PlayerMovementStateBase implements State {
      */
     public abstract boolean canDash(InputProcessor input);
 
-    public abstract PlayerState enter(MovingObject object);
+    public abstract PlayerState enter(PlayerBase player);
 
     /**
      * Determine what the next state should be

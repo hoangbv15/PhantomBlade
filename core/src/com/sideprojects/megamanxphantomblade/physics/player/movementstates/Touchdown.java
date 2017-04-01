@@ -1,6 +1,5 @@
 package com.sideprojects.megamanxphantomblade.physics.player.movementstates;
 
-import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
@@ -18,8 +17,8 @@ public class Touchdown extends Idle {
     }
 
     @Override
-    public PlayerState enter(MovingObject object) {
-        object.stateTime = 0;
+    public PlayerState enter(PlayerBase player) {
+        player.stateTime = 0;
         return PlayerState.TOUCHDOWN;
     }
 

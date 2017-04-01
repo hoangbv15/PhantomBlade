@@ -1,6 +1,5 @@
 package com.sideprojects.megamanxphantomblade.physics.player.movementstates;
 
-import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.input.Command;
 import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
@@ -44,9 +43,9 @@ public class Updash extends PlayerMovementStateBase {
     }
 
     @Override
-    public PlayerState enter(MovingObject object) {
-        object.stateTime = 0;
-        object.grounded = false;
+    public PlayerState enter(PlayerBase player) {
+        player.stateTime = 0;
+        player.grounded = false;
         return PlayerState.UPDASH;
     }
 
