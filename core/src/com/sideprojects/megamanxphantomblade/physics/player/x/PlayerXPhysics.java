@@ -32,6 +32,7 @@ public class PlayerXPhysics extends PlayerPhysics {
         // Logic for attacking
         attackStateTime += delta;
         if (input.isCommandJustPressed(Command.ATTACK) && attackStateTime >= attackRecoveryTime) {
+            resetAttackStatus();
             lightAttack(map);
         } else {
             player.justBegunAttacking = false;
@@ -47,8 +48,7 @@ public class PlayerXPhysics extends PlayerPhysics {
                 }
                 prevState = player.state;
             } else {
-                player.isAttacking = false;
-                player.changeDirectionDuringAttack = false;
+                resetAttackStatus();
             }
         }
         super.internalUpdate(object, delta, map);
@@ -76,5 +76,10 @@ public class PlayerXPhysics extends PlayerPhysics {
         Damage.Side side = bulletDirection == MovingObject.LEFT ? Damage.Side.Right : Damage.Side.Left;
         Damage damage = new Damage(player.attackType, side);
         map.addPlayerAttack(new XBuster(player, damage, bulletDirection, player.animations));
+    }
+
+    private void resetAttackStatus() {
+        player.isAttacking = false;
+        player.changeDirectionDuringAttack = false;
     }
 }
