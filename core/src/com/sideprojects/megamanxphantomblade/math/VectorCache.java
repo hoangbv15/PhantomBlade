@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * Created by buivuhoang on 30/03/17.
  */
-public class VectorPool {
+public class VectorCache {
 
     private static Map<Float, Map<Float, Vector2>> vectorCache = new HashMap<Float, Map<Float, Vector2>>();
 

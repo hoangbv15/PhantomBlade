@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.animation.Sprites;
 import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
-import com.sideprojects.megamanxphantomblade.math.VectorPool;
+import com.sideprojects.megamanxphantomblade.math.VectorCache;
 
 /**
  * Created by buivuhoang on 05/02/17.
@@ -61,37 +61,6 @@ public class PlayerXAnimation extends PlayerAnimation {
     }
 
     @Override
-    protected String getTextureAtlas(Type type, boolean lowHealth) {
-        switch (type) {
-            case Idle:
-                return lowHealth ? Sprites.XIdleLowHealth : Sprites.XIdle;
-            case Walljump:
-                return Sprites.XWallSlide;
-            case Run:
-                return Sprites.XRun;
-            case Jump:
-            case Fall:
-            case Touchdown:
-                return Sprites.XJump;
-            case Wallslide:
-                return Sprites.XWallSlide;
-            case Dashrocket:
-                return Sprites.XDashRocket;
-            case Dash:
-            case Dashbreak:
-                return Sprites.XDash;
-            case Updash:
-                return Sprites.XUpDash;
-            case Updashrocket:
-                return Sprites.XUpDashRocket;
-            case DamagedNormal:
-                return Sprites.XDamagedNormal;
-            default:
-                return null;
-        }
-    }
-
-    @Override
     protected int[] getAnimationIndex(Type type, boolean lowHealth) {
         switch (type) {
             case Idle:
@@ -127,6 +96,37 @@ public class PlayerXAnimation extends PlayerAnimation {
     }
 
     @Override
+    protected String getTextureAtlas(Type type, boolean lowHealth) {
+        switch (type) {
+            case Idle:
+                return lowHealth ? Sprites.XIdleLowHealth : Sprites.XIdle;
+            case Walljump:
+                return Sprites.XWallSlide;
+            case Run:
+                return Sprites.XRun;
+            case Jump:
+            case Fall:
+            case Touchdown:
+                return Sprites.XJump;
+            case Wallslide:
+                return Sprites.XWallSlide;
+            case Dashrocket:
+                return Sprites.XDashRocket;
+            case Dash:
+            case Dashbreak:
+                return Sprites.XDash;
+            case Updash:
+                return Sprites.XUpDash;
+            case Updashrocket:
+                return Sprites.XUpDashRocket;
+            case DamagedNormal:
+                return Sprites.XDamagedNormal;
+            default:
+                return null;
+        }
+    }
+
+    @Override
     protected boolean isLooping(Type type, boolean isAttacking) {
         switch (type) {
             case Idle:
@@ -143,7 +143,7 @@ public class PlayerXAnimation extends PlayerAnimation {
         if (isAttacking) {
             switch (type) {
                 case Idle:
-                    return VectorPool.get(-15, 0);
+                    return VectorCache.get(-15, 0);
                 case Run:
                 case Jump:
                 case Walljump:
@@ -151,18 +151,18 @@ public class PlayerXAnimation extends PlayerAnimation {
                 case Touchdown:
                 case Dash:
                 case Updash:
-                    return VectorPool.get(-8, 0);
+                    return VectorCache.get(-8, 0);
                 case Dashbreak:
-                    return VectorPool.get(-19, 0);
+                    return VectorCache.get(-19, 0);
             }
         }
 
         switch (type) {
             case DamagedNormal:
-                return VectorPool.get(0, -5);
+                return VectorCache.get(0, -5);
 
         }
 
-        return VectorPool.get(0, 0);
+        return VectorCache.get(0, 0);
     }
 }

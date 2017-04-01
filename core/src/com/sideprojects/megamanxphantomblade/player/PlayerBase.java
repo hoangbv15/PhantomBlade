@@ -32,6 +32,7 @@ public abstract class PlayerBase extends MovingObject {
     public static int lowHealthThreshold = 30;
 
     public PlayerAnimation animations;
+    private Animation<TextureRegion> currentAnimation;
     public TextureRegion currentFrame;
     public TextureRegion currentDashRocketFrame;
     public Vector2 animationPadding;
@@ -108,13 +109,21 @@ public abstract class PlayerBase extends MovingObject {
             type = PlayerAnimation.Type.DamagedNormal;
         }
 
-        Animation<TextureRegion> currentAnimation = animations.get(type, direction, isLowHealth(), isAttacking, firstFramesOfAttacking);
+        currentAnimation = animations.get(type, direction, isLowHealth(), isAttacking, firstFramesOfAttacking);
         boolean looping = animations.isLooping(type, isAttacking);
         if (currentAnimation != null) {
             currentFrame = currentAnimation.getKeyFrame(stateTime, looping);
             animationPadding = animations.getAnimationPaddingX(type, direction, isAttacking);
         }
         previousState = state;
+    }
+
+    public int currentFrameIndex() {
+        Animation.PlayMode prevPlayMode = currentAnimation.getPlayMode();
+        currentAnimation.setPlayMode(Animation.PlayMode.LOOP);
+        int frameIndex = currentAnimation.getKeyFrameIndex(stateTime);
+        currentAnimation.setPlayMode(prevPlayMode);
+        return frameIndex;
     }
 
     public abstract void createAnimations();

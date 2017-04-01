@@ -6,12 +6,12 @@ import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.input.Command;
 import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
-import com.sideprojects.megamanxphantomblade.math.VectorPool;
+import com.sideprojects.megamanxphantomblade.math.VectorCache;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerSound;
-import com.sideprojects.megamanxphantomblade.player.x.Bullet;
+import com.sideprojects.megamanxphantomblade.player.x.XBuster;
 
 /**
  * Created by buivuhoang on 26/03/17.
@@ -66,33 +66,6 @@ public class PlayerXPhysics extends PlayerPhysics {
         }
         Damage.Side side = bulletDirection == MovingObject.LEFT ? Damage.Side.Right : Damage.Side.Left;
         Damage damage = new Damage(player.attackType, side);
-        Vector2 pos = new Vector2(player.bounds.x, player.bounds.y);
-        Vector2 padding = getBulletPositionPadding(bulletDirection);
-        pos.x += padding.x;
-        pos.y += padding.y;
-        map.addPlayerAttack(new Bullet(pos, damage, bulletDirection, player.animations));
-    }
-
-    private Vector2 getBulletPositionPadding(int bulletDirection) {
-        Vector2 padding = VectorPool.get(0, + 0.46f);
-        if (bulletDirection == MovingObject.RIGHT) {
-            padding = VectorPool.get(player.bounds.width, padding.y);
-        } else {
-            padding = VectorPool.get(-0.3f, padding.y);
-        }
-
-        switch(player.state) {
-            case JUMP:
-                padding = VectorPool.get(padding.x, 0.55f);
-                break;
-            case FALL:
-                padding = VectorPool.get(padding.x, 0.55f);
-                break;
-            case DASH:
-                padding = VectorPool.get(padding.x, 0.2f);
-                break;
-        }
-
-        return padding;
+        map.addPlayerAttack(new XBuster(player, damage, bulletDirection, player.animations));
     }
 }

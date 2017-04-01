@@ -135,6 +135,7 @@ public abstract class PlayerAnimation {
         DamagedNormal,
         // X
         BulletSmall,
+        BulletSmallMuzzle,
         BulletSmallExplode
     }
 }

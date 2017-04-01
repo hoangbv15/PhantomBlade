@@ -114,7 +114,7 @@ public abstract class MapBase {
         Iterator<PlayerAttack> i = playerAttackList.iterator();
         while (i.hasNext()) {
             PlayerAttack attack = i.next();
-            attack.update(deltaTime);
+            attack.update(player, deltaTime);
             playerPhysics.dealPlayerAttackDamage(attack, this);
             if (attack.shouldBeRemoved) {
                 i.remove();
