@@ -45,6 +45,7 @@ public class XBuster extends PlayerAttack {
         // Calculate position for bullet
         posPadding = getBulletPositionPadding(player, direction, player.currentFrameIndex());
         pos = new Vector2();
+        vel = new Vector2(0, 0);
         pos.x = player.bounds.x + posPadding.x;
         pos.y = player.bounds.y + posPadding.y;
         playerStartDirection = player.direction;
@@ -85,10 +86,11 @@ public class XBuster extends PlayerAttack {
             }
         } else {
             currentFrame = animation.getKeyFrame(stateTime, true);
-            pos.x += 8 * delta * direction;
+            vel.x = 8 * direction;
+            pos.x += vel.x * delta;
             bounds.x = pos.x;
         }
-        if (stateTime <= muzzleTime && !explode) {
+        if (player.state != PlayerState.IDLE && stateTime <= muzzleTime && !explode) {
             muzzleFrame = muzzleAnimation.getKeyFrame(stateTime, false);
             if (player.direction != playerStartDirection) {
                 stopUpdatingMuzzlePos = true;
