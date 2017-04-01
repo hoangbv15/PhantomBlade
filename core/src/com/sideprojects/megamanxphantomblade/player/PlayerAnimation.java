@@ -7,6 +7,7 @@ import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.animation.AnimationLoader;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,11 +18,13 @@ public abstract class PlayerAnimation {
         private Type type;
         private int direction;
         private String texture;
+        private List<Integer> animationIndex;
 
-        public AnimationKey(Type type, int direction, String texture) {
+        public AnimationKey(Type type, int direction, String texture, List<Integer> animationIndex) {
             this.type = type;
             this.direction = direction;
             this.texture = texture;
+            this.animationIndex = animationIndex;
         }
 
         @Override
@@ -33,7 +36,8 @@ public abstract class PlayerAnimation {
 
             if (direction != that.direction) return false;
             if (type != that.type) return false;
-            return texture != null ? texture.equals(that.texture) : that.texture == null;
+            if (texture != null ? !texture.equals(that.texture) : that.texture != null) return false;
+            return animationIndex != null ? animationIndex.equals(that.animationIndex) : that.animationIndex == null;
         }
 
         @Override
@@ -41,6 +45,7 @@ public abstract class PlayerAnimation {
             int result = type != null ? type.hashCode() : 0;
             result = 31 * result + direction;
             result = 31 * result + (texture != null ? texture.hashCode() : 0);
+            result = 31 * result + (animationIndex != null ? animationIndex.hashCode() : 0);
             return result;
         }
     }
@@ -51,26 +56,26 @@ public abstract class PlayerAnimation {
         animationCache = new HashMap<AnimationKey, Animation<TextureRegion>>();
     }
 
-    public Animation<TextureRegion> get(Type type, int direction, boolean lowHealth, boolean isAttacking, boolean isFirstAttackFrame) {
+    public Animation<TextureRegion> get(Type type, int direction, boolean lowHealth, boolean isAttacking, boolean isFirstAttackFrame, boolean changeDirectionDuringAttack) {
         if (isAttacking) {
-            Animation<TextureRegion> attack = getAttack(type, direction, isFirstAttackFrame);
+            Animation<TextureRegion> attack = getAttack(type, direction, isFirstAttackFrame, changeDirectionDuringAttack);
             if (attack != null) {
                 return attack;
             }
         }
         String texture = getTextureAtlas(type, lowHealth);
-        int[] index = getAnimationIndex(type, lowHealth);
+        List<Integer> index = getAnimationIndex(type, lowHealth);
         float frameDuration = getFrameDuration(type, lowHealth);
 
         return retrieveFromCache(type, direction, texture, index, frameDuration);
     }
 
     public Animation<TextureRegion> get(Type type) {
-        return get(type, MovingObject.RIGHT, false, false, false);
+        return get(type, MovingObject.RIGHT, false, false, false, false);
     }
 
-    public Animation<TextureRegion> retrieveFromCache(Type type, int direction, String texture, int[] animationIndex, float frameDuration) {
-        AnimationKey key = new AnimationKey(type, direction, texture);
+    public Animation<TextureRegion> retrieveFromCache(Type type, int direction, String texture, List<Integer> animationIndex, float frameDuration) {
+        AnimationKey key = new AnimationKey(type, direction, texture, animationIndex);
         if (!animationCache.containsKey(key)) {
             boolean flipped = direction == MovingObject.LEFT;
             animationCache.put(key,
@@ -80,9 +85,9 @@ public abstract class PlayerAnimation {
         return animationCache.get(key);
     }
 
-    public abstract Animation<TextureRegion> getAttack(Type type, int direction, boolean isFirstAttackFrame);
+    public abstract Animation<TextureRegion> getAttack(Type type, int direction, boolean isFirstAttackFrame, boolean changeDirectionDuringAttack);
     protected abstract String getTextureAtlas(Type type, boolean lowHealth);
-    protected abstract int[] getAnimationIndex(Type type, boolean lowHealth);
+    protected abstract List<Integer> getAnimationIndex(Type type, boolean lowHealth);
     protected abstract boolean isLooping(Type type, boolean isAttacking);
 
     /**

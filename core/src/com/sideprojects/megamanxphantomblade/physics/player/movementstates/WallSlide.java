@@ -41,11 +41,6 @@ public class WallSlide extends PlayerMovementStateBase {
     }
 
     @Override
-    public boolean canWallSlide() {
-        return true;
-    }
-
-    @Override
     public boolean canDash(InputProcessor input) {
         return false;
     }

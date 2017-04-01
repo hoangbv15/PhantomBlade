@@ -1,12 +1,10 @@
 package com.sideprojects.megamanxphantomblade.physics.player.x;
 
-import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.input.Command;
 import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
-import com.sideprojects.megamanxphantomblade.math.VectorCache;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
@@ -17,13 +15,16 @@ import com.sideprojects.megamanxphantomblade.player.x.XBuster;
  * Created by buivuhoang on 26/03/17.
  */
 public class PlayerXPhysics extends PlayerPhysics {
-    private static float attackTime = 0.32f;
-    private static float firstFramesAttackTime = 0.1f;
+    private static float attackFrameTime = 0.04f;
+    private static float attackTime = 8 * attackFrameTime;
+    private static float firstFramesAttackTime = 4 * attackFrameTime;
     private static float attackRecoveryTime = 0.1f;
     private float attackStateTime;
+    private PlayerState prevState;
 
     public PlayerXPhysics(InputProcessor input, PlayerBase player, PlayerSound soundPlayer) {
         super(input, player, soundPlayer);
+        prevState = null;
     }
 
     @Override
@@ -38,8 +39,16 @@ public class PlayerXPhysics extends PlayerPhysics {
                 if (attackStateTime >= firstFramesAttackTime) {
                     player.firstFramesOfAttacking = false;
                 }
+                // if player state changes during attack
+                // set state time to after the first attack frames
+                // in order to play the ending animation
+                if (prevState != player.state) {
+                    player.changeDirectionDuringAttack = true;
+                }
+                prevState = player.state;
             } else {
                 player.isAttacking = false;
+                player.changeDirectionDuringAttack = false;
             }
         }
         super.internalUpdate(object, delta, map);
@@ -55,7 +64,7 @@ public class PlayerXPhysics extends PlayerPhysics {
         player.justBegunAttacking = true;
         player.attackType = Damage.Type.Light;
         attackStateTime = 0;
-        soundPlayer.playAttackLight();
+        playerSound.playAttackLight();
         createBullet(map);
     }
 

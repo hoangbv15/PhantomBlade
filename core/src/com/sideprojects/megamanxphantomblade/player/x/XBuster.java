@@ -22,13 +22,30 @@ public class XBuster extends PlayerAttack {
         return p / 62f;
     }
 
+    // Run padding
     private static float[] xRunPosPadding = new float[] {
-            -0.08f, -0.08f, -0.08f, 0.12f, -0.12f, -0.12f, -0.08f, -0.04f, -0.04f, -0.04f, 0f, 0f, 0f, -0.04f,
+            -P(0), -P(0), -P(0), -P(1), -P(1), -P(1), -P(0), P(1), P(1), P(1), P(2), P(2), P(2), P(1),
     };
 
     private static float[] yRunPosPadding = new float[] {
             P(3), P(4), P(3), P(2), P(1), P(2), P(3), P(4), P(3), P(2), P(1), 0, P(1), P(2)
-};
+    };
+
+    // Dash padding
+    private static float[] yDashPosPadding = new float[] {
+            P(23), P(17), P(12)
+    };
+
+    // Dashbreak padding
+    private static float[] xDashBreakPosPadding = new float[] {
+            P(13), P(10), 0, P(11)
+    };
+
+    private static float[] yDashBreakPosPadding = new float[] {
+            P(25), P(25), P(24)
+    };
+
+
 
     private float muzzleTime;
     private Vector2 posPadding;
@@ -49,8 +66,11 @@ public class XBuster extends PlayerAttack {
         pos.x = player.bounds.x + posPadding.x;
         pos.y = player.bounds.y + posPadding.y;
         playerStartDirection = player.direction;
+        posPadding = getMuzzlePositionPadding(player, player.currentFrameIndex());
         muzzlePos = new Vector2();
-        bounds = new Rectangle(pos.x, pos.y, 0.1f, 0.1f);
+        muzzlePos.x = player.bounds.x + posPadding.x;
+        muzzlePos.y = player.bounds.y + posPadding.y;
+        bounds = new Rectangle(pos.x, pos.y, 0.1f, P(8));
         initialiseHealthPoints(10);
         explode = false;
         stopUpdatingMuzzlePos = false;
@@ -90,17 +110,15 @@ public class XBuster extends PlayerAttack {
             pos.x += vel.x * delta;
             bounds.x = pos.x;
         }
-        if (player.state != PlayerState.IDLE && stateTime <= muzzleTime && !explode) {
+        if (stateTime <= muzzleTime && !explode) {// && player.state != PlayerState.IDLE) {
             muzzleFrame = muzzleAnimation.getKeyFrame(stateTime, false);
             if (player.direction != playerStartDirection) {
                 stopUpdatingMuzzlePos = true;
             }
             if (!stopUpdatingMuzzlePos) {
-                muzzlePos.x = player.bounds.x;
-                muzzlePos.y = player.bounds.y;
                 posPadding = getMuzzlePositionPadding(player, player.currentFrameIndex());
-                muzzlePos.x += posPadding.x;
-                muzzlePos.y += posPadding.y;
+                muzzlePos.x = player.bounds.x + posPadding.x;
+                muzzlePos.y = player.bounds.y + posPadding.y;
             }
         } else {
             muzzleFrame = null;
@@ -109,39 +127,49 @@ public class XBuster extends PlayerAttack {
 
     private Vector2 getBulletPositionPadding(PlayerBase player, int bulletDirection, int frameIndex) {
         float paddingY = P(27);
-        Vector2 padding;
-        if (bulletDirection == MovingObject.RIGHT) {
-            padding = VectorCache.get(player.bounds.width, paddingY);
-        } else {
-            padding = VectorCache.get(-P(12), paddingY);
+        float paddingX = player.bounds.width;
+        if (bulletDirection == MovingObject.LEFT) {
+            paddingX = -P(12);
         }
 
         switch(player.state) {
             case RUN:
-                padding = VectorCache.get(padding.x, padding.y + yRunPosPadding[frameIndex]);
+                paddingX = paddingX + getPadding(xRunPosPadding, frameIndex) * bulletDirection;
+                paddingY = paddingY + getPadding(yRunPosPadding, frameIndex);
                 break;
             case WALLJUMP:
             case JUMP:
             case FALL:
-                float y = P(34);
-                float x = padding.x + P(2);
+                paddingY = P(35);
+                paddingX = paddingX + P(2);
                 if (bulletDirection == MovingObject.LEFT) {
-                    x = -P(13);
+                    paddingX = -P(13);
                 }
                 if (player.state == PlayerState.FALL) {
-                    y = P(33);
+                    paddingY = P(34);
                 }
-                padding = VectorCache.get(x, y);
                 break;
             case DASH:
-                padding = VectorCache.get(padding.x + P(1), P(12));
+                paddingX = paddingX + P(2) * bulletDirection;
+                paddingY = getPadding(yDashPosPadding, frameIndex);
+                break;
+            case DASHBREAK:
+                paddingX = paddingX + getPadding(xDashBreakPosPadding, frameIndex) * bulletDirection;
+                paddingY = getPadding(yDashBreakPosPadding, frameIndex);
                 break;
             case WALLSLIDE:
-                padding = VectorCache.get(padding.x, P(29));
+                paddingY = P(29);
                 break;
         }
 
-        return padding;
+        return VectorCache.get(paddingX, paddingY);
+    }
+
+    private static float getPadding(float[] padding, int i) {
+        if (i >= padding.length) {
+            return padding[padding.length - 1];
+        }
+        return padding[i];
     }
 
     private Vector2 getMuzzlePositionPadding(PlayerBase player, int frameIndex) {
@@ -151,9 +179,9 @@ public class XBuster extends PlayerAttack {
         switch(player.state) {
             case WALLSLIDE:
                 if (player.direction == LEFT) {
-                    paddingX = player.bounds.width - P(4);
+                    paddingX = player.bounds.width + P(5);
                 } else {
-                    paddingX = P(10);
+                    paddingX = -P(17);
                 }
                 break;
         }

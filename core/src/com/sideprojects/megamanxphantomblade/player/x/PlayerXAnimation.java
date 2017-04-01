@@ -7,16 +7,19 @@ import com.sideprojects.megamanxphantomblade.animation.Sprites;
 import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
 import com.sideprojects.megamanxphantomblade.math.VectorCache;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by buivuhoang on 05/02/17.
  */
 public class PlayerXAnimation extends PlayerAnimation {
 
     @Override
-    public Animation<TextureRegion> getAttack(Type type, int direction, boolean isFirstAttackFrame) {
+    public Animation<TextureRegion> getAttack(Type type, int direction, boolean isFirstAttackFrame, boolean changeDirectionDuringAttack) {
         String texture = getAttackTextureAtlas(type, isFirstAttackFrame);
         if (texture == null) return null;
-        return retrieveFromCache(type, direction, texture, getAttackAnimationIndex(type), getAttackFrameDuration(type));
+        return retrieveFromCache(type, direction, texture, getAttackAnimationIndex(type, changeDirectionDuringAttack), getAttackFrameDuration(type));
     }
 
     private String getAttackTextureAtlas(Type type, boolean withLight) {
@@ -42,10 +45,13 @@ public class PlayerXAnimation extends PlayerAnimation {
         }
     }
 
-    private int[] getAttackAnimationIndex(Type type) {
+    private List<Integer> getAttackAnimationIndex(Type type, boolean changeDirectionDuringAttack) {
         switch(type) {
             case Idle:
-                return null;
+                if (changeDirectionDuringAttack) {
+                    return Arrays.asList(5, 5, 5, 5, 5, 5, 6, 7);
+                }
+                return Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7);
             default:
                 return getAnimationIndex(type, false);
         }
@@ -61,31 +67,31 @@ public class PlayerXAnimation extends PlayerAnimation {
     }
 
     @Override
-    protected int[] getAnimationIndex(Type type, boolean lowHealth) {
+    protected List<Integer> getAnimationIndex(Type type, boolean lowHealth) {
         switch (type) {
             case Idle:
                 if (lowHealth) {
-                    return new int[] {1, 2, 1, 0, 1, 2, 1, 0, 4, 5, 4, 3, 4, 5, 4, 3};
+                    return Arrays.asList(1, 2, 1, 0, 1, 2, 1, 0, 4, 5, 4, 3, 4, 5, 4, 3);
                 }
-                return new int[] {1, 0, 0, 0, 1, 2, 2, 2, 1, 0, 0, 0, 1, 2, 2, 2, 1, 0, 0, 0, 1, 3, 4, 3};
+                return Arrays.asList(1, 0, 0, 0, 1, 2, 2, 2, 1, 0, 0, 0, 1, 2, 2, 2, 1, 0, 0, 0, 1, 3, 4, 3);
             case Walljump:
-                return new int[] {4, 5, 6};
+                return Arrays.asList(4, 5, 6);
             case Run:
                 return null;
             case Jump:
-                return new int[] {0, 1, 2, 3};
+                return Arrays.asList(0, 1, 2, 3);
             case Fall:
-                return new int[] {3, 4, 5, 6, 7};
+                return Arrays.asList(3, 4, 5, 6, 7);
             case Touchdown:
-                return new int[] {8, 9, 10};
+                return Arrays.asList(8, 9, 10);
             case Wallslide:
-                return new int[] {0, 1, 2, 3};
+                return Arrays.asList(0, 1, 2, 3);
             case Dashrocket:
                 return null;
             case Dash:
-                return new int[] {0, 1, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3};
+                return Arrays.asList(0, 1, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3);
             case Dashbreak:
-                return new int[] {4, 5, 6, 7};
+                return Arrays.asList(4, 5, 6, 7);
             case Updash:
             case Updashrocket:
             case DamagedNormal:

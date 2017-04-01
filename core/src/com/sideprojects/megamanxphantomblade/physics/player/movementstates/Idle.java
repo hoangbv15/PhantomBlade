@@ -29,11 +29,6 @@ public class Idle extends PlayerNonDashState {
     }
 
     @Override
-    public boolean canWallSlide() {
-        return false;
-    }
-
-    @Override
     public PlayerState enter(MovingObject object) {
         object.stateTime = 0;
         return PlayerState.IDLE;

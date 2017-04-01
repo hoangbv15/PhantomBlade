@@ -58,11 +58,6 @@ public class Dash extends PlayerMovementStateBase {
     }
 
     @Override
-    public boolean canWallSlide() {
-        return false;
-    }
-
-    @Override
     public boolean canDash(InputProcessor input) {
         return true;
     }

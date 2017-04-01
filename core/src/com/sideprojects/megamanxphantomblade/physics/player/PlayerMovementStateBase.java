@@ -33,12 +33,6 @@ public abstract class PlayerMovementStateBase implements State {
     public abstract boolean canWallGlide();
 
     /**
-     * Sliding down slowly by holding on to a wall
-     * @return
-     */
-    public abstract boolean canWallSlide();
-
-    /**
      * Quick horizontal dash
      * @return
      */

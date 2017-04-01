@@ -35,17 +35,17 @@ public abstract class PlayerPhysics extends PhysicsBase {
     public PlayerDamageState damageState;
     private PlayerJumpDashStateBase holdDashState;
 
-    public PlayerSound soundPlayer;
+    public PlayerSound playerSound;
 
     public PlayerBase player;
 
-    public PlayerPhysics(InputProcessor input, PlayerBase player, PlayerSound soundPlayer) {
+    public PlayerPhysics(InputProcessor input, PlayerBase player, PlayerSound playerSound) {
         super(input);
         this.player = player;
-        this.soundPlayer = soundPlayer;
+        this.playerSound = playerSound;
         // Create the initial states
         player.direction = MovingObject.RIGHT;
-        movementState = new Idle(input, player, null, soundPlayer);
+        movementState = new Idle(input, player, null, playerSound);
         holdDashState = new NotJumpDashing(player);
         damageState = new NotDamaged(player);
     }
@@ -139,7 +139,7 @@ public abstract class PlayerPhysics extends PhysicsBase {
     }
 
     public void setStateToIdle() {
-        movementState = new Idle(input, player, player.state, soundPlayer);
+        movementState = new Idle(input, player, player.state, playerSound);
     }
 
     private CollisionList calculateReaction(float delta, MapBase map) {

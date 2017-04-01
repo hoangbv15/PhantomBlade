@@ -90,11 +90,13 @@ public class PlayerRenderer {
         posY += player.animationPadding.y;
 
         renderPlayerTrace(currentFrame, posX, posY);
-        if (player.state == PlayerState.DASH) {
-            renderPlayerDashRocket(originPosX, posY);
-        }
-        if (player.state == PlayerState.UPDASH) {
-            renderPlayerUpDashRocket(originPosX, posY);
+        if (player.currentDashRocketFrame != null) {
+            if (player.state == PlayerState.DASH) {
+                renderPlayerDashRocket(originPosX, posY);
+            }
+            if (player.state == PlayerState.UPDASH) {
+                renderPlayerUpDashRocket(originPosX, posY);
+            }
         }
         if (player.invincible && flickerStateTime <= flickerDuration) {
             batch.setShader(damagedShader);

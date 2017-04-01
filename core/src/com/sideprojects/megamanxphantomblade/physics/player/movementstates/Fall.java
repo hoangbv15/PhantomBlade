@@ -39,11 +39,6 @@ public class Fall extends PlayerNonDashState {
     }
 
     @Override
-    public boolean canWallSlide() {
-        return true;
-    }
-
-    @Override
     public PlayerState enter(MovingObject object) {
         object.stateTime = 0;
         object.grounded = false;

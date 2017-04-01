@@ -29,11 +29,6 @@ public class Jump extends PlayerNonDashState {
     }
 
     @Override
-    public boolean canWallSlide() {
-        return false;
-    }
-
-    @Override
     public boolean canRun() {
         return true;
     }

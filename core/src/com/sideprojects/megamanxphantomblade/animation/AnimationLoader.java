@@ -5,11 +5,13 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.List;
+
 /**
  * Created by buivuhoang on 05/02/17.
  */
 public class AnimationLoader {
-    public static Animation<TextureRegion> load(String atlasFile, int[] animationIndex, boolean flipped, float frameDuration) {
+    public static Animation<TextureRegion> load(String atlasFile, List<Integer> animationIndex, boolean flipped, float frameDuration) {
         Array<TextureAtlas.AtlasRegion> regions = load(atlasFile, flipped, false);
 
         Array<TextureAtlas.AtlasRegion> indexedRegions = new Array<TextureAtlas.AtlasRegion>();
