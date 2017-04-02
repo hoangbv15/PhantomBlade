@@ -3,6 +3,7 @@ package com.sideprojects.megamanxphantomblade.player;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerStateChangeHandler;
 import com.sideprojects.megamanxphantomblade.sound.SoundPlayerBase;
+import com.sideprojects.megamanxphantomblade.sound.Sounds;
 
 /**
  * Created by buivuhoang on 02/03/17.
@@ -44,6 +45,10 @@ public abstract class PlayerSound implements PlayerStateChangeHandler {
                 playDead();
                 break;
         }
+    }
+
+    public void playBulletHit() {
+        soundPlayer.playInParallel(Sounds.BulletHit);
     }
 
     protected abstract void playDash();

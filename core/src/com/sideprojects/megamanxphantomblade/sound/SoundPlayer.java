@@ -42,6 +42,7 @@ public class SoundPlayer implements SoundPlayerBase {
     public void playInParallel(String file) {
         Sound sound = loadSound(file);
         sound.play(sfxVolume);
+
     }
 
     @Override
@@ -55,6 +56,18 @@ public class SoundPlayer implements SoundPlayerBase {
     public void playOneRandomly(String... files) {
         int randomlyChosenIndex = MathUtils.random(0, files.length - 1);
         playInParallel(files[randomlyChosenIndex]);
+    }
+
+    @Override
+    public void loopInParallel(String file) {
+        Sound sound = loadSound(file);
+        sound.loop(sfxVolume);
+    }
+
+    @Override
+    public void stop(String file) {
+        Sound sound = loadSound(file);
+        sound.stop();
     }
 
     @Override

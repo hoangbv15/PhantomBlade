@@ -8,23 +8,34 @@ import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
-import com.sideprojects.megamanxphantomblade.player.PlayerSound;
+import com.sideprojects.megamanxphantomblade.player.x.PlayerXSound;
 import com.sideprojects.megamanxphantomblade.player.x.XBuster;
 
 /**
  * Created by buivuhoang on 26/03/17.
  */
 public class PlayerXPhysics extends PlayerPhysics {
+    // Timing for attack animation
     private static float attackFrameTime = 0.04f;
     private static float attackTime = 8 * attackFrameTime;
     private static float firstFramesAttackTime = 4 * attackFrameTime;
     private static float attackRecoveryTime = 0.1f;
+
+    // Timing for charging
+    private static float waitBeforeCharging = 0.2f;
+    private static float timeToFullyCharged = 2;
+    private boolean isCharging;
+
     private float attackStateTime;
     private PlayerState prevState;
 
-    public PlayerXPhysics(InputProcessor input, PlayerBase player, PlayerSound soundPlayer) {
-        super(input, player, soundPlayer);
+    private PlayerXSound playerXSound;
+
+    public PlayerXPhysics(InputProcessor input, PlayerBase player, PlayerXSound playerSound) {
+        super(input, player, playerSound);
+        playerXSound = playerSound;
         prevState = null;
+        isCharging = false;
     }
 
     @Override
@@ -50,21 +61,55 @@ public class PlayerXPhysics extends PlayerPhysics {
             } else {
                 resetAttackStatus();
             }
+
+            // if player keep holding, charge
+            if (input.isCommandPressed(Command.ATTACK) && attackStateTime >= waitBeforeCharging) {
+                playerXSound.startPlayingCharge();
+                isCharging = true;
+            } else {
+                playerXSound.stopPlayingCharge();
+                if (isCharging) {
+                    if (attackStateTime < timeToFullyCharged) {
+                        mediumAttack(map);
+                    } else {
+                        heavyAttack(map);
+                    }
+                }
+                isCharging = false;
+            }
         }
         super.internalUpdate(object, delta, map);
     }
 
     private void lightAttack(MapBase map) {
         // Does light damage attack
+        player.attackType = Damage.Type.Light;
+        playerSound.playAttackLight();
+        executeAttack(map);
+    }
+
+    private void mediumAttack(MapBase map) {
+        // Does medium damage attack
+        player.attackType = Damage.Type.Normal;
+        playerSound.playAttackMedium();
+        executeAttack(map);
+    }
+
+    private void heavyAttack(MapBase map) {
+        // Does medium damage attack
+        player.attackType = Damage.Type.Heavy;
+        playerSound.playAttackHeavy();
+        executeAttack(map);
+    }
+
+    private void executeAttack(MapBase map) {
         if (player.state == PlayerState.IDLE) {
             player.stateTime = 0;
         }
         player.isAttacking = true;
         player.firstFramesOfAttacking = true;
         player.justBegunAttacking = true;
-        player.attackType = Damage.Type.Light;
         attackStateTime = 0;
-        playerSound.playAttackLight();
         createBullet(map);
     }
 
@@ -75,7 +120,7 @@ public class PlayerXPhysics extends PlayerPhysics {
         }
         Damage.Side side = bulletDirection == MovingObject.LEFT ? Damage.Side.Right : Damage.Side.Left;
         Damage damage = new Damage(player.attackType, side);
-        map.addPlayerAttack(new XBuster(player, damage, bulletDirection, player.animations));
+        map.addPlayerAttack(new XBuster(player, damage, bulletDirection, player.animations, playerSound));
     }
 
     private void resetAttackStatus() {

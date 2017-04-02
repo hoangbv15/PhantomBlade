@@ -141,6 +141,8 @@ public abstract class PlayerAnimation {
         // X
         BulletSmall,
         BulletSmallMuzzle,
-        BulletSmallExplode
+        BulletSmallExplode,
+        BulletMedium,
+        BulletMediumMuzzle
     }
 }

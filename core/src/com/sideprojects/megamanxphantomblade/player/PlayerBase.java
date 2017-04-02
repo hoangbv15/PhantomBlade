@@ -118,13 +118,6 @@ public abstract class PlayerBase extends MovingObject {
             animationPadding = animations.getAnimationPaddingX(type, direction, isAttacking);
         }
         previousState = state;
-
-
-//        // debug
-//        state = PlayerState.WALLJUMP;
-//        currentAnimation = animations.get(PlayerAnimation.Type.Walljump, direction, isLowHealth(), true, false);
-////        stateTime = 0;
-//        currentFrame = currentAnimation.getKeyFrame(stateTime, true);
     }
 
     public int currentFrameIndex() {

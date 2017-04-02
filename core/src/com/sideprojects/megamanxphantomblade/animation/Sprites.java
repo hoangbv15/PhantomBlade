@@ -25,6 +25,8 @@ public class Sprites {
     public static String XWallslideShootLight = "sprites/x/wallslide_shoot_light.txt";
     public static String XWallslideShootNoLight = "sprites/x/wallslide_shoot_nolight.txt";
     public static String XShootMuzzle = "sprites/x/shoot_muzzle.txt";
+    public static String XShootMediumMuzzle = "sprites/x/shoot_medium_muzzle.txt";
+    public static String XBulletMedium = "sprites/x/bullet_medium.txt";
     public static String XBulletSmall = "sprites/x/bullet_small.txt";
     public static String XBulletSmallExplode = "sprites/x/bullet_small_explode.txt";
 

@@ -10,6 +10,8 @@ public interface SoundPlayerBase {
     void playInParallel(String file);
     void playInParallelAndStopPreviousSound(String file);
     void playOneRandomly(String... files);
+    void loopInParallel(String file);
+    void stop(String file);
     Sound loadSound(String file);
     void dispose();
 }

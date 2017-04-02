@@ -9,11 +9,9 @@ import com.sideprojects.megamanxphantomblade.player.PlayerSound;
  */
 public abstract class PlayerPhysicsFactory {
     protected InputProcessor input;
-    protected PlayerSound stateChangeHandler;
 
-    public PlayerPhysicsFactory(InputProcessor input, PlayerSound stateChangeHandler) {
+    public PlayerPhysicsFactory(InputProcessor input) {
         this.input = input;
-        this.stateChangeHandler = stateChangeHandler;
     }
 
     public abstract PlayerPhysics create(PlayerBase player);

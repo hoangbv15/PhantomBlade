@@ -18,7 +18,7 @@ public class EnemyBase extends MovingObject {
         pos = new Vector2(x, y);
 //        bounds = new Rectangle(x, y, 0.25f, 0.25f);
         bounds = new Rectangle(x, y, 1f, 1f);
-        initialiseHealthPoints(30);
+        initialiseHealthPoints(150000);
         damage = new Damage(Damage.Type.Normal, Damage.Side.None);
         shouldBeRemoved = false;
     }

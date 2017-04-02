@@ -147,10 +147,12 @@ public class WorldRenderer {
     private void renderPlayerAttack() {
         for (PlayerAttack attack: map.playerAttackList) {
             Vector2 pos = applyCameraLerp(attack.pos);
-            batch.draw(attack.currentFrame, pos.x, pos.y);
             if (attack.muzzleFrame != null) {
                 Vector2 muzzlePos = applyCameraLerp(attack.muzzlePos);
                 batch.draw(attack.muzzleFrame, muzzlePos.x, muzzlePos.y);
+            }
+            if (attack.currentFrame != null) {
+                batch.draw(attack.currentFrame, pos.x, pos.y);
             }
         }
     }

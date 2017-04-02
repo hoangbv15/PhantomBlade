@@ -9,8 +9,11 @@ import com.sideprojects.megamanxphantomblade.sound.Sounds;
  * Created by buivuhoang on 02/03/17.
  */
 public class PlayerXSound extends PlayerSound {
+    private boolean isPlayingCharge;
+
     public PlayerXSound(SoundPlayerBase soundPlayer) {
         super(soundPlayer);
+        isPlayingCharge = false;
     }
 
     @Override
@@ -109,5 +112,17 @@ public class PlayerXSound extends PlayerSound {
         soundPlayer.loadSound(Sounds.XJump);
         soundPlayer.loadSound(Sounds.XWallSlide);
         soundPlayer.loadSound(Sounds.XWallJump);
+    }
+
+    public void startPlayingCharge() {
+        if (!isPlayingCharge) {
+            soundPlayer.loopInParallel(Sounds.XCharging);
+            isPlayingCharge = true;
+        }
+    }
+
+    public void stopPlayingCharge() {
+        soundPlayer.stop(Sounds.XCharging);
+        isPlayingCharge = false;
     }
 }
