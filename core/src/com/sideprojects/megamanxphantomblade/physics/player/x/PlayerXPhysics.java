@@ -7,7 +7,9 @@ import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
+import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
+import com.sideprojects.megamanxphantomblade.player.x.PlayerXAnimation;
 import com.sideprojects.megamanxphantomblade.player.x.PlayerXSound;
 import com.sideprojects.megamanxphantomblade.player.x.XBuster;
 
@@ -16,9 +18,9 @@ import com.sideprojects.megamanxphantomblade.player.x.XBuster;
  */
 public class PlayerXPhysics extends PlayerPhysics {
     // Timing for attack animation
-    private static float attackFrameTime = 0.04f;
-    private static float attackTime = 8 * attackFrameTime;
-    private static float firstFramesAttackTime = 4 * attackFrameTime;
+    private float attackFrameTime = 0.04f;
+    private float attackTime = 8 * attackFrameTime;
+    private float firstFramesAttackTime = 4 * attackFrameTime;
     private static float attackRecoveryTime = 0.1f;
 
     // Timing for charging
@@ -34,7 +36,7 @@ public class PlayerXPhysics extends PlayerPhysics {
     public PlayerXPhysics(InputProcessor input, PlayerBase player, PlayerXSound playerSound) {
         super(input, player, playerSound);
         playerXSound = playerSound;
-        prevState = null;
+        prevState = player.state;
         isCharging = false;
     }
 
@@ -45,6 +47,7 @@ public class PlayerXPhysics extends PlayerPhysics {
         if (input.isCommandJustPressed(Command.ATTACK) && attackStateTime >= attackRecoveryTime) {
             resetAttackStatus();
             lightAttack(map);
+//            heavyAttack(map);
         } else {
             player.justBegunAttacking = false;
             if (player.isAttacking && attackStateTime < attackTime) {
@@ -81,10 +84,17 @@ public class PlayerXPhysics extends PlayerPhysics {
         super.internalUpdate(object, delta, map);
     }
 
+    private void initialiseAttackTimings() {
+        attackFrameTime = player.animations.getAttackFrameDuration(PlayerAnimation.Type.Idle, player.attackType);
+        attackTime = player.animations.getAttackDuration(PlayerAnimation.Type.Idle, player.attackType, player.changeStateDuringAttack);
+        firstFramesAttackTime = 4 * attackFrameTime;
+    }
+
     private void lightAttack(MapBase map) {
         // Does light damage attack
         player.attackType = Damage.Type.Light;
         playerSound.playAttackLight();
+        initialiseAttackTimings();
         executeAttack(map);
     }
 
@@ -92,6 +102,7 @@ public class PlayerXPhysics extends PlayerPhysics {
         // Does medium damage attack
         player.attackType = Damage.Type.Normal;
         playerSound.playAttackMedium();
+        initialiseAttackTimings();
         executeAttack(map);
     }
 
@@ -99,6 +110,7 @@ public class PlayerXPhysics extends PlayerPhysics {
         // Does medium damage attack
         player.attackType = Damage.Type.Heavy;
         playerSound.playAttackHeavy();
+        initialiseAttackTimings();
         executeAttack(map);
     }
 

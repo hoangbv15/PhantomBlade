@@ -3,6 +3,7 @@ package com.sideprojects.megamanxphantomblade.player;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.animation.AnimationLoader;
 
@@ -56,9 +57,9 @@ public abstract class PlayerAnimation {
         animationCache = new HashMap<AnimationKey, Animation<TextureRegion>>();
     }
 
-    public Animation<TextureRegion> get(Type type, int direction, boolean lowHealth, boolean isAttacking, boolean isFirstAttackFrame, boolean changeStateDuringAttack) {
+    public Animation<TextureRegion> get(Type type, int direction, boolean lowHealth, boolean isAttacking, Damage.Type attackType, boolean isFirstAttackFrame, boolean changeStateDuringAttack) {
         if (isAttacking) {
-            Animation<TextureRegion> attack = getAttack(type, direction, isFirstAttackFrame, changeStateDuringAttack);
+            Animation<TextureRegion> attack = getAttack(type, direction, attackType, isFirstAttackFrame, changeStateDuringAttack);
             if (attack != null) {
                 return attack;
             }
@@ -71,7 +72,7 @@ public abstract class PlayerAnimation {
     }
 
     public Animation<TextureRegion> get(Type type) {
-        return get(type, MovingObject.RIGHT, false, false, false, false);
+        return get(type, MovingObject.RIGHT, false, false, Damage.Type.Light, false, false);
     }
 
     public Animation<TextureRegion> retrieveFromCache(Type type, int direction, String texture, List<Integer> animationIndex, float frameDuration) {
@@ -85,7 +86,9 @@ public abstract class PlayerAnimation {
         return animationCache.get(key);
     }
 
-    public abstract Animation<TextureRegion> getAttack(Type type, int direction, boolean isFirstAttackFrame, boolean changeStateDuringAttack);
+    public abstract Animation<TextureRegion> getAttack(Type type, int direction, Damage.Type attackType, boolean isFirstAttackFrame, boolean changeStateDuringAttack);
+    public abstract float getAttackFrameDuration(Type type, Damage.Type attackType);
+    public abstract float getAttackDuration(Type type, Damage.Type attackType, boolean changeStateDuringAttack);
     protected abstract String getTextureAtlas(Type type, boolean lowHealth);
     protected abstract List<Integer> getAnimationIndex(Type type, boolean lowHealth);
     protected abstract boolean isLooping(Type type, boolean isAttacking);
@@ -94,7 +97,7 @@ public abstract class PlayerAnimation {
      * Padding to give the sprite for LEFT direction.
      * RIGHT direction will be automatically mirrored.
      */
-    protected abstract Vector2 getAnimationPaddingX(Type type, int direction, boolean isAttacking);
+    protected abstract Vector2 getAnimationPaddingX(Type type, int direction, boolean isAttacking, Damage.Type attackType, boolean changeStateDuringAttack);
 
     protected float getFrameDuration(Type type, boolean lowHealth) {
         switch (type) {
@@ -143,6 +146,8 @@ public abstract class PlayerAnimation {
         BulletSmallMuzzle,
         BulletSmallExplode,
         BulletMedium,
+        BulletHeavy,
+        BulletHeavyMuzzle,
         BulletMediumMuzzle
     }
 }

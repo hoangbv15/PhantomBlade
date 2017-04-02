@@ -88,7 +88,7 @@ public abstract class PlayerBase extends MovingObject {
             }
         } else if (state == PlayerState.DASH) {
             type = PlayerAnimation.Type.Dash;
-            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Dashrocket, direction, isLowHealth(), isAttacking, firstFramesOfAttacking, changeStateDuringAttack);
+            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Dashrocket, direction, isLowHealth(), isAttacking, attackType, firstFramesOfAttacking, changeStateDuringAttack);
             if (dashRocketAnimation != null) {
                 currentDashRocketFrame = dashRocketAnimation.getKeyFrame(stateTime, false);
             }
@@ -100,7 +100,7 @@ public abstract class PlayerBase extends MovingObject {
             type = PlayerAnimation.Type.Dashbreak;
         } else if (state == PlayerState.UPDASH) {
             type = PlayerAnimation.Type.Updash;
-            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Updashrocket, direction, isLowHealth(), isAttacking, firstFramesOfAttacking, changeStateDuringAttack);
+            Animation<TextureRegion> dashRocketAnimation = animations.get(PlayerAnimation.Type.Updashrocket, direction, isLowHealth(), isAttacking, attackType, firstFramesOfAttacking, changeStateDuringAttack);
             if (dashRocketAnimation != null) {
                 currentDashRocketFrame = dashRocketAnimation.getKeyFrame(stateTime, false);
             }
@@ -111,13 +111,18 @@ public abstract class PlayerBase extends MovingObject {
             type = PlayerAnimation.Type.DamagedNormal;
         }
 
-        currentAnimation = animations.get(type, direction, isLowHealth(), isAttacking, firstFramesOfAttacking, changeStateDuringAttack);
+        currentAnimation = animations.get(type, direction, isLowHealth(), isAttacking, attackType, firstFramesOfAttacking, changeStateDuringAttack);
         boolean looping = animations.isLooping(type, isAttacking);
         if (currentAnimation != null) {
             currentFrame = currentAnimation.getKeyFrame(stateTime, looping);
-            animationPadding = animations.getAnimationPaddingX(type, direction, isAttacking);
+            animationPadding = animations.getAnimationPaddingX(type, direction, isAttacking, attackType, changeStateDuringAttack);
         }
         previousState = state;
+
+//        state = PlayerState.WALLSLIDE;
+//        direction = RIGHT;
+//        currentAnimation = animations.get(PlayerAnimation.Type.Wallslide, direction, isLowHealth(), isAttacking, attackType, firstFramesOfAttacking, changeStateDuringAttack);
+//        currentFrame = currentAnimation.getKeyFrame(stateTime, looping);
     }
 
     public int currentFrameIndex() {

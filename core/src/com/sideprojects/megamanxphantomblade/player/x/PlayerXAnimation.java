@@ -3,6 +3,7 @@ package com.sideprojects.megamanxphantomblade.player.x;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.animation.Sprites;
 import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
 import com.sideprojects.megamanxphantomblade.math.VectorCache;
@@ -16,15 +17,18 @@ import java.util.List;
 public class PlayerXAnimation extends PlayerAnimation {
 
     @Override
-    public Animation<TextureRegion> getAttack(Type type, int direction, boolean isFirstAttackFrame, boolean changeStateDuringAttack) {
-        String texture = getAttackTextureAtlas(type, isFirstAttackFrame);
+    public Animation<TextureRegion> getAttack(Type type, int direction, Damage.Type attackType, boolean isFirstAttackFrame, boolean changeStateDuringAttack) {
+        String texture = getAttackTextureAtlas(type, attackType, isFirstAttackFrame, changeStateDuringAttack);
         if (texture == null) return null;
-        return retrieveFromCache(type, direction, texture, getAttackAnimationIndex(type, changeStateDuringAttack), getAttackFrameDuration(type));
+        return retrieveFromCache(type, direction, texture, getAttackAnimationIndex(type, attackType, changeStateDuringAttack), getAttackFrameDuration(type, attackType));
     }
 
-    private String getAttackTextureAtlas(Type type, boolean withLight) {
+    private String getAttackTextureAtlas(Type type, Damage.Type attackType, boolean withLight, boolean changeStateDuringAttack) {
         switch(type) {
             case Idle:
+                if (attackType == Damage.Type.Heavy && !changeStateDuringAttack) {
+                    return Sprites.XIdleShootCharged;
+                }
                 return Sprites.XIdleShoot;
             case Run:
                 return withLight? Sprites.XRunShootLight : Sprites.XRunShootNoLight;
@@ -45,11 +49,14 @@ public class PlayerXAnimation extends PlayerAnimation {
         }
     }
 
-    private List<Integer> getAttackAnimationIndex(Type type, boolean changeStateDuringAttack) {
+    private List<Integer> getAttackAnimationIndex(Type type, Damage.Type attackType, boolean changeStateDuringAttack) {
         switch(type) {
             case Idle:
                 if (changeStateDuringAttack) {
                     return Arrays.asList(5, 5, 5, 5, 5, 5, 6, 7);
+                }
+                if (attackType == Damage.Type.Heavy) {
+                    return Arrays.asList(0, 1, 2, 3, 4, 5, 6, 6, 7, 7, 8, 8);
                 }
                 return Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7);
             default:
@@ -57,13 +64,22 @@ public class PlayerXAnimation extends PlayerAnimation {
         }
     }
 
-    private float getAttackFrameDuration(Type type) {
+    @Override
+    public float getAttackFrameDuration(Type type, Damage.Type attackType) {
         switch(type) {
             case Idle:
+                if (attackType == Damage.Type.Heavy) {
+                    return 0.04f;
+                }
                 return 0.04f;
             default:
                 return getFrameDuration(type, false);
         }
+    }
+
+    @Override
+    public float getAttackDuration(Type type, Damage.Type attackType, boolean changeStateDuringAttack) {
+        return getAttackFrameDuration(type, attackType) * getAttackAnimationIndex(type, attackType, changeStateDuringAttack).size();
     }
 
     @Override
@@ -145,10 +161,13 @@ public class PlayerXAnimation extends PlayerAnimation {
     }
 
     @Override
-    protected Vector2 getAnimationPaddingX(Type type, int direction, boolean isAttacking) {
+    protected Vector2 getAnimationPaddingX(Type type, int direction, boolean isAttacking, Damage.Type attackType, boolean changeStateDuringAttack) {
         if (isAttacking) {
             switch (type) {
                 case Idle:
+                    if (attackType == Damage.Type.Heavy && !changeStateDuringAttack) {
+                        return VectorCache.get(-18, -7);
+                    }
                     return VectorCache.get(-15, 0);
                 case Run:
                 case Jump:

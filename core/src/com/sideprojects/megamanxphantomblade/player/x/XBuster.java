@@ -90,32 +90,32 @@ public class XBuster extends PlayerAttack {
         switch(damage.type) {
             case Heavy:
                 initialiseHealthPoints(100);
-                animation = animations.retrieveFromCache(PlayerAnimation.Type.BulletSmall, direction, Sprites.XBulletSmall, null, 0.05f);
-                muzzleAnimation = animations.retrieveFromCache(PlayerAnimation.Type.BulletSmallMuzzle, direction, Sprites.XShootMuzzle, null, 0.02f);
+                animation = animations.retrieveFromCache(PlayerAnimation.Type.BulletHeavy, direction, Sprites.XBulletHeavy, null, 0.05f);
+                muzzleAnimation = animations.retrieveFromCache(PlayerAnimation.Type.BulletHeavyMuzzle, direction, Sprites.XShootHeavyMuzzle, null, 0.04f);
                 explodeAnimation = animations.retrieveFromCache(PlayerAnimation.Type.BulletSmallExplode, direction, Sprites.XBulletSmallExplode, null, 0.05f);
-                explodePosPaddingXLeft = -P(12);
-                explodePosPaddingXRight = -P(12);
-                explodePosPaddingY = -P(31);
-                muzzlePosPaddingXLeft = 0;
-                muzzlePosPaddingXRight = 0;
-                muzzlePosPaddingY = -P(8);
-                bulletPosPaddingXLeft = 0;
+                explodePosPaddingXLeft = -P(15);
+                explodePosPaddingXRight = -P(15);
+                explodePosPaddingY = -P(25);
+                muzzlePosPaddingXLeft = P(38);
+                muzzlePosPaddingXRight = -P(36);
+                muzzlePosPaddingY = -P(25);
+                bulletPosPaddingXLeft = -P(39);
                 bulletPosPaddingXRight = 0;
-                bulletPosPaddingY = -P(8);
+                bulletPosPaddingY = -P(10);
                 break;
             case Normal:
                 initialiseHealthPoints(10);
                 animation = animations.retrieveFromCache(PlayerAnimation.Type.BulletMedium, direction, Sprites.XBulletMedium, null, 0.05f);
                 muzzleAnimation = animations.retrieveFromCache(PlayerAnimation.Type.BulletMediumMuzzle, direction, Sprites.XShootMediumMuzzle, null, 0.03f);
                 explodeAnimation = animations.retrieveFromCache(PlayerAnimation.Type.BulletSmallExplode, direction, Sprites.XBulletSmallExplode, null, 0.05f);
-                explodePosPaddingXLeft = -P(12);
-                explodePosPaddingXRight = -P(12);
+                explodePosPaddingXLeft = -P(15);
+                explodePosPaddingXRight = -P(15);
                 explodePosPaddingY = -P(25);
                 muzzlePosPaddingXLeft = 0;
                 muzzlePosPaddingXRight = 0;
                 muzzlePosPaddingY = -P(2);
-                bulletPosPaddingXLeft = -P(10);
-                bulletPosPaddingXRight = 0;
+                bulletPosPaddingXLeft = -P(8);
+                bulletPosPaddingXRight = P(4);
                 bulletPosPaddingY = -P(4);
                 break;
             case Light:
@@ -123,8 +123,8 @@ public class XBuster extends PlayerAttack {
                 animation = animations.retrieveFromCache(PlayerAnimation.Type.BulletSmall, direction, Sprites.XBulletSmall, null, 0.05f);
                 muzzleAnimation = animations.retrieveFromCache(PlayerAnimation.Type.BulletSmallMuzzle, direction, Sprites.XShootMuzzle, null, 0.025f);
                 explodeAnimation = animations.retrieveFromCache(PlayerAnimation.Type.BulletSmallExplode, direction, Sprites.XBulletSmallExplode, null, 0.05f);
-                explodePosPaddingXLeft = -P(12);
-                explodePosPaddingXRight = -P(12);
+                explodePosPaddingXLeft = -P(15);
+                explodePosPaddingXRight = -P(15);
                 explodePosPaddingY = -P(30);
                 muzzlePosPaddingXLeft = 0;
                 muzzlePosPaddingXRight = 0;
@@ -200,7 +200,6 @@ public class XBuster extends PlayerAttack {
                 paddingY = P(35);
                 paddingX += P(2);
                 if (bulletDirection == MovingObject.LEFT) {
-//                    paddingX = -P(13);
                     paddingX = -P(22);
                 }
 
@@ -217,11 +216,12 @@ public class XBuster extends PlayerAttack {
                 paddingY = getPadding(yDashBreakPosPadding, frameIndex);
                 break;
             case WALLSLIDE:
+                paddingX -= P(2) * direction;
                 paddingY = P(29);
                 break;
         }
 
-        paddingX += direction == LEFT ? bulletPosPaddingXLeft : bulletPosPaddingXRight;
+        paddingX += (direction == LEFT ? bulletPosPaddingXLeft : bulletPosPaddingXRight);
         paddingY += bulletPosPaddingY;
 
         return VectorCache.get(paddingX, paddingY);
@@ -235,18 +235,9 @@ public class XBuster extends PlayerAttack {
     }
 
     private Vector2 getMuzzlePositionPadding(PlayerBase player, int frameIndex) {
-        Vector2 padding = getBulletPositionPadding(player, player.direction, frameIndex);
+        Vector2 padding = getBulletPositionPadding(player, direction, frameIndex);
         float paddingX = padding.x + (direction == LEFT ? muzzlePosPaddingXLeft : muzzlePosPaddingXRight);
         float paddingY = padding.y + muzzlePosPaddingY;
-        switch(player.state) {
-            case WALLSLIDE:
-                if (player.direction == LEFT) {
-                    paddingX = player.bounds.width + P(5);
-                } else {
-                    paddingX = -P(17);
-                }
-                break;
-        }
         padding = VectorCache.get(paddingX, paddingY);
         return padding;
     }

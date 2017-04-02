@@ -16,6 +16,7 @@ public class Sprites {
     public static String XDamagedNormal = "sprites/x/damaged_normal.txt";
     public static String XIdleLowHealth = "sprites/x/idle_lowhealth.txt";
     public static String XIdleShoot = "sprites/x/idle_shoot.txt";
+    public static String XIdleShootCharged = "sprites/x/idle_shoot_charged.txt";
     public static String XRunShootLight = "sprites/x/run_shoot_light.txt";
     public static String XRunShootNoLight = "sprites/x/run_shoot_nolight.txt";
     public static String XJumpShootLight = "sprites/x/jump_shoot_light.txt";
@@ -26,8 +27,10 @@ public class Sprites {
     public static String XWallslideShootNoLight = "sprites/x/wallslide_shoot_nolight.txt";
     public static String XShootMuzzle = "sprites/x/shoot_muzzle.txt";
     public static String XShootMediumMuzzle = "sprites/x/shoot_medium_muzzle.txt";
-    public static String XBulletMedium = "sprites/x/bullet_medium.txt";
+    public static String XShootHeavyMuzzle = "sprites/x/shoot_heavy_muzzle.txt";
     public static String XBulletSmall = "sprites/x/bullet_small.txt";
+    public static String XBulletHeavy = "sprites/x/bullet_heavy.txt";
+    public static String XBulletMedium = "sprites/x/bullet_medium.txt";
     public static String XBulletSmallExplode = "sprites/x/bullet_small_explode.txt";
 
     // Particle effects
