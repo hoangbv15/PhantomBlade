@@ -56,10 +56,9 @@ public class PlayerXPhysics extends PlayerPhysics {
                 // if player state changes during attack
                 // set state time to after the first attack frames
                 // in order to play the ending animation
-                if (prevState != player.state) {
+                if (player.state == PlayerState.IDLE && prevState != player.state) {
                     player.changeStateDuringAttack = true;
                 }
-                prevState = player.state;
             } else {
                 resetAttackStatus();
             }
@@ -89,6 +88,8 @@ public class PlayerXPhysics extends PlayerPhysics {
                 player.almostFullyCharged = false;
             }
         }
+        prevState = player.state;
+        player.attackStateTime = attackStateTime;
         super.internalUpdate(object, delta, map);
     }
 

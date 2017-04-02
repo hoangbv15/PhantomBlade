@@ -27,6 +27,7 @@ public abstract class PlayerBase extends MovingObject {
     public boolean firstFramesOfAttacking;
     public boolean justBegunAttacking;
     public Damage.Type attackType;
+    public float attackStateTime;
     // This is probably only applicable for shooting characters such as X
     public boolean changeStateDuringAttack;
     public boolean isCharging;
@@ -121,7 +122,13 @@ public abstract class PlayerBase extends MovingObject {
         currentAnimation = animations.get(type, direction, isLowHealth(), isAttacking, attackType, firstFramesOfAttacking, changeStateDuringAttack);
         boolean looping = animations.isLooping(type, isAttacking);
         if (currentAnimation != null) {
-            currentFrame = currentAnimation.getKeyFrame(stateTime, looping);
+            float time;
+            if (isAttacking && changeStateDuringAttack) {
+                time = attackStateTime;
+            } else {
+                time = stateTime;
+            }
+            currentFrame = currentAnimation.getKeyFrame(time, looping);
             animationPadding = animations.getAnimationPaddingX(type, direction, isAttacking, attackType, changeStateDuringAttack);
         }
         previousState = state;

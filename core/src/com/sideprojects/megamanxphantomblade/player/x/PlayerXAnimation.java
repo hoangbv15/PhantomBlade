@@ -68,9 +68,6 @@ public class PlayerXAnimation extends PlayerAnimation {
     public float getAttackFrameDuration(Type type, Damage.Type attackType) {
         switch(type) {
             case Idle:
-                if (attackType == Damage.Type.Heavy) {
-                    return 0.04f;
-                }
                 return 0.04f;
             default:
                 return getFrameDuration(type, false);

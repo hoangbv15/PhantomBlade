@@ -18,9 +18,7 @@ public class Run extends Idle {
 
     @Override
     public PlayerState enter(PlayerBase player) {
-        if (!player.isAttacking) {
-            player.stateTime = 0;
-        }
+        player.stateTime = 0;
         return PlayerState.RUN;
     }
 

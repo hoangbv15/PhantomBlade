@@ -97,11 +97,11 @@ public class XBuster extends PlayerAttack {
                 explodePosPaddingXRight = -P(15);
                 explodePosPaddingY = -P(25);
                 muzzlePosPaddingXLeft = P(38);
-                muzzlePosPaddingXRight = -P(36);
+                muzzlePosPaddingXRight = -P(29);
                 muzzlePosPaddingY = -P(25);
                 bulletPosPaddingXLeft = -P(39);
                 bulletPosPaddingXRight = -P(7);
-                bulletPosPaddingY = -P(10);
+                bulletPosPaddingY = -P(9);
                 break;
             case Normal:
                 initialiseHealthPoints(10);
@@ -114,9 +114,9 @@ public class XBuster extends PlayerAttack {
                 muzzlePosPaddingXLeft = 0;
                 muzzlePosPaddingXRight = 0;
                 muzzlePosPaddingY = -P(2);
-                bulletPosPaddingXLeft = -P(8);
-                bulletPosPaddingXRight = -P(2);
-                bulletPosPaddingY = -P(4);
+                bulletPosPaddingXLeft = -P(9);
+                bulletPosPaddingXRight = P(5);
+                bulletPosPaddingY = -P(5);
                 break;
             case Light:
                 initialiseHealthPoints(10);
@@ -130,7 +130,7 @@ public class XBuster extends PlayerAttack {
                 muzzlePosPaddingXRight = 0;
                 muzzlePosPaddingY = -P(9);
                 bulletPosPaddingXLeft = 0;
-                bulletPosPaddingXRight = -P(6);
+                bulletPosPaddingXRight = -P(0);
                 bulletPosPaddingY = P(1);
                 break;
         }
@@ -216,7 +216,7 @@ public class XBuster extends PlayerAttack {
                 paddingY = getPadding(yDashBreakPosPadding, frameIndex);
                 break;
             case WALLSLIDE:
-                paddingX -= P(2) * direction;
+                paddingX += P(5) * direction;
                 paddingY = P(29);
                 break;
         }
