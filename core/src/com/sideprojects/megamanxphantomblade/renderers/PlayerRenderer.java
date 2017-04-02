@@ -82,7 +82,7 @@ public class PlayerRenderer {
         if (player.direction == PlayerBase.RIGHT) {
             // Pad the texture's start x because the engine is drawing from left to right.
             // Without this the animation frames will be misaligned
-            posX += mapTileWidth * 0.6f - currentFrame.getRegionWidth() - player.animationPadding.x;
+            posX += mapTileWidth * 0.5f - currentFrame.getRegionWidth() - player.animationPadding.x;
         } else {
             posX += player.animationPadding.x;
         }
@@ -105,6 +105,7 @@ public class PlayerRenderer {
         if (player.invincible) {
             batch.setShader(null);
         }
+        renderPlayerCharge(originPosX, posY);
     }
 
     private void renderPlayerDashRocket(float posX, float posY) {
@@ -167,6 +168,19 @@ public class PlayerRenderer {
             startRemovingTraces = false;
         }
         batch.setShader(null);
+    }
+
+    private void renderPlayerCharge(float posX, float posY) {
+        Vector2 padding = player.getChargeAnimationPadding();
+        float x = posX + padding.x;
+        float y = posY + padding.y;
+        if (player.attackChargeFrames != null) {
+            for (TextureRegion frame: player.attackChargeFrames.values()) {
+                if (frame != null) {
+                    batch.draw(frame, x, y);
+                }
+            }
+        }
     }
 
     public void dispose() {

@@ -9,7 +9,6 @@ import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
-import com.sideprojects.megamanxphantomblade.player.x.PlayerXAnimation;
 import com.sideprojects.megamanxphantomblade.player.x.PlayerXSound;
 import com.sideprojects.megamanxphantomblade.player.x.XBuster;
 
@@ -25,8 +24,8 @@ public class PlayerXPhysics extends PlayerPhysics {
 
     // Timing for charging
     private static float waitBeforeCharging = 0.2f;
-    private static float timeToFullyCharged = 2;
-    private boolean isCharging;
+    private static float timeToFullyCharged = 1.9f;
+    private static float timeToAlmostFullyCharged = 1.5f;
 
     private float attackStateTime;
     private PlayerState prevState;
@@ -37,7 +36,7 @@ public class PlayerXPhysics extends PlayerPhysics {
         super(input, player, playerSound);
         playerXSound = playerSound;
         prevState = player.state;
-        isCharging = false;
+        player.isCharging = false;
     }
 
     @Override
@@ -67,18 +66,27 @@ public class PlayerXPhysics extends PlayerPhysics {
 
             // if player keep holding, charge
             if (input.isCommandPressed(Command.ATTACK) && attackStateTime >= waitBeforeCharging) {
+                player.isCharging = true;
                 playerXSound.startPlayingCharge();
-                isCharging = true;
+                if (attackStateTime >= timeToAlmostFullyCharged) {
+                    player.almostFullyCharged = true;
+                }
+                if (attackStateTime >= timeToFullyCharged) {
+                    player.fullyCharged = true;
+                    player.almostFullyCharged = false;
+                }
             } else {
                 playerXSound.stopPlayingCharge();
-                if (isCharging) {
+                if (player.isCharging) {
                     if (attackStateTime < timeToFullyCharged) {
                         mediumAttack(map);
                     } else {
                         heavyAttack(map);
                     }
                 }
-                isCharging = false;
+                player.isCharging = false;
+                player.fullyCharged = false;
+                player.almostFullyCharged = false;
             }
         }
         super.internalUpdate(object, delta, map);

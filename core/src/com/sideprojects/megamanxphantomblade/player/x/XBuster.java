@@ -100,7 +100,7 @@ public class XBuster extends PlayerAttack {
                 muzzlePosPaddingXRight = -P(36);
                 muzzlePosPaddingY = -P(25);
                 bulletPosPaddingXLeft = -P(39);
-                bulletPosPaddingXRight = 0;
+                bulletPosPaddingXRight = -P(7);
                 bulletPosPaddingY = -P(10);
                 break;
             case Normal:
@@ -115,7 +115,7 @@ public class XBuster extends PlayerAttack {
                 muzzlePosPaddingXRight = 0;
                 muzzlePosPaddingY = -P(2);
                 bulletPosPaddingXLeft = -P(8);
-                bulletPosPaddingXRight = P(4);
+                bulletPosPaddingXRight = -P(2);
                 bulletPosPaddingY = -P(4);
                 break;
             case Light:
@@ -130,7 +130,7 @@ public class XBuster extends PlayerAttack {
                 muzzlePosPaddingXRight = 0;
                 muzzlePosPaddingY = -P(9);
                 bulletPosPaddingXLeft = 0;
-                bulletPosPaddingXRight = 0;
+                bulletPosPaddingXRight = -P(6);
                 bulletPosPaddingY = P(1);
                 break;
         }

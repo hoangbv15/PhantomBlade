@@ -108,7 +108,7 @@ public abstract class MapBase {
 
     public void update(float deltaTime) {
         playerPhysics.update(player, deltaTime, this);
-        player.update(this);
+        player.update(this, deltaTime);
         particles.update(deltaTime);
         Iterator<PlayerAttack> i = playerAttackList.iterator();
         while (i.hasNext()) {

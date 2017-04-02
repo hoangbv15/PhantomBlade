@@ -10,6 +10,8 @@ import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 
+import java.util.Map;
+
 /**
  * Created by buivuhoang on 04/02/17.
  */
@@ -24,9 +26,13 @@ public abstract class PlayerBase extends MovingObject {
     public boolean isAttacking;
     public boolean firstFramesOfAttacking;
     public boolean justBegunAttacking;
+    public Damage.Type attackType;
     // This is probably only applicable for shooting characters such as X
     public boolean changeStateDuringAttack;
-    public Damage.Type attackType;
+    public boolean isCharging;
+    public boolean almostFullyCharged;
+    public boolean fullyCharged;
+    public Map<PlayerAnimation.Type, TextureRegion> attackChargeFrames;
 
     // Can only issue low health warning once
     // Resets after health being restored to above threshold
@@ -50,8 +56,9 @@ public abstract class PlayerBase extends MovingObject {
         createAnimations();
     }
 
-    public void update(MapBase map) {
+    public void update(MapBase map, float delta) {
         updateAnimation(map);
+        internalUpdate(delta);
     }
 
     public boolean isLowHealth() {
@@ -136,4 +143,8 @@ public abstract class PlayerBase extends MovingObject {
     public abstract void createAnimations();
 
     public abstract TraceColour getTraceColour();
+
+    protected abstract void internalUpdate(float delta);
+
+    public abstract Vector2 getChargeAnimationPadding();
 }
