@@ -27,6 +27,7 @@ public class Sounds {
     public static String XAttackHeavy = "sounds/PL00_U_00016.wav";
 
     public static String XCharging = "sounds/PL02_U_00024.wav";
+    public static String XChargeLoop = "sounds/PL02_U_00024_LOOP.wav";
 
     // Common
     public static String BulletHit = "sounds/PL00_U_00027.wav";

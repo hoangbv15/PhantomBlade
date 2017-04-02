@@ -67,7 +67,7 @@ public class PlayerXPhysics extends PlayerPhysics {
             // if player keep holding, charge
             if (input.isCommandPressed(Command.ATTACK) && attackStateTime >= waitBeforeCharging) {
                 player.isCharging = true;
-                playerXSound.startPlayingCharge();
+                playerXSound.startPlayingCharge(delta);
                 if (attackStateTime >= timeToAlmostFullyCharged) {
                     player.almostFullyCharged = true;
                 }

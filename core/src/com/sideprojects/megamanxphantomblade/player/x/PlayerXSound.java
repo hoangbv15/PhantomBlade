@@ -9,11 +9,16 @@ import com.sideprojects.megamanxphantomblade.sound.Sounds;
  * Created by buivuhoang on 02/03/17.
  */
 public class PlayerXSound extends PlayerSound {
+    protected static float startChargeAudioDuration = 3f;
     private boolean isPlayingCharge;
+    private boolean isLoopingCharge;
+    private float stateTime;
 
     public PlayerXSound(SoundPlayerBase soundPlayer) {
         super(soundPlayer);
         isPlayingCharge = false;
+        isLoopingCharge = false;
+        stateTime = 0;
     }
 
     @Override
@@ -114,15 +119,24 @@ public class PlayerXSound extends PlayerSound {
         soundPlayer.loadSound(Sounds.XWallJump);
     }
 
-    public void startPlayingCharge() {
+    public void startPlayingCharge(float delta) {
         if (!isPlayingCharge) {
-            soundPlayer.loopInParallel(Sounds.XCharging);
+            soundPlayer.playInParallel(Sounds.XCharging);
             isPlayingCharge = true;
+        }
+        if (stateTime >= startChargeAudioDuration && !isLoopingCharge) {
+            soundPlayer.loopInParallel(Sounds.XChargeLoop);
+            isLoopingCharge = true;
+        } else {
+            stateTime += delta;
         }
     }
 
     public void stopPlayingCharge() {
+        stateTime = 0;
         soundPlayer.stop(Sounds.XCharging);
+        soundPlayer.stop(Sounds.XChargeLoop);
         isPlayingCharge = false;
+        isLoopingCharge = false;
     }
 }

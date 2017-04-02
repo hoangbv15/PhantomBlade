@@ -1,5 +1,6 @@
 package com.sideprojects.megamanxphantomblade.sound;
 
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
 /**
@@ -13,5 +14,6 @@ public interface SoundPlayerBase {
     void loopInParallel(String file);
     void stop(String file);
     Sound loadSound(String file);
+    Music loadMusic(String file);
     void dispose();
 }
