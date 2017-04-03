@@ -1,5 +1,6 @@
 package com.sideprojects.megamanxphantomblade.renderers;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,6 +11,7 @@ import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
+import com.sideprojects.megamanxphantomblade.renderers.shaders.ChargeShader;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.DamagedShader;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.TraceShader;
 
@@ -23,6 +25,7 @@ public class PlayerRenderer {
     private SpriteBatch batch;
     private ShaderProgram traceShader;
     private ShaderProgram damagedShader;
+    private ShaderProgram chargeShader;
 
     // Needed properties to offset the player position properly
     private int mapTileWidth;
@@ -46,8 +49,10 @@ public class PlayerRenderer {
     private float yUpDashRocketPadding;
 
     // invincible state flickering duration
-    private float flickerDuration = 0.05f;
+    private float damageFlickerDuration = 0.05f;
+    private float chargeFlickerDuration = 0.03f;
     private float flickerStateTime = 0;
+
 
     public PlayerRenderer(PlayerBase player, int mapTileWidth, OrthographicCamera cam, SpriteBatch batch) {
         this.player = player;
@@ -66,15 +71,11 @@ public class PlayerRenderer {
         yUpDashRocketPadding = player.animations.get(PlayerAnimation.Type.Updashrocket).getKeyFrame(0).getRegionHeight();
 
         damagedShader = DamagedShader.getShader();
+        chargeShader = ChargeShader.getShader();
     }
 
     // Pass posX and posY in so we don't have to recalculate them
     public void render(float posX, float posY, float delta) {
-        flickerStateTime += delta;
-        if (flickerStateTime >= flickerDuration * 2) {
-            flickerStateTime = 0;
-        }
-
         TextureRegion currentFrame = player.currentFrame;
         float originPosX = posX;
         if (player.direction == PlayerBase.RIGHT) {
@@ -96,11 +97,28 @@ public class PlayerRenderer {
                 renderPlayerUpDashRocket(originPosX, posY);
             }
         }
-        if (player.invincible && flickerStateTime <= flickerDuration) {
-            batch.setShader(damagedShader);
+        if (player.invincible) {
+            flickerStateTime += delta;
+            if (flickerStateTime >= damageFlickerDuration * 2) {
+                flickerStateTime = 0;
+            }
+            if (flickerStateTime <= damageFlickerDuration) {
+                batch.setShader(damagedShader);
+            }
+        }
+        // Only do charging shader if not currently being invincible
+        // TODO: Find a way to modify the texture color to do different weapon charges
+        if (!player.invincible && player.isCharging) {
+            flickerStateTime += delta;
+            if (flickerStateTime >= chargeFlickerDuration * 2) {
+                flickerStateTime = 0;
+            }
+            if (flickerStateTime <= chargeFlickerDuration) {
+                batch.setShader(chargeShader);
+            }
         }
         batch.draw(currentFrame, posX, posY);
-        if (player.invincible) {
+        if (player.invincible || player.isCharging) {
             batch.setShader(null);
         }
         renderPlayerCharge(originPosX, posY);
@@ -180,5 +198,6 @@ public class PlayerRenderer {
     public void dispose() {
         traceShader.dispose();
         damagedShader.dispose();
+        chargeShader.dispose();
     }
 }
