@@ -44,6 +44,7 @@ public abstract class PlayerBase extends MovingObject {
     private Animation<TextureRegion> currentAnimation;
     public TextureRegion currentFrame;
     public TextureRegion currentDashRocketFrame;
+    public static float xDashRocketPadding = 0.4f;
     public Vector2 animationPadding;
 
     public PlayerBase(float x, float y) {
@@ -101,7 +102,10 @@ public abstract class PlayerBase extends MovingObject {
                 currentDashRocketFrame = dashRocketAnimation.getKeyFrame(stateTime, false);
             }
             if (previousState != state && grounded) {
-                float padding = - bounds.getWidth() * direction;
+                float padding = xDashRocketPadding;
+                if (direction == RIGHT) {
+                    padding = - bounds.width - xDashRocketPadding;
+                }
                 map.addParticle(Particle.ParticleType.DASH, pos.x + padding, pos.y, false);
             }
         } else if (state == PlayerState.DASHBREAK) {

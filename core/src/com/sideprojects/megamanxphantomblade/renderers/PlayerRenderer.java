@@ -43,7 +43,6 @@ public class PlayerRenderer {
     private float leftDashRocketPadding;
     private float xDashRocketPadding;
     private float yDashRocketPadding;
-    private float xUpDashRocketPadding;
     private float yUpDashRocketPadding;
 
     // invincible state flickering duration
@@ -64,7 +63,6 @@ public class PlayerRenderer {
         leftDashRocketPadding = player.animations.get(PlayerAnimation.Type.Dash).getKeyFrame(0).getRegionWidth();
         xDashRocketPadding = player.animations.get(PlayerAnimation.Type.Dashrocket).getKeyFrame(0).getRegionWidth() / 5f;
         yDashRocketPadding = player.animations.get(PlayerAnimation.Type.Dashrocket).getKeyFrame(0).getRegionHeight() / 7f;
-        xUpDashRocketPadding = player.animations.get(PlayerAnimation.Type.Updash).getKeyFrame(0).getRegionWidth() / 5f;
         yUpDashRocketPadding = player.animations.get(PlayerAnimation.Type.Updashrocket).getKeyFrame(0).getRegionHeight();
 
         damagedShader = DamagedShader.getShader();
@@ -122,11 +120,7 @@ public class PlayerRenderer {
 
     private void renderPlayerUpDashRocket(float posX, float posY) {
         float y = posY - yUpDashRocketPadding;
-        float x = posX;
-        if (player.direction == MovingObject.RIGHT) {
-            x += xUpDashRocketPadding;
-        }
-        batch.draw(player.currentDashRocketFrame, x, y);
+        batch.draw(player.currentDashRocketFrame, posX, y);
     }
 
     private void renderPlayerTrace(TextureRegion currentFrame, float posX, float posY) {

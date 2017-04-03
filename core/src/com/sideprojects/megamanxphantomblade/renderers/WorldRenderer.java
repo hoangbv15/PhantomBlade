@@ -39,6 +39,7 @@ public class WorldRenderer {
     private float camViewportHalfY;
     private float mapWidthMinusCamViewportHalfX;
     private float mapHeightMinusCamViewportHalfY;
+    private float playerYOffset;
 
     public WorldRenderer(MapBase map) {
         this.map = map;
@@ -52,6 +53,7 @@ public class WorldRenderer {
         cache = new SpriteCache(this.map.tiles.length * this.map.tiles[0].length, false);
         blocks = new int[(int)Math.ceil(this.map.tiles.length / blockWidth)][(int)Math.ceil(this.map.tiles[0].length / blockHeight)];
         lerpTarget = new Vector3();
+        playerYOffset = 1/5f * map.getTileHeight();
         createBlocks();
         calculateCamClamps();
     }
@@ -82,7 +84,6 @@ public class WorldRenderer {
     }
 
     private Vector2 applyCameraLerp(Vector2 pos) {
-        float playerYOffset = 1/5f * map.getTileHeight();
         Vector2 newPos = new Vector2(
                 pos.x * map.getTileWidth(),
                 pos.y * map.getTileHeight() - playerYOffset
