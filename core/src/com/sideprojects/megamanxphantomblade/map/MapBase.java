@@ -97,7 +97,6 @@ public abstract class MapBase implements Disposable {
                 player = playerFactory.createPlayer(x, y);
                 playerPhysics = playerPhysicsFactory.create(player);
             }
-            System.out.println(object.getName());
             if (EnemySpawn.equals(object.getName())) {
                 enemyList.add(new EnemyBase(x, y, this));
             }

@@ -17,7 +17,7 @@ public class EnemyBase extends MovingObject {
     public Damage damage;
     public boolean shouldBeRemoved;
     public boolean isTakingDamage;
-    
+
     private float takeDamageDuration = 0.1f;
     private float stateTime;
 
