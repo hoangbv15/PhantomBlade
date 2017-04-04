@@ -59,6 +59,7 @@ public class PlayerXPhysics extends PlayerPhysics {
                 if (player.state == PlayerState.IDLE && prevState != player.state) {
                     player.changeStateDuringAttack = true;
                 }
+                prevState = player.state;
             } else {
                 resetAttackStatus();
             }
@@ -88,7 +89,6 @@ public class PlayerXPhysics extends PlayerPhysics {
                 player.almostFullyCharged = false;
             }
         }
-        prevState = player.state;
         player.attackStateTime = attackStateTime;
         super.internalUpdate(object, delta, map);
     }
@@ -130,6 +130,7 @@ public class PlayerXPhysics extends PlayerPhysics {
         player.isAttacking = true;
         player.firstFramesOfAttacking = true;
         player.justBegunAttacking = true;
+        prevState = player.state;
         attackStateTime = 0;
         createBullet(map);
     }
