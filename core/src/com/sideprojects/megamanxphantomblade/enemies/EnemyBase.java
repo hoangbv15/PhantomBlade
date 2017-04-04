@@ -17,7 +17,7 @@ public class EnemyBase extends MovingObject {
     public Damage damage;
     public boolean shouldBeRemoved;
     public boolean isTakingDamage;
-
+    
     private float takeDamageDuration = 0.1f;
     private float stateTime;
 
@@ -29,8 +29,8 @@ public class EnemyBase extends MovingObject {
         this.map = map;
         pos = new Vector2(x, y);
         vel = new Vector2(0, 0);
-//        bounds = new Rectangle(x, y, 0.25f, 0.25f);
-        bounds = new Rectangle(x, y, 1f, 1f);
+        bounds = new Rectangle(x, y, 0.25f, 0.25f);
+//        bounds = new Rectangle(x, y, 1f, 1f);
         initialiseHealthPoints(20);
         damage = new Damage(Damage.Type.Normal, Damage.Side.None);
         shouldBeRemoved = false;

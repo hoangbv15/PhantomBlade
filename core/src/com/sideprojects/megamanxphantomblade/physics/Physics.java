@@ -5,6 +5,7 @@ import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
+import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 
 /**
  * Created by buivuhoang on 04/04/17.
@@ -54,6 +55,13 @@ public abstract class Physics extends PhysicsBase {
         return collisionList;
     }
 
+    protected void applyGravity(MovingObject object, float gravity, float maxFallspeed, float delta) {
+        if (object.vel.y > maxFallspeed) {
+            object.vel.y -= gravity * delta;
+        } else {
+            object.vel.y = maxFallspeed;
+        }
+    }
 
     public abstract void inputProcessing(MovingObject object, float delta, MapBase map);
     public abstract void postCollisionDetectionProcessing(CollisionList collisions);

@@ -155,10 +155,6 @@ public abstract class PlayerPhysics extends Physics {
         if (player.state == PlayerState.FALL && object.vel.y > 0) {
             object.vel.y = 0;
         }
-        if (object.vel.y > finalFallspeed) {
-            object.vel.y -= gravity * delta;
-        } else {
-            object.vel.y = finalFallspeed;
-        }
+        this.applyGravity(object, gravity, finalFallspeed, delta);
     }
 }

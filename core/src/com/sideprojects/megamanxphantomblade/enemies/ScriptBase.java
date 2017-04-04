@@ -39,6 +39,7 @@ public abstract class ScriptBase extends Physics {
     @Override
     public void inputProcessing(MovingObject object, float delta, MapBase map) {
         this.delta = delta;
+        applyGravity(object, map.GRAVITY, map.MAX_FALLSPEED, delta);
     }
 
     @Override
