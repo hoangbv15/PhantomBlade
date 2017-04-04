@@ -99,7 +99,7 @@ public abstract class MapBase implements Disposable {
             }
             System.out.println(object.getName());
             if (EnemySpawn.equals(object.getName())) {
-                enemyList.add(new EnemyBase(x, y));
+                enemyList.add(new EnemyBase(x, y, this));
             }
         }
 

@@ -16,7 +16,6 @@
   <object id="26" name="EnemySpawn" x="5181.33" y="143.667" width="56" height="40.6667"/>
   <object id="27" name="EnemySpawn" x="7790" y="387" width="56" height="40.6667"/>
   <object id="28" name="EnemySpawn" x="6961.33" y="323" width="56" height="40.6667"/>
-  <object id="29" name="EnemySpawn" x="9656.67" y="327" width="56" height="40.6667"/>
  </objectgroup>
  <layer name="Map" width="180" height="10">
   <data encoding="base64">

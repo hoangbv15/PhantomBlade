@@ -24,7 +24,6 @@ public abstract class PhysicsBase {
     // Debug property, used for rendering collisions to the screen. Needs to be public
     public CollisionList collisions;
 
-    protected InputProcessor input;
     // Variables for push back
     private float currentPushBackDurationToGo;
     protected abstract float getPushBackDuration();
@@ -32,8 +31,7 @@ public abstract class PhysicsBase {
     private int pushBackDirection;
     private boolean isBeingPushedBack;
 
-    public PhysicsBase(InputProcessor input) {
-        this.input = input;
+    public PhysicsBase() {
         collisions = new CollisionList(new ArrayList<Collision>());
         isBeingPushedBack = false;
     }
