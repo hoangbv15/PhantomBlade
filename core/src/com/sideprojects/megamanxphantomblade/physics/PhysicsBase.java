@@ -180,8 +180,10 @@ public abstract class PhysicsBase {
         if (enemy == null) {
             return;
         }
-        attack.takeDamage(enemy.damage);
         enemy.takeDamage(attack.damage);
+        if (!enemy.isDead() || attack.damage.type != Damage.Type.Heavy) {
+            attack.die();
+        }
     }
 
     private EnemyBase getCollidingEnemy(MovingObject object, MapBase map) {

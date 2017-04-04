@@ -41,6 +41,10 @@ public abstract class MovingObject {
         pos.y = bounds.y;
     }
 
+    public void die() {
+        healthPoints = 0;
+    }
+
     public boolean isDead() {
         return healthPoints <= 0;
     }

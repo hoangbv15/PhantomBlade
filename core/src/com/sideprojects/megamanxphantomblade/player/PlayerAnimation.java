@@ -150,6 +150,7 @@ public abstract class PlayerAnimation {
         BulletHeavyMuzzle,
         BulletMediumMuzzle,
         ChargeInnerCircles,
+        BulletHeavyExplode,
         ChargeOuterCircles
     }
 }

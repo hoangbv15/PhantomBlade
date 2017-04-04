@@ -31,14 +31,12 @@ public class DamagedShader {
                 + "uniform sampler2D u_texture;\n" //
                 + "void main()\n"//
                 + "{\n" //
-                + "  vec4 color = texture2D(u_texture, v_texCoords) * v_color;\n" //
-                + "  color.r = 1.;\n" //
-                + "  color.g = 1.;\n" //
-                + "  color.b = 1.;\n" //
-//                + "  color.b = 1. - color.b;\n" //
-                + "  color.rgb = 2. * color.rgb;\n" //
-                + "  gl_FragColor = color;\n" //
-                + "}\n";
+                + "  vec4 f_color = texture2D(u_texture, v_texCoords);\n" //
+                + "  f_color.rgb /= f_color.a;\n" //
+                + "  f_color.rgb += 0.5;\n" //
+                + "  f_color.rgb *= f_color.a;\n" //
+                + "  gl_FragColor = f_color;\n" //
+                + "}";
         // TODO: implement correct shader to map dark to white, rest to blue
         ShaderProgram shader = new ShaderProgram(vertexShader, fragmentShader);
         return shader;
