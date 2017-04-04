@@ -1,10 +1,11 @@
 package com.sideprojects.megamanxphantomblade.map.maps;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.rahul.libgdx.parallax.TextureRegionParallaxLayer;
@@ -22,8 +23,8 @@ public class IntroStage extends MapBase {
     }
 
     @Override
-    protected Pixmap getMapResource() {
-        return new Pixmap(Gdx.files.internal("maps/IntroStage.png"));
+    protected TiledMap getMapResource() {
+        return new TmxMapLoader().load("maps/IntroStage.tmx");
     }
 
     @Override
@@ -57,21 +58,5 @@ public class IntroStage extends MapBase {
         ParallaxBackground parallaxBackground = new ParallaxBackground();
         parallaxBackground.addLayers(mountainsLayerA,mountainsLayerB,cloudsLayer,buildingsLayerA,buildingsLayerB,buildingsLayerC);
         return parallaxBackground;
-    }
-
-    @Override
-    public TextureRegion getGround() {
-        if (ground == null) {
-            ground = new TextureRegion(new Texture(Gdx.files.internal("sprites/maps/IntroStage/ground.png")));
-        }
-        return ground;
-    }
-
-    @Override
-    public TextureRegion getWall() {
-        if (wall == null) {
-            wall = new TextureRegion(new Texture(Gdx.files.internal("sprites/maps/IntroStage/wall.png")));
-        }
-        return wall;
     }
 }
