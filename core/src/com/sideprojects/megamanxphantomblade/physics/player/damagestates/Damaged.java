@@ -5,7 +5,7 @@ import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerDamageState;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
-import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
+import com.sideprojects.megamanxphantomblade.player.PlayerAnimationBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 
 /**
@@ -16,7 +16,7 @@ public class Damaged extends PlayerDamageState {
 
     public Damaged(PlayerBase player, Damage damage, PlayerPhysics physics) {
         super(player);
-        stunTime = player.animations.get(PlayerAnimation.Type.DamagedNormal).getAnimationDuration();
+        stunTime = player.animations.get(PlayerAnimationBase.Type.DamagedNormal).getAnimationDuration();
         // Reduce player's health here
         switch (damage.type) {
             case Heavy:

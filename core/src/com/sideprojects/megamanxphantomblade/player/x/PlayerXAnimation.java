@@ -141,7 +141,7 @@ public class PlayerXAnimation extends PlayerAnimation {
             case DamagedNormal:
                 return Sprites.XDamagedNormal;
             default:
-                return null;
+                return super.getTextureAtlas(type, lowHealth);
         }
     }
 

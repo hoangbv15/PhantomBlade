@@ -6,7 +6,7 @@ import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerMovementStateBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerStateChangeHandler;
-import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
+import com.sideprojects.megamanxphantomblade.player.PlayerAnimationBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 
 /**
@@ -25,7 +25,7 @@ public class DashBreak extends Idle {
 
     @Override
     public PlayerMovementStateBase nextState(InputProcessor input, PlayerBase player, CollisionList collisionList) {
-        if (player.stateTime >= player.animations.get(PlayerAnimation.Type.Dashbreak).getAnimationDuration()) {
+        if (player.stateTime >= player.animations.get(PlayerAnimationBase.Type.Dashbreak).getAnimationDuration()) {
             return new Idle(input, player, player.state, stateChangeHandler);
         }
         if (player.vel.y > 0) {

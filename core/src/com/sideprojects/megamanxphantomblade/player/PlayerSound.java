@@ -50,6 +50,9 @@ public abstract class PlayerSound implements PlayerStateChangeHandler {
     public void playBulletHit() {
         soundPlayer.playInParallel(Sounds.BulletHit);
     }
+    public void playAttackNoDamage() {
+        soundPlayer.playInParallel(Sounds.BulletNoDamage);
+    }
 
     protected abstract void playDash();
     protected abstract void playLand();

@@ -32,8 +32,14 @@ public abstract class MovingObject {
         healthPoints = hp;
     }
 
-    public void takeDamage(Damage damage) {
+    /**
+     * Decreases this object's hp by the amount of damage
+     * @param damage The damage that is being dealt to this object
+     * @return Whether the damage has successfully been dealt
+     */
+    public boolean takeDamage(Damage damage) {
         healthPoints -= damage.getDamage();
+        return true;
     }
 
     public void updatePos() {

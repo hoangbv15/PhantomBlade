@@ -1,6 +1,5 @@
 package com.sideprojects.megamanxphantomblade.renderers;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Queue;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
-import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
+import com.sideprojects.megamanxphantomblade.player.PlayerAnimationBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.ChargeShader;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.DamagedShader;
@@ -54,7 +53,7 @@ public class PlayerRenderer {
     private float flickerStateTime = 0;
 
 
-    public PlayerRenderer(PlayerBase player, int mapTileWidth, OrthographicCamera cam, SpriteBatch batch) {
+    public PlayerRenderer(PlayerBase player, int mapTileWidth, OrthographicCamera cam, SpriteBatch batch, ShaderProgram damagedShader) {
         this.player = player;
         this.cam = cam;
         this.mapTileWidth = mapTileWidth;
@@ -65,12 +64,12 @@ public class PlayerRenderer {
         lastPlayerPositionQueue = new Queue<Vector2>(numOfTraces);
         startRemovingTraces = false;
         // Calculate dash rocket padding
-        leftDashRocketPadding = player.animations.get(PlayerAnimation.Type.Dash).getKeyFrame(0).getRegionWidth();
-        xDashRocketPadding = player.animations.get(PlayerAnimation.Type.Dashrocket).getKeyFrame(0).getRegionWidth() / 5f;
-        yDashRocketPadding = player.animations.get(PlayerAnimation.Type.Dashrocket).getKeyFrame(0).getRegionHeight() / 7f;
-        yUpDashRocketPadding = player.animations.get(PlayerAnimation.Type.Updashrocket).getKeyFrame(0).getRegionHeight();
+        leftDashRocketPadding = player.animations.get(PlayerAnimationBase.Type.Dash).getKeyFrame(0).getRegionWidth();
+        xDashRocketPadding = player.animations.get(PlayerAnimationBase.Type.Dashrocket).getKeyFrame(0).getRegionWidth() / 5f;
+        yDashRocketPadding = player.animations.get(PlayerAnimationBase.Type.Dashrocket).getKeyFrame(0).getRegionHeight() / 7f;
+        yUpDashRocketPadding = player.animations.get(PlayerAnimationBase.Type.Updashrocket).getKeyFrame(0).getRegionHeight();
 
-        damagedShader = DamagedShader.getShader();
+        this.damagedShader = damagedShader;
         chargeShader = ChargeShader.getShader();
     }
 
@@ -197,7 +196,6 @@ public class PlayerRenderer {
 
     public void dispose() {
         traceShader.dispose();
-        damagedShader.dispose();
         chargeShader.dispose();
     }
 }

@@ -180,9 +180,9 @@ public abstract class PhysicsBase {
         if (enemy == null) {
             return;
         }
-        enemy.takeDamage(attack.damage);
+        boolean enemyTookDamage = enemy.takeDamage(attack.damage);
         if (!enemy.isDead() || attack.damage.type != Damage.Type.Heavy) {
-            attack.die();
+            attack.die(enemyTookDamage);
         }
     }
 

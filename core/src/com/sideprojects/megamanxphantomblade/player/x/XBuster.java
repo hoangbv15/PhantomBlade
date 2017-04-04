@@ -9,7 +9,7 @@ import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.animation.Sprites;
 import com.sideprojects.megamanxphantomblade.math.VectorCache;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
-import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
+import com.sideprojects.megamanxphantomblade.player.PlayerAnimationBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerSound;
@@ -53,14 +53,18 @@ public class XBuster extends PlayerAttack {
     private Animation<TextureRegion> animation;
     private Animation<TextureRegion> muzzleAnimation;
     private Animation<TextureRegion> explodeAnimation;
+    private Animation<TextureRegion> explodeNoDamageAnimation;
     private boolean explode;
     private float explodePosPaddingY;
+    private float noDamagePosPaddingY;
     private float muzzlePosPaddingY;
     private float bulletPosPaddingY;
     private float explodePosPaddingXLeft;
+    private float noDamagePosPaddingXLeft;
     private float muzzlePosPaddingXLeft;
     private float bulletPosPaddingXLeft;
     private float explodePosPaddingXRight;
+    private float noDamagePosPaddingXRight;
     private float muzzlePosPaddingXRight;
     private float bulletPosPaddingXRight;
     private int playerStartDirection;
@@ -68,7 +72,7 @@ public class XBuster extends PlayerAttack {
 
     private PlayerSound playerSound;
 
-    public XBuster(PlayerBase player, Damage damage, int direction, PlayerAnimation animations, PlayerSound playerSound) {
+    public XBuster(PlayerBase player, Damage damage, int direction, PlayerAnimationBase animations, PlayerSound playerSound) {
         super(damage, direction);
         this.playerSound = playerSound;
         // Calculate position for bullet
@@ -86,16 +90,20 @@ public class XBuster extends PlayerAttack {
         stateTime = 0;
     }
 
-    private void createAnimation(PlayerAnimation animations) {
+    private void createAnimation(PlayerAnimationBase animations) {
+        explodeNoDamageAnimation = animations.get(PlayerAnimationBase.Type.BulletNoDamageExplode, direction);
         switch(damage.type) {
             case Heavy:
                 initialiseHealthPoints(100);
-                animation = animations.retrieveFromCache(PlayerAnimation.Type.BulletHeavy, direction, Sprites.XBulletHeavy, null, 0.05f);
-                muzzleAnimation = animations.retrieveFromCache(PlayerAnimation.Type.BulletHeavyMuzzle, direction, Sprites.XShootHeavyMuzzle, null, 0.04f);
-                explodeAnimation = animations.retrieveFromCache(PlayerAnimation.Type.BulletHeavyExplode, direction, Sprites.XBulletHeavyExplode, null, 0.05f);
+                animation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletHeavy, direction, Sprites.XBulletHeavy, null, 0.05f);
+                muzzleAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletHeavyMuzzle, direction, Sprites.XShootHeavyMuzzle, null, 0.04f);
+                explodeAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletHeavyExplode, direction, Sprites.XBulletHeavyExplode, null, 0.05f);
                 explodePosPaddingXLeft = -P(15);
                 explodePosPaddingXRight = P(4);
                 explodePosPaddingY = -P(30);
+                noDamagePosPaddingXLeft = -P(10);
+                noDamagePosPaddingXRight = P(15);
+                noDamagePosPaddingY = -P(22);
                 muzzlePosPaddingXLeft = P(38);
                 muzzlePosPaddingXRight = -P(29);
                 muzzlePosPaddingY = -P(25);
@@ -105,12 +113,15 @@ public class XBuster extends PlayerAttack {
                 break;
             case Normal:
                 initialiseHealthPoints(10);
-                animation = animations.retrieveFromCache(PlayerAnimation.Type.BulletMedium, direction, Sprites.XBulletMedium, null, 0.05f);
-                muzzleAnimation = animations.retrieveFromCache(PlayerAnimation.Type.BulletMediumMuzzle, direction, Sprites.XShootMediumMuzzle, null, 0.03f);
-                explodeAnimation = animations.retrieveFromCache(PlayerAnimation.Type.BulletSmallExplode, direction, Sprites.XBulletSmallExplode, null, 0.05f);
+                animation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletMedium, direction, Sprites.XBulletMedium, null, 0.05f);
+                muzzleAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletMediumMuzzle, direction, Sprites.XShootMediumMuzzle, null, 0.03f);
+                explodeAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletSmallExplode, direction, Sprites.XBulletSmallExplode, null, 0.05f);
                 explodePosPaddingXLeft = -P(15);
                 explodePosPaddingXRight = -P(6);
                 explodePosPaddingY = -P(25);
+                noDamagePosPaddingXRight = -P(6);
+                noDamagePosPaddingXLeft = -P(12);
+                noDamagePosPaddingY = explodePosPaddingY;
                 muzzlePosPaddingXLeft = 0;
                 muzzlePosPaddingXRight = 0;
                 muzzlePosPaddingY = -P(2);
@@ -120,17 +131,20 @@ public class XBuster extends PlayerAttack {
                 break;
             case Light:
                 initialiseHealthPoints(10);
-                animation = animations.retrieveFromCache(PlayerAnimation.Type.BulletSmall, direction, Sprites.XBulletSmall, null, 0.05f);
-                muzzleAnimation = animations.retrieveFromCache(PlayerAnimation.Type.BulletSmallMuzzle, direction, Sprites.XShootMuzzle, null, 0.025f);
-                explodeAnimation = animations.retrieveFromCache(PlayerAnimation.Type.BulletSmallExplode, direction, Sprites.XBulletSmallExplode, null, 0.05f);
+                animation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletSmall, direction, Sprites.XBulletSmall, null, 0.05f);
+                muzzleAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletSmallMuzzle, direction, Sprites.XShootMuzzle, null, 0.025f);
+                explodeAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletSmallExplode, direction, Sprites.XBulletSmallExplode, null, 0.05f);
                 explodePosPaddingXLeft = -P(15);
                 explodePosPaddingXRight = -P(17);
                 explodePosPaddingY = -P(30);
+                noDamagePosPaddingXLeft = -P(8);
+                noDamagePosPaddingXRight = -P(25);
+                noDamagePosPaddingY = explodePosPaddingY;
                 muzzlePosPaddingXLeft = 0;
                 muzzlePosPaddingXRight = 0;
                 muzzlePosPaddingY = -P(9);
                 bulletPosPaddingXLeft = 0;
-                bulletPosPaddingXRight = -P(0);
+                bulletPosPaddingXRight = 0;
                 bulletPosPaddingY = P(1);
                 break;
         }
@@ -159,11 +173,24 @@ public class XBuster extends PlayerAttack {
             if (!explode) {
                 stateTime = 0;
                 explode = true;
-                pos.x += direction == LEFT ? explodePosPaddingXLeft : explodePosPaddingXRight;
+                float explodePosPaddingX, explodePosPaddingY;
+                if (enemyTookDamage) {
+                    explodePosPaddingX = direction == LEFT ? explodePosPaddingXLeft : explodePosPaddingXRight;
+                    explodePosPaddingY = this.explodePosPaddingY;
+                    playerSound.playBulletHit();
+                } else {
+                    explodePosPaddingX = direction == LEFT ? noDamagePosPaddingXLeft : noDamagePosPaddingXRight;
+                    explodePosPaddingY = noDamagePosPaddingY;
+                    playerSound.playAttackNoDamage();
+                }
+                pos.x += explodePosPaddingX;
                 pos.y += explodePosPaddingY;
-                playerSound.playBulletHit();
             }
-            currentFrame = explodeAnimation.getKeyFrame(stateTime, false);
+            if (enemyTookDamage) {
+                currentFrame = explodeAnimation.getKeyFrame(stateTime, false);
+            } else {
+                currentFrame = explodeNoDamageAnimation.getKeyFrame(stateTime, false);
+            }
             if (explodeAnimation.isAnimationFinished(stateTime)) {
                 shouldBeRemoved = true;
             }

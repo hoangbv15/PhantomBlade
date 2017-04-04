@@ -7,7 +7,7 @@ import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
-import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
+import com.sideprojects.megamanxphantomblade.player.PlayerAnimationBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.player.x.PlayerXSound;
 import com.sideprojects.megamanxphantomblade.player.x.XBuster;
@@ -94,8 +94,8 @@ public class PlayerXPhysics extends PlayerPhysics {
     }
 
     private void initialiseAttackTimings() {
-        attackFrameTime = player.animations.getAttackFrameDuration(PlayerAnimation.Type.Idle, player.attackType);
-        attackTime = player.animations.getAttackDuration(PlayerAnimation.Type.Idle, player.attackType, player.changeStateDuringAttack);
+        attackFrameTime = player.animations.getAttackFrameDuration(PlayerAnimationBase.Type.Idle, player.attackType);
+        attackTime = player.animations.getAttackDuration(PlayerAnimationBase.Type.Idle, player.attackType, player.changeStateDuringAttack);
         firstFramesAttackTime = 4 * attackFrameTime;
     }
 

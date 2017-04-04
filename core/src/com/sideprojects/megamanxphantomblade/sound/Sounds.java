@@ -25,12 +25,14 @@ public class Sounds {
     public static String XAttackLight = "sounds/PL02_U_00020.wav";
     public static String XAttackMedium = "sounds/PL00_U_00023.wav";
     public static String XAttackHeavy = "sounds/PL00_U_00016.wav";
-
+    public static String XHeavyAttackShout = "sounds/PL02_U_00043.wav";
     public static String XCharging = "sounds/PL02_U_00024.wav";
     public static String XChargeLoop = "sounds/PL02_U_00024_LOOP.wav";
 
     // Common
     public static String BulletHit = "sounds/PL00_U_00027.wav";
+    public static String BulletNoDamage = "sounds/ST0E_U0_00005.wav";
+    public static String Ready = "sounds/ST0E_U0_00015.wav";
 
     // BGM
 }

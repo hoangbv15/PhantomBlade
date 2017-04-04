@@ -14,12 +14,18 @@ public abstract class PlayerAttack extends MovingObject {
     public TextureRegion currentFrame;
     public TextureRegion muzzleFrame;
     public boolean shouldBeRemoved;
+    public boolean enemyTookDamage;
     public Vector2 muzzlePos;
 
     public PlayerAttack(Damage damage, int direction) {
         this.damage = damage;
         this.direction = direction;
         shouldBeRemoved = false;
+    }
+
+    public void die(boolean enemyTookDamage) {
+        this.enemyTookDamage = enemyTookDamage;
+        super.die();
     }
 
     public abstract void update(PlayerBase player, float delta);

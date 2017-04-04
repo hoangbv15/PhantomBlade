@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -12,6 +13,7 @@ import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
+import com.sideprojects.megamanxphantomblade.renderers.shaders.DamagedShader;
 
 /**
  * Created by buivuhoang on 04/02/17.
@@ -24,6 +26,8 @@ public class WorldRenderer {
     private ParallaxBackground background;
     private SpriteCache cache;
     private SpriteBatch batch;
+
+    private ShaderProgram damagedShader;
 
     private int[][] blocks;
     private float blockHeight = 16f;
@@ -48,7 +52,8 @@ public class WorldRenderer {
         gameCam = new OrthographicCamera(camViewPortY * 16 / 9f, camViewPortY);
         guiCam = new OrthographicCamera(16, 9);
         guiCam.zoom = 0.4f;
-        playerRenderer = new PlayerRenderer(map.player, map.getTileWidth(), gameCam, batch);
+        damagedShader = DamagedShader.getShader();
+        playerRenderer = new PlayerRenderer(map.player, map.getTileWidth(), gameCam, batch, damagedShader);
         playerHealthRenderer = new PlayerHealthRenderer(batch);
         cache = new SpriteCache(this.map.tiles.length * this.map.tiles[0].length, false);
         blocks = new int[(int)Math.ceil(this.map.tiles.length / blockWidth)][(int)Math.ceil(this.map.tiles[0].length / blockHeight)];
@@ -141,7 +146,13 @@ public class WorldRenderer {
     private void renderEnemies() {
         for (EnemyBase enemy: map.enemyList) {
             Vector2 pos = applyCameraLerp(enemy.pos);
+            if (enemy.isTakingDamage) {
+                batch.setShader(damagedShader);
+            }
             batch.draw(enemy.currentFrame, pos.x, pos.y);
+            if (enemy.isTakingDamage) {
+                batch.setShader(null);
+            }
         }
     }
 
@@ -175,6 +186,7 @@ public class WorldRenderer {
         batch.dispose();
         playerRenderer.dispose();
         playerHealthRenderer.dispose();
+        damagedShader.dispose();
     }
 
     public void resize(int width, int height) {

@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.animation.Sprites;
 import com.sideprojects.megamanxphantomblade.math.VectorCache;
-import com.sideprojects.megamanxphantomblade.player.PlayerAnimation;
+import com.sideprojects.megamanxphantomblade.player.PlayerAnimationBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.player.TraceColour;
 
@@ -29,13 +29,13 @@ public class PlayerX extends PlayerBase {
         super(x, y);
         bounds.width = 0.4f;
         bounds.height = 0.7f;
-        attackChargeFrames = new HashMap<PlayerAnimation.Type, TextureRegion>(2);
+        attackChargeFrames = new HashMap<PlayerAnimationBase.Type, TextureRegion>(2);
         List<Integer> outerCircleChargeAnimationIndex = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
         List<Integer> innerCircleChargeAnimationIndex = Arrays.asList(13, 11, 13, 10, 13, 12, 13, 14);
         List<Integer> innerCircleAlmostChargeAnimationIndex = Arrays.asList(10, 14, 11, 14, 12, 10, 13, 11);
-        outerCircleChargeAnimation = animations.retrieveFromCache(PlayerAnimation.Type.ChargeOuterCircles, MovingObject.RIGHT, Sprites.XChargeParticles, outerCircleChargeAnimationIndex, 0.03f);
-        innerCircleChargeAnimation = animations.retrieveFromCache(PlayerAnimation.Type.ChargeInnerCircles, MovingObject.RIGHT, Sprites.XChargeParticles, innerCircleChargeAnimationIndex, 0.05f);
-        innerCircleAlmostChargeAnimation = animations.retrieveFromCache(PlayerAnimation.Type.ChargeInnerCircles, MovingObject.RIGHT, Sprites.XChargeParticles, innerCircleAlmostChargeAnimationIndex, 0.05f);
+        outerCircleChargeAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.ChargeOuterCircles, MovingObject.RIGHT, Sprites.XChargeParticles, outerCircleChargeAnimationIndex, 0.03f);
+        innerCircleChargeAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.ChargeInnerCircles, MovingObject.RIGHT, Sprites.XChargeParticles, innerCircleChargeAnimationIndex, 0.05f);
+        innerCircleAlmostChargeAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.ChargeInnerCircles, MovingObject.RIGHT, Sprites.XChargeParticles, innerCircleAlmostChargeAnimationIndex, 0.05f);
         chargeStateTime = 0;
     }
 
@@ -69,8 +69,8 @@ public class PlayerX extends PlayerBase {
             almostChargeStateTime = 0;
             fullyChargedStateTime = 0;
         }
-        attackChargeFrames.put(PlayerAnimation.Type.ChargeOuterCircles, outerCircleFrame);
-        attackChargeFrames.put(PlayerAnimation.Type.ChargeInnerCircles, innerCircleFrame);
+        attackChargeFrames.put(PlayerAnimationBase.Type.ChargeOuterCircles, outerCircleFrame);
+        attackChargeFrames.put(PlayerAnimationBase.Type.ChargeInnerCircles, innerCircleFrame);
     }
 
     @Override

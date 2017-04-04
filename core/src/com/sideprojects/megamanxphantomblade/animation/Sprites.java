@@ -35,6 +35,9 @@ public class Sprites {
     public static String XBulletHeavyExplode = "sprites/x/bullet_heavy_explode.txt";
     public static String XChargeParticles = "sprites/x/charge_particles.txt";
 
+    // All players
+    public static String BulletNoDamageExplode = "sprites/bullet_nodamage_explode.txt";
+
     // Particle effects
     public static String Wallslide = "sprites/wallslide_dust.txt";
     public static String WallKick = "sprites/wallslide_kick.txt";
