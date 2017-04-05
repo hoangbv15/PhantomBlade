@@ -6,13 +6,14 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.sideprojects.megamanxphantomblade.animation.AnimationLoader;
 import com.sideprojects.megamanxphantomblade.animation.Sprites;
 
 /**
  * Created by buivuhoang on 25/03/17.
  */
-public class PlayerHealthRenderer {
+public class PlayerHealthRenderer implements Disposable {
     private ShapeRenderer healthRenderer;
     private SpriteBatch batch;
     private Array<TextureAtlas.AtlasRegion> guiElements;
@@ -125,7 +126,8 @@ public class PlayerHealthRenderer {
         return (int)Math.ceil(health / healthPointsPerUnit);
     }
 
-    void dispose() {
+    @Override
+    public void dispose() {
         healthRenderer.dispose();
     }
 }

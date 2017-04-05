@@ -74,5 +74,6 @@ public class PhantomBladeGame extends ApplicationAdapter {
 		mapRenderer.dispose();
 		debugRenderer.dispose();
 		playerSounds.dispose();
+		map.dispose();
 	}
 }

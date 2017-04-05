@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Created by buivuhoang on 11/02/17.
  */
-public class DebugRenderer {
+public class DebugRenderer implements Disposable {
     private OrthographicCamera cam;
     private MapBase map;
     ShapeRenderer shapeDebugger;
@@ -69,6 +70,7 @@ public class DebugRenderer {
         shapeDebugger.end();
     }
 
+    @Override
     public void dispose() {
         shapeDebugger.dispose();
     }

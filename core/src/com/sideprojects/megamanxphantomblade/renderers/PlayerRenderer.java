@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Queue;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
@@ -17,7 +18,7 @@ import com.sideprojects.megamanxphantomblade.renderers.shaders.TraceShader;
 /**
  * Created by buivuhoang on 23/03/17.
  */
-public class PlayerRenderer {
+public class PlayerRenderer implements Disposable {
     private PlayerBase player;
 
     private OrthographicCamera cam;
@@ -27,7 +28,7 @@ public class PlayerRenderer {
     private ShaderProgram chargeShader;
 
     // Needed properties to offset the player position properly
-    private int mapTileWidth;
+    private float mapTileWidth;
 
     // Keep the last frames of the player to draw a trace
     private Queue<TextureRegion> lastPlayerFrameQueue;
@@ -53,7 +54,7 @@ public class PlayerRenderer {
     private float flickerStateTime = 0;
 
 
-    public PlayerRenderer(PlayerBase player, int mapTileWidth, OrthographicCamera cam, SpriteBatch batch, ShaderProgram damagedShader) {
+    public PlayerRenderer(PlayerBase player, float mapTileWidth, OrthographicCamera cam, SpriteBatch batch, ShaderProgram damagedShader) {
         this.player = player;
         this.cam = cam;
         this.mapTileWidth = mapTileWidth;
@@ -194,6 +195,7 @@ public class PlayerRenderer {
         }
     }
 
+    @Override
     public void dispose() {
         traceShader.dispose();
         chargeShader.dispose();

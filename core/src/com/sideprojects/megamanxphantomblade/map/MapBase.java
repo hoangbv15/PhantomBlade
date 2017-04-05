@@ -1,8 +1,14 @@
 package com.sideprojects.megamanxphantomblade.map;
 
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Queue;
 import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
@@ -21,32 +27,28 @@ import java.util.List;
 /**
  * Created by buivuhoang on 04/02/17.
  */
-public abstract class MapBase {
-    public static int EMPTY = 0xffffff;
-    public static int GROUND = 0x000000;
-    public static int WALL = 0x0000A0;
-    public static int START = 0xff0000;
-    public static int DOOR = 0x00ffff;
-    public static int ENEMY = 0xff00ff;
+public abstract class MapBase implements Disposable {
+    public static String MapLayer = "Map";
+    public static String ObjectLayer = "Objects";
+    public static String XSpawn = "XSpawn";
+    public static String EnemySpawn = "EnemySpawn";
+
     public float GRAVITY = 15f;
     public float MAX_FALLSPEED = -8f;
     public float WALLSLIDE_FALLSPEED = -2f;
     private static int MAX_PLAYERATTACK = 20;
 
+    public TiledMap tiledMap;
+    private TiledMapTileLayer mapLayer;
+
     private PlayerFactory playerFactory;
     private PlayerPhysicsFactory playerPhysicsFactory;
     public PlayerBase player;
     public PlayerPhysics playerPhysics;
-    public int[][] tiles;
     public Rectangle[][] bounds;
 
     public List<EnemyBase> enemyList;
     public Queue<PlayerAttack> playerAttackList;
-
-    protected TextureRegion ground;
-    public abstract TextureRegion getGround();
-    protected TextureRegion wall;
-    public abstract TextureRegion getWall();
 
     public Particles particles;
 
@@ -59,51 +61,57 @@ public abstract class MapBase {
         loadMap();
     }
 
-    public int getTileWidth() {
-        return getGround().getRegionWidth();
+    public float getTileWidth() {
+        return mapLayer.getTileWidth();
     }
 
-    public int getTileHeight() {
-        return getGround().getRegionHeight();
+    public float getTileHeight() {
+        return mapLayer.getTileHeight();
     }
 
-    public int getWidth() { return tiles.length * getTileWidth(); }
+    public float getWidth() {
+        return mapLayer.getWidth() * getTileWidth();
+    }
 
-    public int getHeight() { return tiles[0].length * getTileHeight(); }
+    public float getHeight() {
+        return mapLayer.getHeight() * getTileHeight();
+    }
 
-    protected abstract Pixmap getMapResource();
+    protected abstract TiledMap getMapResource();
 
     public abstract ParallaxBackground getBackground();
 
     private void loadMap() {
-        Pixmap pixmap = getMapResource();
-        tiles = new int[pixmap.getWidth()][pixmap.getHeight()];
-        bounds = new Rectangle[pixmap.getWidth()][pixmap.getHeight()];
+        tiledMap = getMapResource();
+        mapLayer = (TiledMapTileLayer)tiledMap.getLayers().get(MapLayer);
 
-        for (int y = 0; y < pixmap.getHeight(); y++) {
-            for (int x = 0; x < pixmap.getWidth(); x++) {
-                int pix = (pixmap.getPixel(x, pixmap.getHeight() - y - 1) >>> 8) & 0xffffff;
+        bounds = new Rectangle[mapLayer.getWidth()][mapLayer.getHeight()];
 
-                if (match(pix, START)) {
-                    // we load the player here
-                    player = playerFactory.createPlayer(x, y);
-                    playerPhysics = playerPhysicsFactory.create(player);
-                }
-                tiles[x][y] = pix;
-                if (match(pix, GROUND) || match(pix, WALL)) {
-                    // collision rectangles
+        // Spawn player and enemies
+        MapObjects objects = tiledMap.getLayers().get(ObjectLayer).getObjects();
+        for (int i = 0; i < objects.getCount(); i ++) {
+            RectangleMapObject object = (RectangleMapObject)objects.get(i);
+            float x = object.getRectangle().x / getTileWidth();
+            float y = object.getRectangle().y / getTileHeight();
+            if (XSpawn.equals(object.getName())) {
+                player = playerFactory.createPlayer(x, y);
+                playerPhysics = playerPhysicsFactory.create(player);
+            }
+            System.out.println(object.getName());
+            if (EnemySpawn.equals(object.getName())) {
+                enemyList.add(new EnemyBase(x, y));
+            }
+        }
+
+        // Create bounding boxes
+        for (int y = 0; y < mapLayer.getHeight(); y++) {
+            for (int x = 0; x < mapLayer.getWidth(); x++) {
+                TiledMapTileLayer.Cell cell = mapLayer.getCell(x, y);
+                if (cell != null) {
                     bounds[x][y] = new Rectangle(x, y, 1, 1);
-                }
-                // basic enemy for testing
-                if (match(pix, ENEMY)) {
-                    enemyList.add(new EnemyBase(x, y));
                 }
             }
         }
-    }
-
-    public boolean match (int src, int dst) {
-        return src == dst;
     }
 
     public void update(float deltaTime) {
@@ -146,5 +154,10 @@ public abstract class MapBase {
 
     public void addParticle(Particle.ParticleType type, float x, float y, boolean isSingletonParticle) {
         particles.add(type, x, y, isSingletonParticle, playerPhysics.movementState.startingDirection);
+    }
+
+    @Override
+    public void dispose() {
+        tiledMap.dispose();
     }
 }
