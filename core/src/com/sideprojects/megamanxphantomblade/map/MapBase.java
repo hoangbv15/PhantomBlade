@@ -1,12 +1,9 @@
 package com.sideprojects.megamanxphantomblade.map;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Queue;
@@ -14,6 +11,8 @@ import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.animation.Particles;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
+import com.sideprojects.megamanxphantomblade.enemies.EnemySpawn;
+import com.sideprojects.megamanxphantomblade.enemies.types.Mettool;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
 import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
@@ -47,6 +46,7 @@ public abstract class MapBase implements Disposable {
     public PlayerPhysics playerPhysics;
     public Rectangle[][] bounds;
 
+    public List<EnemySpawn> enemySpawnList;
     public List<EnemyBase> enemyList;
     public Queue<PlayerAttack> playerAttackList;
 
@@ -57,6 +57,7 @@ public abstract class MapBase implements Disposable {
         this.playerPhysicsFactory = playerPhysicsFactory;
         particles = new Particles(20);
         enemyList = new ArrayList<EnemyBase>();
+        enemySpawnList = new ArrayList<EnemySpawn>();
         playerAttackList = new Queue<PlayerAttack>(MAX_PLAYERATTACK);
         loadMap();
     }
@@ -98,7 +99,7 @@ public abstract class MapBase implements Disposable {
                 playerPhysics = playerPhysicsFactory.create(player);
             }
             if (EnemySpawn.equals(object.getName())) {
-                enemyList.add(new EnemyBase(x, y, this));
+                enemySpawnList.add(new EnemySpawn(x, y, true));
             }
         }
 
@@ -113,6 +114,15 @@ public abstract class MapBase implements Disposable {
         }
     }
 
+    /**
+     * This determines whether the point is potentially visible to the player
+     * The viewport height and width are 9 and 16. Half of those are 4.5 and 8.
+     * We allow a bit of leeway by giving another 1/4th of the values here.
+     */
+    private boolean isPointInPlayerRange(float x, float y) {
+        return Math.abs(x - player.bounds.x) < 12f && Math.abs(y - player.bounds.y) < 6.75f;
+    }
+
     public void update(float deltaTime) {
         playerPhysics.update(player, deltaTime, this);
         player.update(this, deltaTime);
@@ -121,18 +131,43 @@ public abstract class MapBase implements Disposable {
         while (i.hasNext()) {
             PlayerAttack attack = i.next();
             attack.update(player, deltaTime);
-            playerPhysics.dealPlayerAttackDamage(attack, this);
+            if (!isPointInPlayerRange(attack.bounds.x, attack.bounds.y)) {
+                attack.shouldBeRemoved = true;
+            }
             if (attack.shouldBeRemoved) {
                 i.remove();
+            } else {
+                playerPhysics.dealDamageIfPlayerAttackHitsEnemy(attack, this);
             }
         }
 
         Iterator<EnemyBase> j = enemyList.iterator();
         while (j.hasNext()) {
             EnemyBase enemy = j.next();
-            enemy.update(deltaTime);
+            // If the enemy is outside of player's range, kill it
+            if (!isPointInPlayerRange(enemy.bounds.x, enemy.bounds.y)) {
+                enemy.shouldBeRemoved = true;
+            }
             if (enemy.shouldBeRemoved) {
+                // Remove enemy
+                enemySpawnList.add(new EnemySpawn(enemy.bounds.x, enemy.bounds.y, false));
                 j.remove();
+            } else {
+                enemy.update(deltaTime);
+            }
+        }
+
+        Iterator<EnemySpawn> k = enemySpawnList.iterator();
+        while (k.hasNext()) {
+            EnemySpawn spawn = k.next();
+            if (isPointInPlayerRange(spawn.x, spawn.y)) {
+                if (spawn.canBeSpawned) {
+                    // Spawn enemy
+                    enemyList.add(new Mettool(spawn.x, spawn.y, this));
+                    k.remove();
+                }
+            } else {
+                spawn.canBeSpawned = true;
             }
         }
     }

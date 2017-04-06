@@ -1,15 +1,15 @@
-package com.sideprojects.megamanxphantomblade.enemies.actions;
+package com.sideprojects.megamanxphantomblade.physics.actions;
 
 import com.sideprojects.megamanxphantomblade.MovingObject;
-import com.sideprojects.megamanxphantomblade.enemies.ActionBase;
+import com.sideprojects.megamanxphantomblade.physics.ActionBase;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
 
 /**
  * Created by buivuhoang on 04/04/17.
  */
 public class Move extends ActionBase {
-    private final MovingObject object;
-    private final int direction;
+    protected final MovingObject object;
+    protected int direction;
     private final float speed;
     private final float time;
     private float stateTime;

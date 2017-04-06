@@ -1,11 +1,10 @@
-package com.sideprojects.megamanxphantomblade.enemies;
+package com.sideprojects.megamanxphantomblade.physics;
 
 import com.badlogic.gdx.utils.Queue;
 import com.sideprojects.megamanxphantomblade.MovingObject;
-import com.sideprojects.megamanxphantomblade.enemies.actions.Move;
-import com.sideprojects.megamanxphantomblade.enemies.actions.Wait;
+import com.sideprojects.megamanxphantomblade.physics.actions.Move;
+import com.sideprojects.megamanxphantomblade.physics.actions.Wait;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
-import com.sideprojects.megamanxphantomblade.physics.Physics;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
 
 /**
@@ -28,22 +27,26 @@ public abstract class ScriptBase extends Physics {
      */
     public abstract void describe();
 
-    protected void move(int direction, float speed, float time) {
-        actionQueue.addFirst(new Move(object, direction, speed, time));
+    protected final void addToQueue(ActionBase action) {
+        actionQueue.addFirst(action);
     }
 
-    protected void wait(float time) {
-        actionQueue.addFirst(new Wait(object, time));
+    protected final void move(int direction, float speed, float time) {
+        addToQueue(new Move(object, direction, speed, time));
+    }
+
+    protected final void wait(float time) {
+        addToQueue(new Wait(object, time));
     }
 
     @Override
-    public void inputProcessing(MovingObject object, float delta, MapBase map) {
+    public final void inputProcessing(MovingObject object, float delta, MapBase map) {
         this.delta = delta;
         applyGravity(object, map.GRAVITY, map.MAX_FALLSPEED, delta);
     }
 
     @Override
-    public void postCollisionDetectionProcessing(CollisionList collisions) {
+    public final void postCollisionDetectionProcessing(CollisionList collisions) {
         if (actionQueue.size == 0) {
             describe();
             return;
@@ -57,12 +60,12 @@ public abstract class ScriptBase extends Physics {
     }
 
     @Override
-    protected float getPushBackDuration() {
+    protected final float getPushBackDuration() {
         return 0;
     }
 
     @Override
-    protected float getPushBackSpeed() {
+    protected final float getPushBackSpeed() {
         return 0;
     }
 }

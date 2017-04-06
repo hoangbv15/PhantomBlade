@@ -1,4 +1,4 @@
-package com.sideprojects.megamanxphantomblade.enemies;
+package com.sideprojects.megamanxphantomblade.physics;
 
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
 

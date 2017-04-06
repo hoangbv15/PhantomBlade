@@ -170,7 +170,7 @@ public abstract class PhysicsBase {
         return enemy.damage;
     }
 
-    public final void dealPlayerAttackDamage(PlayerAttack attack, MapBase map) {
+    public final void dealDamageIfPlayerAttackHitsEnemy(PlayerAttack attack, MapBase map) {
         if (attack.isDead()) {
             return;
         }

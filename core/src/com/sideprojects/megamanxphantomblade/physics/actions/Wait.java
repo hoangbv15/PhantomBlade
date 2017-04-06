@@ -1,7 +1,7 @@
-package com.sideprojects.megamanxphantomblade.enemies.actions;
+package com.sideprojects.megamanxphantomblade.physics.actions;
 
 import com.sideprojects.megamanxphantomblade.MovingObject;
-import com.sideprojects.megamanxphantomblade.enemies.ActionBase;
+import com.sideprojects.megamanxphantomblade.physics.ActionBase;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
 
 /**
