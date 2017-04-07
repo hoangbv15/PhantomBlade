@@ -1,5 +1,6 @@
 package com.sideprojects.megamanxphantomblade.physics.player.movementstates;
 
+import com.sideprojects.megamanxphantomblade.input.Command;
 import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
@@ -24,6 +25,12 @@ public class Touchdown extends Idle {
 
     @Override
     public PlayerMovementStateBase nextState(InputProcessor input, PlayerBase player, CollisionList collisionList) {
+        if (input.isCommandPressed(Command.DASH) && canDash(input)) {
+            if (input.isCommandPressed(Command.UP)) {
+                return new Updash(player, player.state, stateChangeHandler);
+            }
+            return new Dash(input, player, player.state, stateChangeHandler);
+        }
         if (player.vel.x != 0 && player.grounded) {
             return new Run(input, player, player.state, stateChangeHandler);
         }

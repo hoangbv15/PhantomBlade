@@ -71,7 +71,7 @@ public class Dash extends PlayerMovementStateBase {
     public PlayerMovementStateBase nextState(InputProcessor input, PlayerBase player, CollisionList collisionList) {
         if (enterWhileRunning) {
             if (player.stateTime >= dashDuration
-                    || input.isCommandPressed(Command.JUMP)
+                    || input.isCommandJustPressed(Command.JUMP)
                     || !input.isCommandPressed(directionKeyBeingPressed)
                     || hasChangedDirection(player)
                     || player.vel.y < 0
@@ -80,7 +80,7 @@ public class Dash extends PlayerMovementStateBase {
             }
         } else if (enterWhileIdle) {
             if (player.stateTime >= dashDuration
-                    || input.isCommandPressed(Command.JUMP)
+                    || input.isCommandJustPressed(Command.JUMP)
                     || hasChangedDirection(player)
                     || player.vel.y < 0
                     || !input.isCommandPressed(Command.DASH) ||
