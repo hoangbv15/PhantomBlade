@@ -30,7 +30,7 @@ public class Idle extends PlayerNonDashState {
     @Override
     public PlayerState enter(PlayerBase player) {
         player.stateTime = 0;
-        return PlayerState.IDLE;
+        return PlayerState.Idle;
     }
 
     @Override

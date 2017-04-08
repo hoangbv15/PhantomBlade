@@ -26,9 +26,9 @@ public class NotJumpDashing extends PlayerJumpDashStateBase {
 
     @Override
     public PlayerJumpDashStateBase nextState(InputProcessor input, PlayerBase player) {
-        if ((input.isCommandPressed(Command.DASH) || player.state == PlayerState.DASH)
+        if ((input.isCommandPressed(Command.DASH) || player.state == PlayerState.Dash)
                 && input.isCommandJustPressed(Command.JUMP)
-                && (player.grounded || player.state == PlayerState.WALLSLIDE)) {
+                && (player.grounded || player.state == PlayerState.Wallslide)) {
             return new JumpDashing(player);
         }
         return this;

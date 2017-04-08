@@ -1,8 +1,6 @@
 package com.sideprojects.megamanxphantomblade.enemies;
 
-import com.badlogic.gdx.maps.MapObjects;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.sideprojects.megamanxphantomblade.enemies.types.Mettool;
+import com.sideprojects.megamanxphantomblade.enemies.types.mettool.Mettool;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 
 import java.util.ArrayList;

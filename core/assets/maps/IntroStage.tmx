@@ -10,12 +10,12 @@
  </tileset>
  <objectgroup name="Objects">
   <object id="16" name="XSpawn" x="123" y="494" width="62" height="62"/>
-  <object id="18" name="EnemySpawn" x="375" y="494" width="64" height="63"/>
-  <object id="20" name="EnemySpawn" x="2420" y="513.333" width="56" height="40.6667"/>
-  <object id="23" name="EnemySpawn" x="3538" y="446.333" width="56" height="40.6667"/>
-  <object id="26" name="EnemySpawn" x="5181.33" y="143.667" width="56" height="40.6667"/>
-  <object id="27" name="EnemySpawn" x="7790" y="387" width="56" height="40.6667"/>
-  <object id="28" name="EnemySpawn" x="6961.33" y="323" width="56" height="40.6667"/>
+  <object id="18" name="MettoolSpawn" x="375" y="494" width="64" height="63"/>
+  <object id="20" name="MettoolSpawn" x="2420" y="513.333" width="56" height="40.6667"/>
+  <object id="23" name="MettoolSpawn" x="3538" y="446.333" width="56" height="40.6667"/>
+  <object id="26" name="MettoolSpawn" x="5181.33" y="143.667" width="56" height="40.6667"/>
+  <object id="27" name="MettoolSpawn" x="7790" y="387" width="56" height="40.6667"/>
+  <object id="28" name="MettoolSpawn" x="6961.33" y="323" width="56" height="40.6667"/>
  </objectgroup>
  <layer name="Map" width="180" height="10">
   <data encoding="base64">

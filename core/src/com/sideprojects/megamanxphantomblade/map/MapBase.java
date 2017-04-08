@@ -11,8 +11,7 @@ import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.animation.Particles;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
-import com.sideprojects.megamanxphantomblade.enemies.EnemySpawn;
-import com.sideprojects.megamanxphantomblade.enemies.types.Mettool;
+import com.sideprojects.megamanxphantomblade.enemies.types.mettool.Mettool;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
 import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
@@ -30,7 +29,7 @@ public abstract class MapBase implements Disposable {
     public static String MapLayer = "Map";
     public static String ObjectLayer = "Objects";
     public static String XSpawn = "XSpawn";
-    public static String EnemySpawn = "EnemySpawn";
+    public static String MettoolSpawn = "MettoolSpawn";
 
     public float GRAVITY = 15f;
     public float MAX_FALLSPEED = -8f;
@@ -46,7 +45,6 @@ public abstract class MapBase implements Disposable {
     public PlayerPhysics playerPhysics;
     public Rectangle[][] bounds;
 
-    public List<EnemySpawn> enemySpawnList;
     public List<EnemyBase> enemyList;
     public Queue<PlayerAttack> playerAttackList;
 
@@ -57,7 +55,6 @@ public abstract class MapBase implements Disposable {
         this.playerPhysicsFactory = playerPhysicsFactory;
         particles = new Particles(20);
         enemyList = new ArrayList<EnemyBase>();
-        enemySpawnList = new ArrayList<EnemySpawn>();
         playerAttackList = new Queue<PlayerAttack>(MAX_PLAYERATTACK);
         loadMap();
     }
@@ -98,8 +95,8 @@ public abstract class MapBase implements Disposable {
                 player = playerFactory.createPlayer(x, y);
                 playerPhysics = playerPhysicsFactory.create(player);
             }
-            if (EnemySpawn.equals(object.getName())) {
-                enemySpawnList.add(new EnemySpawn(x, y, true));
+            if (MettoolSpawn.equals(object.getName())) {
+                enemyList.add(new Mettool(x, y, this));
             }
         }
 
@@ -120,7 +117,7 @@ public abstract class MapBase implements Disposable {
      * We allow a bit of leeway by giving another 1/4th of the values here.
      */
     private boolean isPointInPlayerRange(float x, float y) {
-        return Math.abs(x - player.bounds.x) < 12f && Math.abs(y - player.bounds.y) < 6.75f;
+        return Math.abs((int)x - (int)player.bounds.x) < 12 && Math.abs((int)y - (int)player.bounds.y) < 7;
     }
 
     public void update(float deltaTime) {
@@ -146,28 +143,12 @@ public abstract class MapBase implements Disposable {
             EnemyBase enemy = j.next();
             // If the enemy is outside of player's range, kill it
             if (!isPointInPlayerRange(enemy.bounds.x, enemy.bounds.y)) {
-                enemy.shouldBeRemoved = true;
+                enemy.despawn(true);
+            } else if (!enemy.spawned && enemy.canSpawn) {
+                enemy.spawn();
             }
-            if (enemy.shouldBeRemoved) {
-                // Remove enemy
-                enemySpawnList.add(new EnemySpawn(enemy.bounds.x, enemy.bounds.y, false));
-                j.remove();
-            } else {
+            if (enemy.spawned) {
                 enemy.update(deltaTime);
-            }
-        }
-
-        Iterator<EnemySpawn> k = enemySpawnList.iterator();
-        while (k.hasNext()) {
-            EnemySpawn spawn = k.next();
-            if (isPointInPlayerRange(spawn.x, spawn.y)) {
-                if (spawn.canBeSpawned) {
-                    // Spawn enemy
-                    enemyList.add(new Mettool(spawn.x, spawn.y, this));
-                    k.remove();
-                }
-            } else {
-                spawn.canBeSpawned = true;
             }
         }
     }

@@ -19,7 +19,7 @@ public class Run extends Idle {
     @Override
     public PlayerState enter(PlayerBase player) {
         player.stateTime = 0;
-        return PlayerState.RUN;
+        return PlayerState.Run;
     }
 
     @Override

@@ -20,7 +20,7 @@ public class Touchdown extends Idle {
     @Override
     public PlayerState enter(PlayerBase player) {
         player.stateTime = 0;
-        return PlayerState.TOUCHDOWN;
+        return PlayerState.Touchdown;
     }
 
     @Override

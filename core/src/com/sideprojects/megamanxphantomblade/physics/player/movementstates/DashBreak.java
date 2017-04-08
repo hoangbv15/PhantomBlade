@@ -20,7 +20,7 @@ public class DashBreak extends Idle {
     @Override
     public PlayerState enter(PlayerBase player) {
         player.stateTime = 0;
-        return PlayerState.DASHBREAK;
+        return PlayerState.Dashbreak;
     }
 
     @Override

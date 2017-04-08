@@ -22,7 +22,7 @@ public class WallJump extends Jump {
     @Override
     public PlayerState enter(PlayerBase player) {
         super.enter(player);
-        return PlayerState.WALLJUMP;
+        return PlayerState.Walljump;
     }
 
     @Override

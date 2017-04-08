@@ -18,30 +18,30 @@ public abstract class PlayerSound implements PlayerStateChangeHandler {
     @Override
     public void callback(PlayerState previousState, PlayerState nextState) {
         switch (nextState) {
-            case TOUCHDOWN:
-            case RUN:
-            case IDLE:
-                if (previousState == PlayerState.FALL || previousState == PlayerState.WALLSLIDE) {
+            case Touchdown:
+            case Run:
+            case Idle:
+                if (previousState == PlayerState.Fall || previousState == PlayerState.Wallslide) {
                     playLand();
                 }
                 break;
-            case UPDASH:
-            case DASH:
+            case Updash:
+            case Dash:
                 playDash();
                 break;
-            case DASHBREAK:
+            case Dashbreak:
                 playDashBreak();
                 break;
-            case WALLJUMP:
+            case Walljump:
                 playWallJump();
                 break;
-            case JUMP:
+            case Jump:
                 playJump();
                 break;
-            case WALLSLIDE:
+            case Wallslide:
                 playWallSlide();
                 break;
-            case DEAD:
+            case Dead:
                 playDead();
                 break;
         }

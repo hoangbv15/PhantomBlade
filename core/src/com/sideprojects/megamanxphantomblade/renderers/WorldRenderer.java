@@ -113,15 +113,32 @@ public class WorldRenderer implements Disposable {
     private void renderEnemies() {
         for (EnemyBase enemy: map.enemyList) {
             Vector2 pos = applyCameraLerp(enemy.pos);
-            if (enemy.isTakingDamage) {
-                batch.setShader(damagedShader);
+            if (enemy.currentFrame != null) {
+                if (enemy.isTakingDamage) {
+                    batch.setShader(damagedShader);
+                }
+                Vector2 padding = enemy.animationPadding;
+                batch.draw(enemy.currentFrame, pos.x + padding.x, pos.y + padding.y);
+                if (enemy.isTakingDamage) {
+                    batch.setShader(null);
+                }
             }
-            batch.draw(enemy.currentFrame, pos.x, pos.y);
-            if (enemy.isTakingDamage) {
-                batch.setShader(null);
+
+            Vector2 padding = enemy.getAuxiliaryAnimationPadding();
+            if (padding != null) {
+                float x = pos.x + padding.x;
+                float y = pos.y + padding.y;
+                if (enemy.auxiliaryFrames != null) {
+                    for (Object frame : enemy.auxiliaryFrames.values()) {
+                        if (frame != null) {
+                            batch.draw((TextureRegion)frame, x, y);
+                        }
+                    }
+                }
             }
         }
     }
+
 
     private void renderPlayerAttack() {
         for (PlayerAttack attack: map.playerAttackList) {

@@ -1,11 +1,11 @@
-package com.sideprojects.megamanxphantomblade.player;
+package com.sideprojects.megamanxphantomblade.enemies;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.animation.AnimationCache;
+import com.sideprojects.megamanxphantomblade.animation.Sprites;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
  * Loads player animations depending on the player state and direction
  * Created by buivuhoang on 05/02/17.
  */
-public abstract class PlayerAnimationBase {
+public abstract class EnemyAnimationBase {
     protected class AnimationKey {
         private Type type;
         private int direction;
@@ -52,20 +52,14 @@ public abstract class PlayerAnimationBase {
 
     private AnimationCache<AnimationKey> animationCache;
 
-    public PlayerAnimationBase() {
+    public EnemyAnimationBase() {
         animationCache = new AnimationCache<AnimationKey>();
     }
 
-    public Animation<TextureRegion> get(Type type, int direction, boolean lowHealth, boolean isAttacking, Damage.Type attackType, boolean isFirstAttackFrame, boolean changeStateDuringAttack) {
-        if (isAttacking) {
-            Animation<TextureRegion> attack = getAttack(type, direction, attackType, isFirstAttackFrame, changeStateDuringAttack);
-            if (attack != null) {
-                return attack;
-            }
-        }
-        String texture = getTextureAtlas(type, lowHealth);
-        List<Integer> index = getAnimationIndex(type, lowHealth);
-        float frameDuration = getFrameDuration(type, lowHealth);
+    public Animation<TextureRegion> get(Type type, int direction) {
+        String texture = getTextureAtlas(type);
+        List<Integer> index = getAnimationIndex(type);
+        float frameDuration = getFrameDuration(type);
 
         return retrieveFromCache(type, direction, texture, index, frameDuration);
     }
@@ -74,30 +68,38 @@ public abstract class PlayerAnimationBase {
         return get(type, MovingObject.RIGHT);
     }
 
-    public Animation<TextureRegion> get(Type type, int direction) {
-        return get(type, direction, false, false, Damage.Type.Light, false, false);
-    }
-
     public Animation<TextureRegion> retrieveFromCache(Type type, int direction, String texture, List<Integer> animationIndex, float frameDuration) {
         AnimationKey key = new AnimationKey(type, direction, texture, animationIndex);
-        boolean flipped = direction == MovingObject.LEFT;
+        boolean flipped = direction == MovingObject.RIGHT;
         return animationCache.retrieveFromCache(key, flipped, texture, animationIndex, frameDuration);
     }
 
-    public abstract Animation<TextureRegion> getAttack(Type type, int direction, Damage.Type attackType, boolean isFirstAttackFrame, boolean changeStateDuringAttack);
-    public abstract float getAttackFrameDuration(Type type, Damage.Type attackType);
-    public abstract float getAttackDuration(Type type, Damage.Type attackType, boolean changeStateDuringAttack);
-    protected abstract String getTextureAtlas(Type type, boolean lowHealth);
-    protected abstract List<Integer> getAnimationIndex(Type type, boolean lowHealth);
-    protected abstract boolean isLooping(Type type, boolean isAttacking);
+    protected abstract List<Integer> getAnimationIndex(Type type);
+    public abstract boolean isLooping(Type type);
 
     /**
      * Padding to give the sprite for LEFT direction.
      * RIGHT direction will be automatically mirrored.
      */
-    protected abstract Vector2 getAnimationPaddingX(Type type, int direction, boolean isAttacking, Damage.Type attackType, boolean changeStateDuringAttack);
+    public abstract Vector2 getAnimationPaddingX(Type type, int direction);
 
-    protected abstract float getFrameDuration(Type type, boolean lowHealth);
+    protected String getTextureAtlas(Type type) {
+        switch (type) {
+            case Die:
+                return Sprites.EnemyExplode;
+            default:
+                return null;
+        }
+    }
+
+    protected float getFrameDuration(Type type) {
+        switch (type) {
+            case Die:
+                return 0.04f;
+            default:
+                return 0.1f;
+        }
+    }
 
     public enum Type {
         // Common
@@ -105,26 +107,8 @@ public abstract class PlayerAnimationBase {
         Run,
         Jump,
         Fall,
-        Touchdown,
-        Wallslide,
-        Walljump,
-        Dash,
-        Dashbreak,
-        Dashrocket,
-        Updash,
-        Updashrocket,
-        DamagedNormal,
-        BulletNoDamageExplode,
-        // X
-        BulletSmall,
-        BulletSmallMuzzle,
-        BulletSmallExplode,
-        BulletMedium,
-        BulletHeavy,
-        BulletHeavyMuzzle,
-        BulletMediumMuzzle,
-        ChargeInnerCircles,
-        BulletHeavyExplode,
-        ChargeOuterCircles
+        Attack,
+        Damaged,
+        Die
     }
 }

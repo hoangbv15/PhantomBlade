@@ -64,7 +64,7 @@ public class Dash extends PlayerMovementStateBase {
     @Override
     public PlayerState enter(PlayerBase player) {
         player.stateTime = 0;
-        return PlayerState.DASH;
+        return PlayerState.Dash;
     }
 
     @Override

@@ -25,13 +25,13 @@ public class PlayerXSound extends PlayerSound {
     public void callback(PlayerState previousState, PlayerState nextState) {
         super.callback(previousState, nextState);
         switch (nextState) {
-            case WALLJUMP:
+            case Walljump:
                 soundPlayer.playInParallel(Sounds.XJumpShout1);
                 break;
-            case JUMP:
+            case Jump:
                 playRandomJumpShout();
                 break;
-            case DAMAGEDNORMAL:
+            case DamagedNormal:
                 playerRandomDamagedShout();
                 break;
         }

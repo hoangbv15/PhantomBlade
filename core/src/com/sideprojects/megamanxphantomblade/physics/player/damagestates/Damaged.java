@@ -27,11 +27,11 @@ public class Damaged extends PlayerDamageState {
                 player.isAttacking = false;
                 player.firstFramesOfAttacking = false;
                 if (player.isDead()) {
-                    physics.playerSound.callback(player.state, PlayerState.DEAD);
-                    player.state = PlayerState.DEAD;
+                    physics.playerSound.callback(player.state, PlayerState.Dead);
+                    player.state = PlayerState.Dead;
                 } else {
-                    physics.playerSound.callback(player.state, PlayerState.DAMAGEDNORMAL);
-                    player.state = PlayerState.DAMAGEDNORMAL;
+                    physics.playerSound.callback(player.state, PlayerState.DamagedNormal);
+                    player.state = PlayerState.DamagedNormal;
                     if (player.canIssueLowHealthWarning && player.isLowHealth()) {
                         physics.playerSound.lowHealthWarning();
                     }

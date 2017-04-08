@@ -1,14 +1,11 @@
 package com.sideprojects.megamanxphantomblade.physics.player;
 
-import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.input.Command;
 import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.physics.Physics;
-import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
-import com.sideprojects.megamanxphantomblade.physics.PhysicsBase;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
 import com.sideprojects.megamanxphantomblade.physics.player.damagestates.NotDamaged;
 import com.sideprojects.megamanxphantomblade.physics.player.jumpdashstate.NotJumpDashing;
@@ -97,7 +94,7 @@ public abstract class PlayerPhysics extends Physics {
 
             // Dashing
             boolean doNotApplyGravity = false;
-            if (player.state == PlayerState.DASH) {
+            if (player.state == PlayerState.Dash) {
                 player.vel.x = (VELOCITY_WALK + VELOCITY_DASH_ADDITION) * player.direction;
                 // Air dash
                 if (!player.grounded) {
@@ -106,7 +103,7 @@ public abstract class PlayerPhysics extends Physics {
                 }
             }
 
-            if (player.state == PlayerState.UPDASH) {
+            if (player.state == PlayerState.Updash) {
                 player.vel.y = VELOCITY_JUMP + VELOCITY_DASH_ADDITION;
                 doNotApplyGravity = true;
             }
@@ -149,10 +146,10 @@ public abstract class PlayerPhysics extends Physics {
 
     private void applyGravity(MovingObject object, float gravity, float maxFallspeed, float wallslideFallspeed, float delta) {
         float finalFallspeed = maxFallspeed;
-        if (player.state == PlayerState.WALLSLIDE) {
+        if (player.state == PlayerState.Wallslide) {
             finalFallspeed = wallslideFallspeed;
         }
-        if (player.state == PlayerState.FALL && object.vel.y > 0) {
+        if (player.state == PlayerState.Fall && object.vel.y > 0) {
             object.vel.y = 0;
         }
         this.applyGravity(object, gravity, finalFallspeed, delta);

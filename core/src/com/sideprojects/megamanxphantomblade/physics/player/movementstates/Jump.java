@@ -41,7 +41,7 @@ public class Jump extends PlayerNonDashState {
     public PlayerState enter(PlayerBase player) {
         player.stateTime = 0;
         player.grounded = false;
-        return PlayerState.JUMP;
+        return PlayerState.Jump;
     }
 
     @Override
