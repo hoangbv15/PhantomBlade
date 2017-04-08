@@ -186,7 +186,7 @@ public abstract class PhysicsBase {
 
     private EnemyBase getCollidingEnemy(MovingObject object, MapBase map) {
         for (EnemyBase enemy: map.enemyList) {
-            if (enemy.isDead()) {
+            if (enemy.isDead() || !enemy.spawned) {
                 continue;
             }
             if (object.bounds.overlaps(enemy.bounds)) {

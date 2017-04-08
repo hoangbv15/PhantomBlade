@@ -19,7 +19,7 @@ import java.util.Map;
  * Created by buivuhoang on 19/03/17.
  */
 public abstract class EnemyBase<T> extends MovingObject {
-    private Vector2 spawnPos;
+    public Vector2 spawnPos;
 
     public boolean spawned;
     public boolean canSpawn;

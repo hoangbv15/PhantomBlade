@@ -117,6 +117,9 @@ public class WorldRenderer implements Disposable {
 
     private void renderEnemies(float delta) {
         for (EnemyBase enemy: map.enemyList) {
+            if (!enemy.spawned) {
+                continue;
+            }
             Vector2 pos = applyCameraLerp(enemy.pos);
             if (enemy.currentFrame != null) {
                 if (enemy.isTakingDamage) {
