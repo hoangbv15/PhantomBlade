@@ -1,11 +1,16 @@
 package com.sideprojects.megamanxphantomblade.enemies;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,6 +24,7 @@ public abstract class EnemyBase<T> extends MovingObject {
 
     public EnemyAnimationBase animations;
     public Map<EnemyAnimationBase.Type, TextureRegion> auxiliaryFrames;
+    public List<ExplodeFragment> explodeFragments;
 
     public TextureRegion currentFrame;
     public Vector2 animationPadding;
@@ -33,7 +39,7 @@ public abstract class EnemyBase<T> extends MovingObject {
     private float takeDamageDuration = 0.1f;
     private float takeDamageStateTime;
 
-    private final MapBase map;
+    protected final MapBase map;
     protected EnemyScript script;
 
     private float deathExplosionStateTime;
@@ -45,6 +51,7 @@ public abstract class EnemyBase<T> extends MovingObject {
         isTakingDamage = false;
         canTakeDamage = true;
         canSpawn = true;
+        explodeFragments = new ArrayList<ExplodeFragment>();
         takeDamageStateTime = 0;
         stateTime = 0;
     }
@@ -62,12 +69,29 @@ public abstract class EnemyBase<T> extends MovingObject {
 
     public void update(float delta) {
         if (isDead()) {
-            sounds.playDie(delta);
+            if (deathExplosionStateTime == 0) {
+                sounds.playDie(delta);
+            }
             if (deathExplosionStateTime < deathExplosionTime()) {
                 deathExplosionStateTime += delta;
                 stateTime = deathExplosionStateTime;
+
+                // Add explosion fragments
+                Animation<TextureRegion> explodeFragmentAnimation = animations.get(EnemyAnimationBase.Type.ExplodeFragment, direction);
+                List<TextureRegion> fragmentFrames = Arrays.asList(explodeFragmentAnimation.getKeyFrames());
+                if (explodeFragments.isEmpty()) {
+                    for (TextureRegion fragmentFrame : fragmentFrames) {
+                        explodeFragments.add(new ExplodeFragment(fragmentFrame, pos.x - bounds.getWidth()/3f, pos.y - bounds.getHeight()/3f, MathUtils.random(2f), 5f));
+                    }
+                } else {
+                    for (ExplodeFragment fragment : explodeFragments) {
+                        script.applyGravity(fragment, map.GRAVITY, map.MAX_FALLSPEED, delta);
+                        fragment.update(delta);
+                    }
+                }
             } else {
                 despawn(false);
+                explodeFragments.clear();
             }
         } else {
             stateTime += delta;
@@ -103,7 +127,7 @@ public abstract class EnemyBase<T> extends MovingObject {
 
     protected abstract void updateAnimation(float delta);
 
-    public abstract Vector2 getAuxiliaryAnimationPadding();
+    public abstract Vector2 getAuxiliaryAnimationPadding(EnemyAnimationBase.Type type, float delta);
 
     public abstract int getMaxHealthPoints();
 }

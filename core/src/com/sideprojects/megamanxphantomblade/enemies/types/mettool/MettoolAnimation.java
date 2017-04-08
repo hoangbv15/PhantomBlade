@@ -33,6 +33,8 @@ public class MettoolAnimation extends EnemyAnimationBase {
                 return Arrays.asList(25, 26, 27, 28, 29, 30, 31, 32, 33, 34);
             case Attack:
                 return Arrays.asList(20, 21, 22, 23, 24);
+            case ExplodeFragment:
+                return Arrays.asList(8, 9, 10, 11);
             case Die:
                 return null;
             default:

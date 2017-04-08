@@ -55,7 +55,7 @@ public abstract class Physics extends PhysicsBase {
         return collisionList;
     }
 
-    protected void applyGravity(MovingObject object, float gravity, float maxFallspeed, float delta) {
+    public void applyGravity(MovingObject object, float gravity, float maxFallspeed, float delta) {
         if (object.vel.y > maxFallspeed) {
             object.vel.y -= gravity * delta;
         } else {

@@ -5,13 +5,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.Damage;
+import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyAnimationBase;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.math.VectorCache;
 import com.sideprojects.megamanxphantomblade.sound.SoundPlayer;
 
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Created by buivuhoang on 06/04/17.
@@ -30,7 +31,7 @@ public class Mettool extends EnemyBase<Mettool.State> {
 
     @Override
     protected float deathExplosionTime() {
-        return animations.get(EnemyAnimationBase.Type.Die).getAnimationDuration();
+        return 2;
     }
 
     @Override
@@ -71,8 +72,14 @@ public class Mettool extends EnemyBase<Mettool.State> {
     }
 
     @Override
-    public Vector2 getAuxiliaryAnimationPadding() {
-        return VectorCache.get(-25, -5);
+    public Vector2 getAuxiliaryAnimationPadding(EnemyAnimationBase.Type type, float delta) {
+        if (type == EnemyAnimationBase.Type.Die) {
+            if (direction == LEFT) {
+                return VectorCache.get(-20, -10);
+            }
+            return VectorCache.get(-13, -10);
+        }
+        return VectorCache.get(0, 0);
     }
 
     @Override

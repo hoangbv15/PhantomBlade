@@ -109,6 +109,7 @@ public abstract class EnemyAnimationBase {
         Fall,
         Attack,
         Damaged,
-        Die
+        Die,
+        ExplodeFragment
     }
 }
