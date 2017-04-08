@@ -17,6 +17,7 @@ import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory
 import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerFactory;
+import com.sideprojects.megamanxphantomblade.sound.SoundPlayer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -50,9 +51,13 @@ public abstract class MapBase implements Disposable {
 
     public Particles particles;
 
-    public MapBase(PlayerFactory playerFactory, PlayerPhysicsFactory playerPhysicsFactory) {
+    // This is DI to inject into enemies
+    private SoundPlayer soundPlayer;
+
+    public MapBase(PlayerFactory playerFactory, PlayerPhysicsFactory playerPhysicsFactory, SoundPlayer soundPlayer) {
         this.playerFactory = playerFactory;
         this.playerPhysicsFactory = playerPhysicsFactory;
+        this.soundPlayer = soundPlayer;
         particles = new Particles(20);
         enemyList = new ArrayList<EnemyBase>();
         playerAttackList = new Queue<PlayerAttack>(MAX_PLAYERATTACK);
@@ -96,7 +101,7 @@ public abstract class MapBase implements Disposable {
                 playerPhysics = playerPhysicsFactory.create(player);
             }
             if (MettoolSpawn.equals(object.getName())) {
-                enemyList.add(new Mettool(x, y, this));
+                enemyList.add(new Mettool(x, y, this, soundPlayer));
             }
         }
 

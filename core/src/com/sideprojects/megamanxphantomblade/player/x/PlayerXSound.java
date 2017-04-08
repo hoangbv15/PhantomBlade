@@ -1,5 +1,6 @@
 package com.sideprojects.megamanxphantomblade.player.x;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.player.PlayerSound;
 import com.sideprojects.megamanxphantomblade.sound.SoundPlayerBase;
@@ -104,6 +105,9 @@ public class PlayerXSound extends PlayerSound {
     @Override
     public void playAttackHeavy() {
         soundPlayer.playInParallel(Sounds.XAttackHeavy);
+        if (MathUtils.random(1) == 1) {
+            soundPlayer.playInParallel(Sounds.XHeavyAttackShout);
+        }
     }
 
     @Override

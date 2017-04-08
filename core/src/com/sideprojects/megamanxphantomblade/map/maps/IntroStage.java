@@ -13,13 +13,14 @@ import com.rahul.libgdx.parallax.Utils;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
 import com.sideprojects.megamanxphantomblade.player.PlayerFactory;
+import com.sideprojects.megamanxphantomblade.sound.SoundPlayer;
 
 /**
  * Created by buivuhoang on 04/02/17.
  */
 public class IntroStage extends MapBase {
-    public IntroStage(PlayerFactory playerFactory, PlayerPhysicsFactory playerPhysicsFactory) {
-        super(playerFactory, playerPhysicsFactory);
+    public IntroStage(PlayerFactory playerFactory, PlayerPhysicsFactory playerPhysicsFactory, SoundPlayer soundPlayer) {
+        super(playerFactory, playerPhysicsFactory, soundPlayer);
     }
 
     @Override

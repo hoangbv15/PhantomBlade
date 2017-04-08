@@ -9,6 +9,7 @@ import com.sideprojects.megamanxphantomblade.enemies.EnemyAnimationBase;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.math.VectorCache;
+import com.sideprojects.megamanxphantomblade.sound.SoundPlayer;
 
 import java.util.HashMap;
 
@@ -16,13 +17,14 @@ import java.util.HashMap;
  * Created by buivuhoang on 06/04/17.
  */
 public class Mettool extends EnemyBase<Mettool.State> {
-    public Mettool(float x, float y, MapBase map) {
+    public Mettool(float x, float y, MapBase map, SoundPlayer soundPlayer) {
         super(x, y, map);
         bounds = new Rectangle(x, y, 0.4f, 0.5f);
         damage = new Damage(Damage.Type.Normal, Damage.Side.None);
         script = new MettoolScript(this, map.player);
         auxiliaryFrames = new HashMap<EnemyAnimationBase.Type, TextureRegion>(2);
         animations = new MettoolAnimation();
+        sounds = new MettoolSound(soundPlayer);
         state = State.Walk;
     }
 

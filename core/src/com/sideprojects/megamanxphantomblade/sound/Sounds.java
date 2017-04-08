@@ -33,6 +33,7 @@ public class Sounds {
     public static String BulletHit = "sounds/PL00_U_00027.wav";
     public static String BulletNoDamage = "sounds/ST0E_U0_00005.wav";
     public static String Ready = "sounds/ST0E_U0_00015.wav";
+    public static String EnvironmentEnemyExplode = "sounds/ST0E_U0_00001.wav";
 
     // BGM
 }

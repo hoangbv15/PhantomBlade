@@ -23,6 +23,8 @@ public abstract class EnemyBase<T> extends MovingObject {
     public TextureRegion currentFrame;
     public Vector2 animationPadding;
 
+    protected EnemySound sounds;
+
     public T state;
     public Damage damage;
     public boolean isTakingDamage;
@@ -60,6 +62,7 @@ public abstract class EnemyBase<T> extends MovingObject {
 
     public void update(float delta) {
         if (isDead()) {
+            sounds.playDie(delta);
             if (deathExplosionStateTime < deathExplosionTime()) {
                 deathExplosionStateTime += delta;
                 stateTime = deathExplosionStateTime;

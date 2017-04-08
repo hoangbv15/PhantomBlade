@@ -32,9 +32,10 @@ public class PhantomBladeGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		keyMap = new KeyMap();
-		playerSounds = new PlayerXSound(new SoundPlayer());
+		SoundPlayer sound = new SoundPlayer();
+		playerSounds = new PlayerXSound(sound);
 		playerSounds.preload();
-		map = new IntroStage(new PlayerXFactory(), new PlayerXPhysicsFactory(new PlayerInputProcessor(keyMap), playerSounds));
+		map = new IntroStage(new PlayerXFactory(), new PlayerXPhysicsFactory(new PlayerInputProcessor(keyMap), playerSounds), sound);
 		mapRenderer = new WorldRenderer(map);
 		debugRenderer = new DebugRenderer(mapRenderer);
 		shapeRenderer = new ShapeRenderer();
