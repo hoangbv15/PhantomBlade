@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="left-up" width="180" height="10" tilewidth="62" tileheight="62" nextobjectid="30">
+<map version="1.0" orientation="orthogonal" renderorder="left-up" width="180" height="10" tilewidth="62" tileheight="62" nextobjectid="40">
  <tileset firstgid="1" name="ground" tilewidth="62" tileheight="62" tilecount="2" columns="0">
   <tile id="0">
    <image width="62" height="62" source="ground.png"/>
@@ -16,6 +16,16 @@
   <object id="26" name="MettoolSpawn" x="5181.33" y="143.667" width="56" height="40.6667"/>
   <object id="27" name="MettoolSpawn" x="7790" y="387" width="56" height="40.6667"/>
   <object id="28" name="MettoolSpawn" x="6961.33" y="323" width="56" height="40.6667"/>
+  <object id="30" name="MettoolSpawn" x="950" y="118.5" width="64" height="63"/>
+  <object id="31" name="MettoolSpawn" x="988" y="119.5" width="64" height="63"/>
+  <object id="32" name="MettoolSpawn" x="1015" y="119.5" width="64" height="63"/>
+  <object id="33" name="MettoolSpawn" x="1055" y="119.5" width="64" height="63"/>
+  <object id="34" name="MettoolSpawn" x="1099" y="120.5" width="64" height="63"/>
+  <object id="35" name="MettoolSpawn" x="1139" y="120.5" width="64" height="63"/>
+  <object id="36" name="MettoolSpawn" x="1184" y="120.5" width="64" height="63"/>
+  <object id="37" name="MettoolSpawn" x="1227" y="118.5" width="64" height="63"/>
+  <object id="38" name="MettoolSpawn" x="1266" y="115.5" width="64" height="63"/>
+  <object id="39" name="MettoolSpawn" x="1325" y="113.5" width="64" height="63"/>
  </objectgroup>
  <layer name="Map" width="180" height="10">
   <data encoding="base64">

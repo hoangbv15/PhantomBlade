@@ -19,6 +19,8 @@ import java.util.Map;
  * Created by buivuhoang on 19/03/17.
  */
 public abstract class EnemyBase<T> extends MovingObject {
+    private Vector2 spawnPos;
+
     public boolean spawned;
     public boolean canSpawn;
 
@@ -47,6 +49,7 @@ public abstract class EnemyBase<T> extends MovingObject {
     public EnemyBase(float x, float y, MapBase map) {
         this.map = map;
         pos = new Vector2(x, y);
+        spawnPos = new Vector2(x, y);
         vel = new Vector2(0, 0);
         isTakingDamage = false;
         canTakeDamage = true;
@@ -58,6 +61,10 @@ public abstract class EnemyBase<T> extends MovingObject {
 
     public final void despawn(boolean canSpawn) {
         spawned = false;
+        bounds.x = spawnPos.x;
+        bounds.y = spawnPos.y;
+        pos.x = bounds.x;
+        pos.y = bounds.y;
         this.canSpawn = canSpawn;
     }
 
