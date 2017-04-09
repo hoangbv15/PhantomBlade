@@ -75,9 +75,9 @@ public class Mettool extends EnemyBase<Mettool.State> {
     public Vector2 getAuxiliaryAnimationPadding(EnemyAnimationBase.Type type, float delta) {
         if (type == EnemyAnimationBase.Type.Die) {
             if (direction == LEFT) {
-                return VectorCache.get(-20, -10);
+                return VectorCache.get(-20, -20);
             }
-            return VectorCache.get(-13, -10);
+            return VectorCache.get(-13, -20);
         }
         return VectorCache.get(0, 0);
     }
