@@ -1,5 +1,6 @@
 package com.sideprojects.megamanxphantomblade.physics.player.x;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.input.Command;
@@ -56,7 +57,7 @@ public class PlayerXPhysics extends PlayerPhysics {
                 // if player state changes during attack
                 // set state time to after the first attack frames
                 // in order to play the ending animation
-                if (player.state == PlayerState.IDLE && prevState != player.state) {
+                if (player.state == PlayerState.Idle && prevState != player.state) {
                     player.changeStateDuringAttack = true;
                 }
                 prevState = player.state;
@@ -124,7 +125,7 @@ public class PlayerXPhysics extends PlayerPhysics {
     }
 
     private void executeAttack(MapBase map) {
-        if (player.state == PlayerState.IDLE) {
+        if (player.state == PlayerState.Idle) {
             player.stateTime = 0;
         }
         player.isAttacking = true;
@@ -137,11 +138,11 @@ public class PlayerXPhysics extends PlayerPhysics {
 
     private void createBullet(MapBase map) {
         int bulletDirection = player.direction;
-        if (player.state == PlayerState.WALLSLIDE) {
+        if (player.state == PlayerState.Wallslide) {
             bulletDirection = player.direction * -1;
         }
         Damage.Side side = bulletDirection == MovingObject.LEFT ? Damage.Side.Right : Damage.Side.Left;
-        Damage damage = new Damage(player.attackType, side);
+        Damage damage = new Damage(player.attackType, side, player.difficulty);
         map.addPlayerAttack(new XBuster(player, damage, bulletDirection, player.animations, playerSound));
     }
 

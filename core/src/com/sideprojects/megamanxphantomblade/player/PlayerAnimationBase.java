@@ -5,13 +5,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.MovingObject;
-import com.sideprojects.megamanxphantomblade.animation.AnimationLoader;
+import com.sideprojects.megamanxphantomblade.animation.AnimationCache;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
+ * Loads player animations depending on the player state and direction
  * Created by buivuhoang on 05/02/17.
  */
 public abstract class PlayerAnimationBase {
@@ -51,10 +50,10 @@ public abstract class PlayerAnimationBase {
         }
     }
 
-    private Map<AnimationKey, Animation<TextureRegion>> animationCache;
+    private AnimationCache<AnimationKey> animationCache;
 
     public PlayerAnimationBase() {
-        animationCache = new HashMap<AnimationKey, Animation<TextureRegion>>();
+        animationCache = new AnimationCache<AnimationKey>();
     }
 
     public Animation<TextureRegion> get(Type type, int direction, boolean lowHealth, boolean isAttacking, Damage.Type attackType, boolean isFirstAttackFrame, boolean changeStateDuringAttack) {
@@ -81,13 +80,8 @@ public abstract class PlayerAnimationBase {
 
     public Animation<TextureRegion> retrieveFromCache(Type type, int direction, String texture, List<Integer> animationIndex, float frameDuration) {
         AnimationKey key = new AnimationKey(type, direction, texture, animationIndex);
-        if (!animationCache.containsKey(key)) {
-            boolean flipped = direction == MovingObject.LEFT;
-            animationCache.put(key,
-                    AnimationLoader.load(texture, animationIndex, flipped, frameDuration));
-        }
-
-        return animationCache.get(key);
+        boolean flipped = direction == MovingObject.LEFT;
+        return animationCache.retrieveFromCache(key, flipped, texture, animationIndex, frameDuration);
     }
 
     public abstract Animation<TextureRegion> getAttack(Type type, int direction, Damage.Type attackType, boolean isFirstAttackFrame, boolean changeStateDuringAttack);

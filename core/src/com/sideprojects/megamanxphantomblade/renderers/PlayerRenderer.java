@@ -12,7 +12,6 @@ import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.player.PlayerAnimationBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.ChargeShader;
-import com.sideprojects.megamanxphantomblade.renderers.shaders.DamagedShader;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.TraceShader;
 
 /**
@@ -90,10 +89,10 @@ public class PlayerRenderer implements Disposable {
 
         renderPlayerTrace(currentFrame, posX, posY);
         if (player.currentDashRocketFrame != null) {
-            if (player.state == PlayerState.DASH) {
+            if (player.state == PlayerState.Dash) {
                 renderPlayerDashRocket(originPosX, posY);
             }
-            if (player.state == PlayerState.UPDASH) {
+            if (player.state == PlayerState.Updash) {
                 renderPlayerUpDashRocket(originPosX, posY);
             }
         }
@@ -121,7 +120,7 @@ public class PlayerRenderer implements Disposable {
         if (player.invincible || player.isCharging) {
             batch.setShader(null);
         }
-        renderPlayerCharge(originPosX, posY);
+        renderPlayerAuxiliaryAnimation(originPosX, posY);
     }
 
     private void renderPlayerDashRocket(float posX, float posY) {
@@ -142,7 +141,7 @@ public class PlayerRenderer implements Disposable {
     }
 
     private void renderPlayerTrace(TextureRegion currentFrame, float posX, float posY) {
-        if (traceFrameSkipCount != traceFrameSkip) {
+        if (traceFrameSkipCount < traceFrameSkip) {
             traceFrameSkipCount++;
         } else {
             if (startRemovingTraces) {
@@ -151,7 +150,7 @@ public class PlayerRenderer implements Disposable {
             }
             traceFrameSkipCount = 0;
             // If player is dashing, draw a trace
-            if (player.state == PlayerState.DASH || player.state == PlayerState.UPDASH || player.isJumpDashing) {
+            if (player.state == PlayerState.Dash || player.state == PlayerState.Updash || player.isJumpDashing) {
                 lastPlayerFrameQueue.addLast(currentFrame);
                 lastPlayerPositionQueue.addLast(new Vector2(posX, posY));
             }
@@ -160,7 +159,7 @@ public class PlayerRenderer implements Disposable {
             }
         }
 
-        if (player.state == PlayerState.DASH || player.state == PlayerState.UPDASH || player.isJumpDashing) {
+        if (player.state == PlayerState.Dash || player.state == PlayerState.Updash || player.isJumpDashing) {
             if (lastPlayerFrameQueue.size != numOfTraces) {
                 startRemovingTraces = false;
             }
@@ -182,14 +181,16 @@ public class PlayerRenderer implements Disposable {
         batch.setShader(null);
     }
 
-    private void renderPlayerCharge(float posX, float posY) {
-        Vector2 padding = player.getChargeAnimationPadding();
-        float x = posX + padding.x;
-        float y = posY + padding.y;
-        if (player.attackChargeFrames != null) {
-            for (TextureRegion frame: player.attackChargeFrames.values()) {
-                if (frame != null) {
-                    batch.draw(frame, x, y);
+    private void renderPlayerAuxiliaryAnimation(float posX, float posY) {
+        Vector2 padding = player.getAuxiliaryAnimationPadding();
+        if (padding != null) {
+            float x = posX + padding.x;
+            float y = posY + padding.y;
+            if (player.auxiliaryFrames != null) {
+                for (TextureRegion frame : player.auxiliaryFrames.values()) {
+                    if (frame != null) {
+                        batch.draw(frame, x, y);
+                    }
                 }
             }
         }

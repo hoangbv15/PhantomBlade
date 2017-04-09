@@ -6,14 +6,20 @@ import java.util.List;
  * Created by buivuhoang on 25/02/17.
  */
 public class CollisionList {
+    private static float edgeThreshold = 0.2f;
     public List<Collision> toList;
     private boolean isCollidingSide;
     private float distanceToSideCollision;
     private Collision.Side collidingSide;
+    private boolean isAtEdgeLeft;
+    private boolean isAtEdgeRight;
 
     public CollisionList(List<Collision> collisionList) {
         this.toList = collisionList;
         isCollidingSide = false;
+        isAtEdgeLeft = false;
+        isAtEdgeRight = false;
+        Collision up = null;
         for (Collision collision: toList) {
             if (collision.side == Collision.Side.Left ||
                     collision.side == Collision.Side.Right ||
@@ -21,6 +27,19 @@ public class CollisionList {
                 isCollidingSide = true;
                 distanceToSideCollision = collision.dist;
                 collidingSide = collision.side;
+            }
+            if (collision.side == Collision.Side.Up) {
+                up = collision;
+            }
+        }
+        // Check if we are at the edge
+        if (up != null && !isCollidingSide) {
+            // We are only colliding with the up side
+            // That means there's a chance we might be at the edge
+            if (up.tileLeft == null && Math.abs(up.tile.x - up.getPrecollidePos().x) <= edgeThreshold) {
+                isAtEdgeLeft = true;
+            } else if (up.tileRight == null && Math.abs(up.tile.x + up.tile.getWidth() - up.getPrecollidePos().x) <= edgeThreshold) {
+                isAtEdgeRight = true;
             }
         }
     }
@@ -34,4 +53,16 @@ public class CollisionList {
     }
 
     public Collision.Side collidingSide() { return collidingSide; }
+
+    public boolean isAtEdge() {
+        return isAtEdgeLeft || isAtEdgeRight;
+    }
+
+    public boolean isAtEdgeLeft() {
+        return isAtEdgeLeft;
+    }
+
+    public boolean isAtEdgeRight() {
+        return isAtEdgeRight;
+    }
 }

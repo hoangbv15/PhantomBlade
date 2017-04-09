@@ -46,7 +46,7 @@ public class Updash extends PlayerMovementStateBase {
     public PlayerState enter(PlayerBase player) {
         player.stateTime = 0;
         player.grounded = false;
-        return PlayerState.UPDASH;
+        return PlayerState.Updash;
     }
 
     @Override

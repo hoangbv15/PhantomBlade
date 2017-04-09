@@ -47,7 +47,7 @@ public class WallSlide extends PlayerMovementStateBase {
     @Override
     public PlayerState enter(PlayerBase player) {
         player.stateTime = 0;
-        return PlayerState.WALLSLIDE;
+        return PlayerState.Wallslide;
     }
 
     @Override

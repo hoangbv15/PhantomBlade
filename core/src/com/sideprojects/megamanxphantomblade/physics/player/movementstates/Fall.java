@@ -41,7 +41,7 @@ public class Fall extends PlayerNonDashState {
     public PlayerState enter(PlayerBase player) {
         player.stateTime = 0;
         player.grounded = false;
-        return PlayerState.FALL;
+        return PlayerState.Fall;
     }
 
     @Override

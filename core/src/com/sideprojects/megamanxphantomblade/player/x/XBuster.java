@@ -208,7 +208,7 @@ public class XBuster extends PlayerAttack {
                 currentFrame = animation.getKeyFrame(stateTime, true);
             }
         }
-        if (stateTime <= muzzleTime && !explode) {// && player.state != PlayerState.IDLE) {
+        if (stateTime <= muzzleTime && !explode) {// && player.state != PlayerState.Idle) {
             muzzleFrame = muzzleAnimation.getKeyFrame(stateTime, false);
             if (player.direction != playerStartDirection) {
                 stopUpdatingMuzzlePos = true;
@@ -231,32 +231,32 @@ public class XBuster extends PlayerAttack {
         }
 
         switch(player.state) {
-            case RUN:
+            case Run:
                 paddingX += getPadding(xRunPosPadding, frameIndex) * bulletDirection;
                 paddingY += getPadding(yRunPosPadding, frameIndex);
                 break;
-            case WALLJUMP:
-            case JUMP:
-            case FALL:
+            case Walljump:
+            case Jump:
+            case Fall:
                 paddingY = P(35);
                 paddingX += P(2);
                 if (bulletDirection == MovingObject.LEFT) {
                     paddingX = -P(22);
                 }
 
-                if (player.state == PlayerState.FALL) {
+                if (player.state == PlayerState.Fall) {
                     paddingY = P(34);
                 }
                 break;
-            case DASH:
+            case Dash:
                 paddingX += P(2) * bulletDirection;
                 paddingY = getPadding(yDashPosPadding, frameIndex);
                 break;
-            case DASHBREAK:
+            case Dashbreak:
                 paddingX += getPadding(xDashBreakPosPadding, frameIndex) * bulletDirection;
                 paddingY = getPadding(yDashBreakPosPadding, frameIndex);
                 break;
-            case WALLSLIDE:
+            case Wallslide:
                 paddingX += P(5) * direction;
                 paddingY = P(29);
                 break;

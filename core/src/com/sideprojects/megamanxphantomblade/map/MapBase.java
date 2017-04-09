@@ -1,12 +1,9 @@
 package com.sideprojects.megamanxphantomblade.map;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Queue;
@@ -14,11 +11,13 @@ import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.animation.Particles;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
+import com.sideprojects.megamanxphantomblade.enemies.types.mettool.Mettool;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
 import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerFactory;
+import com.sideprojects.megamanxphantomblade.sound.SoundPlayer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,7 +30,7 @@ public abstract class MapBase implements Disposable {
     public static String MapLayer = "Map";
     public static String ObjectLayer = "Objects";
     public static String XSpawn = "XSpawn";
-    public static String EnemySpawn = "EnemySpawn";
+    public static String MettoolSpawn = "MettoolSpawn";
 
     public float GRAVITY = 15f;
     public float MAX_FALLSPEED = -8f;
@@ -52,13 +51,17 @@ public abstract class MapBase implements Disposable {
 
     public Particles particles;
 
-    public MapBase(PlayerFactory playerFactory, PlayerPhysicsFactory playerPhysicsFactory) {
+    // This is DI to inject into enemies
+    private SoundPlayer soundPlayer;
+
+    public MapBase(PlayerFactory playerFactory, PlayerPhysicsFactory playerPhysicsFactory, SoundPlayer soundPlayer, int difficulty) {
         this.playerFactory = playerFactory;
         this.playerPhysicsFactory = playerPhysicsFactory;
+        this.soundPlayer = soundPlayer;
         particles = new Particles(20);
         enemyList = new ArrayList<EnemyBase>();
         playerAttackList = new Queue<PlayerAttack>(MAX_PLAYERATTACK);
-        loadMap();
+        loadMap(difficulty);
     }
 
     public float getTileWidth() {
@@ -81,7 +84,7 @@ public abstract class MapBase implements Disposable {
 
     public abstract ParallaxBackground getBackground();
 
-    private void loadMap() {
+    private void loadMap(int difficulty) {
         tiledMap = getMapResource();
         mapLayer = (TiledMapTileLayer)tiledMap.getLayers().get(MapLayer);
 
@@ -94,12 +97,11 @@ public abstract class MapBase implements Disposable {
             float x = object.getRectangle().x / getTileWidth();
             float y = object.getRectangle().y / getTileHeight();
             if (XSpawn.equals(object.getName())) {
-                player = playerFactory.createPlayer(x, y);
+                player = playerFactory.createPlayer(x, y, difficulty);
                 playerPhysics = playerPhysicsFactory.create(player);
             }
-            System.out.println(object.getName());
-            if (EnemySpawn.equals(object.getName())) {
-                enemyList.add(new EnemyBase(x, y));
+            if (MettoolSpawn.equals(object.getName())) {
+                enemyList.add(new Mettool(x, y, this, soundPlayer, difficulty));
             }
         }
 
@@ -114,6 +116,15 @@ public abstract class MapBase implements Disposable {
         }
     }
 
+    /**
+     * This determines whether the point is potentially visible to the player
+     * The viewport height and width are 9 and 16. Half of those are 4.5 and 8.
+     * We allow a bit of leeway by giving another 1/4th of the values here.
+     */
+    private boolean isPointInPlayerRange(float x, float y) {
+        return Math.abs((int)x - (int)player.bounds.x) < 12 && Math.abs((int)y - (int)player.bounds.y) < 7;
+    }
+
     public void update(float deltaTime) {
         playerPhysics.update(player, deltaTime, this);
         player.update(this, deltaTime);
@@ -122,18 +133,29 @@ public abstract class MapBase implements Disposable {
         while (i.hasNext()) {
             PlayerAttack attack = i.next();
             attack.update(player, deltaTime);
-            playerPhysics.dealPlayerAttackDamage(attack, this);
+            if (!isPointInPlayerRange(attack.bounds.x, attack.bounds.y)) {
+                attack.shouldBeRemoved = true;
+            }
             if (attack.shouldBeRemoved) {
                 i.remove();
+            } else {
+                playerPhysics.dealDamageIfPlayerAttackHitsEnemy(attack, this);
             }
         }
 
-        Iterator<EnemyBase> j = enemyList.iterator();
-        while (j.hasNext()) {
-            EnemyBase enemy = j.next();
-            enemy.update(deltaTime);
-            if (enemy.shouldBeRemoved) {
-                j.remove();
+        for (EnemyBase enemy : enemyList) {
+            // If the enemy is outside of player's range, kill it
+            if (!isPointInPlayerRange(enemy.bounds.x, enemy.bounds.y)) {
+                if (isPointInPlayerRange(enemy.spawnPos.x, enemy.spawnPos.y)) {
+                    enemy.despawn(false);
+                } else {
+                    enemy.despawn(true);
+                }
+            } else if (!enemy.spawned && enemy.canSpawn) {
+                enemy.spawn();
+            }
+            if (enemy.spawned) {
+                enemy.update(deltaTime);
             }
         }
     }

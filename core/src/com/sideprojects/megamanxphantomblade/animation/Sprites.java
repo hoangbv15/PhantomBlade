@@ -43,6 +43,10 @@ public class Sprites {
     public static String WallKick = "sprites/wallslide_kick.txt";
     public static String DashDust = "sprites/dash_dust.txt";
 
+    // Enemies
+    public static String EnemyExplode = "sprites/enemies/enemy_explode.txt";
+    public static String Mettool = "sprites/enemies/mettool.txt";
+
     // GUI elements
     public static String GuiElements = "sprites/ingame_gui.txt";
 }

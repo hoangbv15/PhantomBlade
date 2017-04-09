@@ -25,11 +25,11 @@ public class PlayerX extends PlayerBase {
     private float almostChargeStateTime;
     private float fullyChargedStateTime;
 
-    protected PlayerX(float x, float y) {
-        super(x, y);
+    protected PlayerX(float x, float y, int difficulty) {
+        super(x, y, difficulty);
         bounds.width = 0.4f;
         bounds.height = 0.7f;
-        attackChargeFrames = new HashMap<PlayerAnimationBase.Type, TextureRegion>(2);
+        auxiliaryFrames = new HashMap<PlayerAnimationBase.Type, TextureRegion>(2);
         List<Integer> outerCircleChargeAnimationIndex = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
         List<Integer> innerCircleChargeAnimationIndex = Arrays.asList(13, 11, 13, 10, 13, 12, 13, 14);
         List<Integer> innerCircleAlmostChargeAnimationIndex = Arrays.asList(10, 14, 11, 14, 12, 10, 13, 11);
@@ -69,12 +69,12 @@ public class PlayerX extends PlayerBase {
             almostChargeStateTime = 0;
             fullyChargedStateTime = 0;
         }
-        attackChargeFrames.put(PlayerAnimationBase.Type.ChargeOuterCircles, outerCircleFrame);
-        attackChargeFrames.put(PlayerAnimationBase.Type.ChargeInnerCircles, innerCircleFrame);
+        auxiliaryFrames.put(PlayerAnimationBase.Type.ChargeOuterCircles, outerCircleFrame);
+        auxiliaryFrames.put(PlayerAnimationBase.Type.ChargeInnerCircles, innerCircleFrame);
     }
 
     @Override
-    public Vector2 getChargeAnimationPadding() {
+    public Vector2 getAuxiliaryAnimationPadding() {
         float x = -outerCircleChargeAnimation.getKeyFrame(0).getRegionWidth() / 3f;
         float y = -outerCircleChargeAnimation.getKeyFrame(0).getRegionHeight() / 4f;
         return VectorCache.get(x, y);

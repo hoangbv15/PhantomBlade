@@ -14,9 +14,9 @@ public abstract class PlayerNonDashState extends PlayerMovementStateBase {
 
     public PlayerNonDashState(InputProcessor input, PlayerBase player, PlayerState lastState, PlayerStateChangeHandler stateChangeHandler) {
         super(player, lastState, stateChangeHandler);
-        if (lastState == PlayerState.DASH
-                || lastState == PlayerState.UPDASH
-                || lastState == PlayerState.DASHBREAK
+        if (lastState == PlayerState.Dash
+                || lastState == PlayerState.Updash
+                || lastState == PlayerState.Dashbreak
                 || input.isCommandPressed(Command.DASH)
                 || player.isJumpDashing) {
             canDash = false;

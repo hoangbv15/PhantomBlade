@@ -24,7 +24,6 @@ public abstract class PhysicsBase {
     // Debug property, used for rendering collisions to the screen. Needs to be public
     public CollisionList collisions;
 
-    protected InputProcessor input;
     // Variables for push back
     private float currentPushBackDurationToGo;
     protected abstract float getPushBackDuration();
@@ -32,8 +31,7 @@ public abstract class PhysicsBase {
     private int pushBackDirection;
     private boolean isBeingPushedBack;
 
-    public PhysicsBase(InputProcessor input) {
-        this.input = input;
+    public PhysicsBase() {
         collisions = new CollisionList(new ArrayList<Collision>());
         isBeingPushedBack = false;
     }
@@ -142,7 +140,7 @@ public abstract class PhysicsBase {
             if (right.point != null) collisionList.add(right);
         }
         if (tileUp == null) {
-            Collision up = new Collision(GeoMath.findIntersectionUp(tile, start, end), Collision.Side.Up, ray, tile);
+            Collision up = new Collision(GeoMath.findIntersectionUp(tile, start, end), Collision.Side.Up, ray, tile, tileLeft, tileRight);
             if (up.point != null) collisionList.add(up);
         }
         if (tileDown == null) {
@@ -172,7 +170,7 @@ public abstract class PhysicsBase {
         return enemy.damage;
     }
 
-    public final void dealPlayerAttackDamage(PlayerAttack attack, MapBase map) {
+    public final void dealDamageIfPlayerAttackHitsEnemy(PlayerAttack attack, MapBase map) {
         if (attack.isDead()) {
             return;
         }
@@ -188,7 +186,7 @@ public abstract class PhysicsBase {
 
     private EnemyBase getCollidingEnemy(MovingObject object, MapBase map) {
         for (EnemyBase enemy: map.enemyList) {
-            if (enemy.isDead()) {
+            if (enemy.isDead() || !enemy.spawned) {
                 continue;
             }
             if (object.bounds.overlaps(enemy.bounds)) {

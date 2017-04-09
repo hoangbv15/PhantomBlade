@@ -1,6 +1,7 @@
 package com.sideprojects.megamanxphantomblade.renderers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -14,11 +15,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 import com.rahul.libgdx.parallax.ParallaxBackground;
+import com.sideprojects.megamanxphantomblade.enemies.EnemyAnimationBase;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
+import com.sideprojects.megamanxphantomblade.enemies.ExplodeFragment;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.DamagedShader;
+
+import java.util.List;
 
 /**
  * Created by buivuhoang on 04/02/17.
@@ -88,7 +93,7 @@ public class WorldRenderer implements Disposable {
         renderMap();
         batch.setProjectionMatrix(gameCam.combined);
         batch.begin();
-        renderEnemies();
+        renderEnemies(delta);
         playerRenderer.render(pos.x, pos.y, delta);
         renderPlayerAttack();
         renderParticles();
@@ -110,18 +115,49 @@ public class WorldRenderer implements Disposable {
         mapRenderer.render();
     }
 
-    private void renderEnemies() {
+    private void renderEnemies(float delta) {
         for (EnemyBase enemy: map.enemyList) {
-            Vector2 pos = applyCameraLerp(enemy.pos);
-            if (enemy.isTakingDamage) {
-                batch.setShader(damagedShader);
+            if (!enemy.spawned) {
+                continue;
             }
-            batch.draw(enemy.currentFrame, pos.x, pos.y);
-            if (enemy.isTakingDamage) {
-                batch.setShader(null);
+            Vector2 pos = applyCameraLerp(enemy.pos);
+            if (enemy.currentFrame != null) {
+                if (enemy.isTakingDamage) {
+                    batch.setShader(damagedShader);
+                }
+                Vector2 padding = enemy.animationPadding;
+                batch.draw(enemy.currentFrame, pos.x + padding.x, pos.y + padding.y);
+                if (enemy.isTakingDamage) {
+                    batch.setShader(null);
+                }
+            }
+
+            if (enemy.explodeFragments != null) {
+                for (Object item: enemy.explodeFragments) {
+                    ExplodeFragment fragment = (ExplodeFragment)item;
+                    Vector2 fragmentPos = applyCameraLerp(fragment.pos);
+                    Color color = batch.getColor();
+                    color.a = 0.9f;
+                    batch.setColor(color);
+                    batch.draw(fragment.frame, fragmentPos.x, fragmentPos.y);
+                    batch.setColor(Color.WHITE);
+                }
+            }
+
+            if (enemy.auxiliaryFrames != null) {
+                for (Object key : enemy.auxiliaryFrames.keySet()) {
+                    TextureRegion frame = (TextureRegion)enemy.auxiliaryFrames.get(key);
+                    Vector2 padding = enemy.getAuxiliaryAnimationPadding((EnemyAnimationBase.Type) key, delta);
+                    float x = pos.x + padding.x;
+                    float y = pos.y + padding.y;
+                    if (frame != null) {
+                        batch.draw(frame, x, y);
+                    }
+                }
             }
         }
     }
+
 
     private void renderPlayerAttack() {
         for (PlayerAttack attack: map.playerAttackList) {
