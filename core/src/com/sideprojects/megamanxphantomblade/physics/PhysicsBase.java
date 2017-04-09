@@ -140,7 +140,7 @@ public abstract class PhysicsBase {
             if (right.point != null) collisionList.add(right);
         }
         if (tileUp == null) {
-            Collision up = new Collision(GeoMath.findIntersectionUp(tile, start, end), Collision.Side.Up, ray, tile);
+            Collision up = new Collision(GeoMath.findIntersectionUp(tile, start, end), Collision.Side.Up, ray, tile, tileLeft, tileRight);
             if (up.point != null) collisionList.add(up);
         }
         if (tileDown == null) {

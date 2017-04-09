@@ -1,5 +1,7 @@
 package com.sideprojects.megamanxphantomblade.enemies;
 
+import com.sideprojects.megamanxphantomblade.enemies.actions.SetEnemyStateIfAtEdge;
+import com.sideprojects.megamanxphantomblade.physics.actions.JumpIfAtEdge;
 import com.sideprojects.megamanxphantomblade.enemies.actions.MoveTowardsPlayer;
 import com.sideprojects.megamanxphantomblade.enemies.actions.SetCanTakeDamage;
 import com.sideprojects.megamanxphantomblade.enemies.actions.SetEnemyState;
@@ -31,5 +33,9 @@ public abstract class EnemyScript<T> extends ScriptBase {
 
     protected void setEnemyState(T state) {
         addToQueue(new SetEnemyState<T>(enemy, state));
+    }
+
+    protected void setEnemyStateIfAtEdge(T state) {
+        addToQueue(new SetEnemyStateIfAtEdge(enemy, state));
     }
 }

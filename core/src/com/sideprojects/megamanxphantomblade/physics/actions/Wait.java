@@ -19,7 +19,7 @@ public class Wait extends ActionBase {
     }
 
     @Override
-    public void execute(float delta) {
+    public void execute(CollisionList collisions, float delta) {
         object.vel.x = 0;
         stateTime += delta;
     }

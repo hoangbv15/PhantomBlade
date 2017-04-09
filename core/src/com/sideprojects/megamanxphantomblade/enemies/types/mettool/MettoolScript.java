@@ -11,7 +11,11 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
  */
 public class MettoolScript extends EnemyScript<Mettool.State> {
     private static float velocity = 1;
-    private static float time = 1;
+    private static float jumpVelocity = 5;
+    private static float walkTime = 2;
+    private static float waitTime = 1;
+    private static float waitTimeBeforeJump = 0.4f;
+    private boolean isStupidAi;
 
     public MettoolScript(EnemyBase<Mettool.State> enemy, PlayerBase player) {
         super(enemy, player);
@@ -21,6 +25,11 @@ public class MettoolScript extends EnemyScript<Mettool.State> {
     public void describe() {
         int rand = MathUtils.random(1);
         if (rand == 0) {
+            isStupidAi = true;
+        } else {
+            isStupidAi = false;
+        }
+        if (isStupidAi) {
             stupidAi();
         } else {
             annoyingAi();
@@ -29,25 +38,35 @@ public class MettoolScript extends EnemyScript<Mettool.State> {
 
     private void stupidAi() {
         setEnemyState(Mettool.State.Walk);
-        move(MovingObject.LEFT, velocity, time);
-        setCanTakeDamage(false);
-        setEnemyState(Mettool.State.BuckledUp);
-        wait(time);
-        setCanTakeDamage(true);
+        moveTillEdge(MovingObject.LEFT, velocity, walkTime);
+        int rand = MathUtils.random(2);
+        if (rand == 0) {
+            setEnemyStateIfAtEdge(Mettool.State.Jump);
+            jumpIfAtEdge(velocity, jumpVelocity, waitTimeBeforeJump);
+        } else if (rand == 1) {
+            setCanTakeDamage(false);
+            setEnemyState(Mettool.State.BuckledUp);
+            wait(waitTime);
+            setCanTakeDamage(true);
+        }
         setEnemyState(Mettool.State.Walk);
-        move(MovingObject.RIGHT, velocity, time);
+        moveTillEdge(MovingObject.RIGHT, velocity, walkTime);
+        setEnemyStateIfAtEdge(Mettool.State.Jump);
+        jumpIfAtEdge(velocity, jumpVelocity, waitTimeBeforeJump);
         setCanTakeDamage(false);
         setEnemyState(Mettool.State.BuckledUp);
-        wait(time);
+        wait(waitTime);
         setCanTakeDamage(true);
     }
 
     private void annoyingAi() {
         setEnemyState(Mettool.State.Walk);
         moveTowardsPlayer(velocity, 5);
+        setEnemyStateIfAtEdge(Mettool.State.Jump);
+        jumpIfAtEdge(velocity, jumpVelocity, waitTimeBeforeJump);
         setCanTakeDamage(false);
         setEnemyState(Mettool.State.BuckledUp);
-        wait(time);
+        wait(waitTime);
         setCanTakeDamage(true);
     }
 }

@@ -23,7 +23,7 @@ public class Move extends ActionBase {
     }
 
     @Override
-    public void execute(float delta) {
+    public void execute(CollisionList collisions, float delta) {
         stateTime += delta;
         object.vel.x = direction * speed;
         object.direction = direction;

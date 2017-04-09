@@ -16,7 +16,7 @@ public class SetEnemyState<T> extends ActionBase {
     }
 
     @Override
-    public void execute(float delta) {
+    public void execute(CollisionList collisions, float delta) {
         enemy.setState(state);
         enemy.stateTime = 0;
     }
