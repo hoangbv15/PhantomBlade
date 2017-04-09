@@ -25,8 +25,8 @@ public class PlayerX extends PlayerBase {
     private float almostChargeStateTime;
     private float fullyChargedStateTime;
 
-    protected PlayerX(float x, float y) {
-        super(x, y);
+    protected PlayerX(float x, float y, int difficulty) {
+        super(x, y, difficulty);
         bounds.width = 0.4f;
         bounds.height = 0.7f;
         auxiliaryFrames = new HashMap<PlayerAnimationBase.Type, TextureRegion>(2);

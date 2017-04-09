@@ -54,14 +54,14 @@ public abstract class MapBase implements Disposable {
     // This is DI to inject into enemies
     private SoundPlayer soundPlayer;
 
-    public MapBase(PlayerFactory playerFactory, PlayerPhysicsFactory playerPhysicsFactory, SoundPlayer soundPlayer) {
+    public MapBase(PlayerFactory playerFactory, PlayerPhysicsFactory playerPhysicsFactory, SoundPlayer soundPlayer, int difficulty) {
         this.playerFactory = playerFactory;
         this.playerPhysicsFactory = playerPhysicsFactory;
         this.soundPlayer = soundPlayer;
         particles = new Particles(20);
         enemyList = new ArrayList<EnemyBase>();
         playerAttackList = new Queue<PlayerAttack>(MAX_PLAYERATTACK);
-        loadMap();
+        loadMap(difficulty);
     }
 
     public float getTileWidth() {
@@ -84,7 +84,7 @@ public abstract class MapBase implements Disposable {
 
     public abstract ParallaxBackground getBackground();
 
-    private void loadMap() {
+    private void loadMap(int difficulty) {
         tiledMap = getMapResource();
         mapLayer = (TiledMapTileLayer)tiledMap.getLayers().get(MapLayer);
 
@@ -97,11 +97,11 @@ public abstract class MapBase implements Disposable {
             float x = object.getRectangle().x / getTileWidth();
             float y = object.getRectangle().y / getTileHeight();
             if (XSpawn.equals(object.getName())) {
-                player = playerFactory.createPlayer(x, y);
+                player = playerFactory.createPlayer(x, y, difficulty);
                 playerPhysics = playerPhysicsFactory.create(player);
             }
             if (MettoolSpawn.equals(object.getName())) {
-                enemyList.add(new Mettool(x, y, this, soundPlayer));
+                enemyList.add(new Mettool(x, y, this, soundPlayer, difficulty));
             }
         }
 

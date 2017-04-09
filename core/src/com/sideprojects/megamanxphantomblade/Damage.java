@@ -31,14 +31,18 @@ public class Damage {
 
     public Type type;
     public Side side;
+    public int difficulty;
 
-    public Damage(Type type, Side side) {
+    public Damage(Type type, Side side, int difficulty) {
         this.type = type;
         this.side = side;
+        this.difficulty = difficulty;
     }
 
     public int getDamage() {
-        return damage.get(type);
+        int finalDamage = damage.get(type) + difficulty;
+        if (finalDamage < 0) return 1;
+        return finalDamage;
     }
 
     public static int getDamage(Type type) {

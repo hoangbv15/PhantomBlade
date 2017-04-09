@@ -18,10 +18,10 @@ import java.util.*;
  * Created by buivuhoang on 06/04/17.
  */
 public class Mettool extends EnemyBase<Mettool.State> {
-    public Mettool(float x, float y, MapBase map, SoundPlayer soundPlayer) {
+    public Mettool(float x, float y, MapBase map, SoundPlayer soundPlayer, int difficulty) {
         super(x, y, map);
         bounds = new Rectangle(x, y, 0.4f, 0.5f);
-        damage = new Damage(Damage.Type.Normal, Damage.Side.None);
+        damage = new Damage(Damage.Type.Normal, Damage.Side.None, -difficulty);
         script = new MettoolScript(this, map.player);
         auxiliaryFrames = new HashMap<EnemyAnimationBase.Type, TextureRegion>(2);
         animations = new MettoolAnimation();

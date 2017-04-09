@@ -16,6 +16,7 @@ import java.util.Map;
  * Created by buivuhoang on 04/02/17.
  */
 public abstract class PlayerBase extends MovingObject {
+    public final int difficulty;
     public PlayerState state;
     public PlayerState previousState;
     // If the player is holding dash button
@@ -47,7 +48,8 @@ public abstract class PlayerBase extends MovingObject {
     public static float xDashRocketPadding = 0.4f;
     public Vector2 animationPadding;
 
-    public PlayerBase(float x, float y) {
+    public PlayerBase(float x, float y, int difficulty) {
+        this.difficulty = difficulty;
         bounds = new Rectangle(x, y, 0.1f, 0.1f);
         pos = new Vector2(x, y);
         updatePos();

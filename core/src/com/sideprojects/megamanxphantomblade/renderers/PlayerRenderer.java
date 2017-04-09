@@ -141,7 +141,7 @@ public class PlayerRenderer implements Disposable {
     }
 
     private void renderPlayerTrace(TextureRegion currentFrame, float posX, float posY) {
-        if (traceFrameSkipCount != traceFrameSkip) {
+        if (traceFrameSkipCount < traceFrameSkip) {
             traceFrameSkipCount++;
         } else {
             if (startRemovingTraces) {

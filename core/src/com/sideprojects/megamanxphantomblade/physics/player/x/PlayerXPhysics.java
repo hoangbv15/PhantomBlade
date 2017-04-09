@@ -142,7 +142,7 @@ public class PlayerXPhysics extends PlayerPhysics {
             bulletDirection = player.direction * -1;
         }
         Damage.Side side = bulletDirection == MovingObject.LEFT ? Damage.Side.Right : Damage.Side.Left;
-        Damage damage = new Damage(player.attackType, side);
+        Damage damage = new Damage(player.attackType, side, player.difficulty);
         map.addPlayerAttack(new XBuster(player, damage, bulletDirection, player.animations, playerSound));
     }
 

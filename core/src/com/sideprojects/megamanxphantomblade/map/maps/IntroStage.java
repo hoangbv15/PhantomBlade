@@ -19,8 +19,8 @@ import com.sideprojects.megamanxphantomblade.sound.SoundPlayer;
  * Created by buivuhoang on 04/02/17.
  */
 public class IntroStage extends MapBase {
-    public IntroStage(PlayerFactory playerFactory, PlayerPhysicsFactory playerPhysicsFactory, SoundPlayer soundPlayer) {
-        super(playerFactory, playerPhysicsFactory, soundPlayer);
+    public IntroStage(PlayerFactory playerFactory, PlayerPhysicsFactory playerPhysicsFactory, SoundPlayer soundPlayer, int difficulty) {
+        super(playerFactory, playerPhysicsFactory, soundPlayer, difficulty);
     }
 
     @Override

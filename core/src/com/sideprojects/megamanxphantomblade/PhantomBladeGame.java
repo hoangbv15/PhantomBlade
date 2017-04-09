@@ -35,7 +35,7 @@ public class PhantomBladeGame extends ApplicationAdapter {
 		SoundPlayer sound = new SoundPlayer();
 		playerSounds = new PlayerXSound(sound);
 		playerSounds.preload();
-		map = new IntroStage(new PlayerXFactory(), new PlayerXPhysicsFactory(new PlayerInputProcessor(keyMap), playerSounds), sound);
+		map = new IntroStage(new PlayerXFactory(), new PlayerXPhysicsFactory(new PlayerInputProcessor(keyMap), playerSounds), sound, Difficulty.Normal);
 		mapRenderer = new WorldRenderer(map);
 		debugRenderer = new DebugRenderer(mapRenderer);
 		shapeRenderer = new ShapeRenderer();
