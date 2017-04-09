@@ -59,8 +59,8 @@ public abstract class MapBase implements Disposable {
         this.playerPhysicsFactory = playerPhysicsFactory;
         this.soundPlayer = soundPlayer;
         particles = new Particles(20);
-        enemyList = new ArrayList<EnemyBase>();
-        playerAttackList = new Queue<PlayerAttack>(MAX_PLAYERATTACK);
+        enemyList = new ArrayList<>();
+        playerAttackList = new Queue<>(MAX_PLAYERATTACK);
         loadMap(difficulty);
     }
 
@@ -160,6 +160,11 @@ public abstract class MapBase implements Disposable {
             if (enemy.spawned) {
                 enemy.update(deltaTime);
             }
+        }
+
+        // If player dies, respawn for now
+        if (player.isDead()) {
+            player.spawn();
         }
     }
 

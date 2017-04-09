@@ -29,7 +29,7 @@ public class PlayerX extends PlayerBase {
         super(x, y, difficulty);
         bounds.width = 0.4f;
         bounds.height = 0.7f;
-        auxiliaryFrames = new HashMap<PlayerAnimationBase.Type, TextureRegion>(2);
+        auxiliaryFrames = new HashMap<>(2);
         List<Integer> outerCircleChargeAnimationIndex = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
         List<Integer> innerCircleChargeAnimationIndex = Arrays.asList(13, 11, 13, 10, 13, 12, 13, 14);
         List<Integer> innerCircleAlmostChargeAnimationIndex = Arrays.asList(10, 14, 11, 14, 12, 10, 13, 11);

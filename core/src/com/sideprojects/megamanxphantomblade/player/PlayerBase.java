@@ -16,6 +16,8 @@ import java.util.Map;
  * Created by buivuhoang on 04/02/17.
  */
 public abstract class PlayerBase extends MovingObject {
+    private Vector2 spawnPos;
+
     public final int difficulty;
     public PlayerState state;
     public PlayerState previousState;
@@ -50,14 +52,23 @@ public abstract class PlayerBase extends MovingObject {
 
     public PlayerBase(float x, float y, int difficulty) {
         this.difficulty = difficulty;
-        bounds = new Rectangle(x, y, 0.1f, 0.1f);
-        pos = new Vector2(x, y);
+        spawnPos = new Vector2(x, y);
+        animationPadding = new Vector2(0, 0);
+        bounds = new Rectangle();
+        pos = new Vector2();
+        createAnimations();
+        spawn();
+    }
+
+    public void spawn() {
+        bounds.x = spawnPos.x;
+        bounds.y = spawnPos.y;
+        pos.x = bounds.x;
+        pos.y = bounds.y;
         updatePos();
         vel = new Vector2(0, 0);
         initialiseHealthPoints(100);
         canIssueLowHealthWarning = true;
-        animationPadding = new Vector2(0, 0);
-        createAnimations();
     }
 
     public void update(MapBase map, float delta) {
