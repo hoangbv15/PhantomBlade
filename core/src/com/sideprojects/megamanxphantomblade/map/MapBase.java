@@ -139,6 +139,9 @@ public abstract class MapBase implements Disposable {
             if (attack.shouldBeRemoved) {
                 i.remove();
             } else {
+                if (attack.canCollideWithWall()) {
+                    playerPhysics.stopAttackIfHitWall(attack, deltaTime, this);
+                }
                 playerPhysics.dealDamageIfPlayerAttackHitsEnemy(attack, this);
             }
         }

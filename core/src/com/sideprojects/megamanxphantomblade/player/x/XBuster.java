@@ -167,6 +167,11 @@ public class XBuster extends PlayerAttack {
     }
 
     @Override
+    public boolean canCollideWithWall() {
+        return true;
+    }
+
+    @Override
     public void update(PlayerBase player, float delta) {
         stateTime += delta;
         if (isDead()) {

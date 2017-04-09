@@ -37,6 +37,10 @@ public abstract class PhysicsBase {
     }
 
     public final CollisionList getMapCollision(MovingObject object, float deltaTime, MapBase map) {
+        return getMapCollision(object, deltaTime, map, false);
+    }
+
+    public final CollisionList getMapCollision(MovingObject object, float deltaTime, MapBase map, boolean overlapMode) {
         int direction = object.direction;
         Vector2 vel = object.vel;
         Rectangle bounds = object.bounds;
@@ -106,7 +110,7 @@ public abstract class PhysicsBase {
 
                 for (CollisionDetectionRay ray: detectionRayList) {
                     Collision collision = getSideOfCollisionWithTile(ray, tile,
-                            tileUp, tileDown, tileLeft, tileRight);
+                            tileUp, tileDown, tileLeft, tileRight, overlapMode);
                     if (collision != null) {
                         collisionList.add(collision);
                         collisions.toList.add(collision);
@@ -122,9 +126,23 @@ public abstract class PhysicsBase {
                                                  Rectangle tileUp,
                                                  Rectangle tileDown,
                                                  Rectangle tileLeft,
-                                                 Rectangle tileRight) {
+                                                 Rectangle tileRight,
+                                                 boolean overlapMode) {
         Vector2 start = ray.getStart();
         Vector2 end = ray.getEnd();
+
+        // If we just wants to check collision from overlapping
+        if (overlapMode) {
+            Vector2 collidePoint = null;
+            if (tile.contains(end)) {
+                collidePoint = end;
+            } else if (tile.contains(start)) {
+                collidePoint = start;
+            }
+            if (collidePoint != null) {
+                return new Collision(collidePoint, Collision.Side.None, ray, tile);
+            }
+        }
 
         // Put non-null ones in an array, then sort by distance to start
         // A line can only have at most 2 intersections with a rectangle
@@ -181,6 +199,13 @@ public abstract class PhysicsBase {
         boolean enemyTookDamage = enemy.takeDamage(attack.damage);
         if (!enemy.isDead() || attack.damage.type != Damage.Type.Heavy) {
             attack.die(enemyTookDamage);
+        }
+    }
+
+    public final void stopAttackIfHitWall(PlayerAttack attack, float delta, MapBase map) {
+        CollisionList collisions = getMapCollision(attack, delta, map, true);
+        if (!collisions.toList.isEmpty()) {
+            attack.die(true);
         }
     }
 

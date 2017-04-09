@@ -28,5 +28,7 @@ public abstract class PlayerAttack extends MovingObject {
         super.die();
     }
 
+    public abstract boolean canCollideWithWall();
+
     public abstract void update(PlayerBase player, float delta);
 }

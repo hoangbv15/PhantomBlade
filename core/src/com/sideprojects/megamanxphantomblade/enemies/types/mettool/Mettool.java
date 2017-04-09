@@ -23,7 +23,7 @@ public class Mettool extends EnemyBase<Mettool.State> {
         bounds = new Rectangle(x, y, 0.4f, 0.5f);
         damage = new Damage(Damage.Type.Normal, Damage.Side.None, -difficulty);
         script = new MettoolScript(this, map.player);
-        auxiliaryFrames = new HashMap<EnemyAnimationBase.Type, TextureRegion>(2);
+        auxiliaryFrames = new HashMap<>(2);
         animations = new MettoolAnimation();
         sounds = new MettoolSound(soundPlayer);
         state = State.Walk;
@@ -75,9 +75,9 @@ public class Mettool extends EnemyBase<Mettool.State> {
     public Vector2 getAuxiliaryAnimationPadding(EnemyAnimationBase.Type type, float delta) {
         if (type == EnemyAnimationBase.Type.Die) {
             if (direction == LEFT) {
-                return VectorCache.get(-20, -20);
+                return VectorCache.get(-20, -15);
             }
-            return VectorCache.get(-13, -20);
+            return VectorCache.get(-13, -15);
         }
         return VectorCache.get(0, 0);
     }
