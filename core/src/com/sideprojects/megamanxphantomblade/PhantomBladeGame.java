@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.sideprojects.megamanxphantomblade.input.PlayerInputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.map.maps.IntroStage;
-import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
+import com.sideprojects.megamanxphantomblade.physics.player.x.PlayerXPhysicsFactory;
 import com.sideprojects.megamanxphantomblade.player.x.PlayerXFactory;
 import com.sideprojects.megamanxphantomblade.player.x.PlayerXSound;
 import com.sideprojects.megamanxphantomblade.renderers.DebugRenderer;
@@ -32,9 +32,10 @@ public class PhantomBladeGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		keyMap = new KeyMap();
-		playerSounds = new PlayerXSound(new SoundPlayer());
+		SoundPlayer sound = new SoundPlayer();
+		playerSounds = new PlayerXSound(sound);
 		playerSounds.preload();
-		map = new IntroStage(new PlayerXFactory(), new PlayerPhysicsFactory(new PlayerInputProcessor(keyMap), playerSounds));
+		map = new IntroStage(new PlayerXFactory(), new PlayerXPhysicsFactory(new PlayerInputProcessor(keyMap), playerSounds), sound, Difficulty.Normal);
 		mapRenderer = new WorldRenderer(map);
 		debugRenderer = new DebugRenderer(mapRenderer);
 		shapeRenderer = new ShapeRenderer();
@@ -48,8 +49,8 @@ public class PhantomBladeGame extends ApplicationAdapter {
 		float delta = Gdx.graphics.getRawDeltaTime();
 		map.update(delta);
 		renderGradientBackground();
-		mapRenderer.render();
-//		debugRenderer.render(delta, playerPhysics.collisions);
+		mapRenderer.render(delta);
+//		debugRenderer.render(delta, map.playerPhysics.collisions.toList);
 	}
 
 	private void renderGradientBackground() {
@@ -74,5 +75,6 @@ public class PhantomBladeGame extends ApplicationAdapter {
 		mapRenderer.dispose();
 		debugRenderer.dispose();
 		playerSounds.dispose();
+		map.dispose();
 	}
 }

@@ -1,6 +1,5 @@
 package com.sideprojects.megamanxphantomblade.physics.player.movementstates;
 
-import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.input.Command;
 import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
@@ -29,14 +28,9 @@ public class Idle extends PlayerNonDashState {
     }
 
     @Override
-    public boolean canWallSlide() {
-        return false;
-    }
-
-    @Override
-    public PlayerState enter(MovingObject object) {
-        object.stateTime = 0;
-        return PlayerState.IDLE;
+    public PlayerState enter(PlayerBase player) {
+        player.stateTime = 0;
+        return PlayerState.Idle;
     }
 
     @Override
@@ -44,7 +38,13 @@ public class Idle extends PlayerNonDashState {
         if (player.vel.y > 0) {
             return new Jump(input, player, player.state, stateChangeHandler);
         }
+        if (player.vel.y < 0) {
+            return new Fall(input, player, player.state, stateChangeHandler);
+        }
         if (input.isCommandPressed(Command.DASH) && canDash(input)) {
+            if (input.isCommandPressed(Command.UP)) {
+                return new Updash(player, player.state, stateChangeHandler);
+            }
             return new Dash(input, player, player.state, stateChangeHandler);
         }
         if (player.vel.x != 0 && player.grounded) {

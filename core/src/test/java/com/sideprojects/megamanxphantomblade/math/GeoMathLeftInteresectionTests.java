@@ -36,6 +36,12 @@ public class GeoMathLeftInteresectionTests {
                         new Vector2(2.5f, -0.5f),
                         new Vector2(1f, -2.0f)
                 },
+                {
+                        new Rectangle(1, 1, 1, 1),
+                        new Vector2(0.5f, 2f),
+                        new Vector2(1.5f, 2f),
+                        new Vector2(1, 2)
+                },
                 // not colliding
                 {
                         new Rectangle(1, 1, 1, 1),

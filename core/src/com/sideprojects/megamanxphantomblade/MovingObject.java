@@ -24,8 +24,34 @@ public abstract class MovingObject {
 
     public float stateTime;
 
+    public int healthPoints;
+    public int maxHealthPoints;
+
+    public void initialiseHealthPoints(int hp) {
+        maxHealthPoints = hp;
+        healthPoints = hp;
+    }
+
+    /**
+     * Decreases this object's hp by the amount of damage
+     * @param damage The damage that is being dealt to this object
+     * @return Whether the damage has successfully been dealt
+     */
+    public boolean takeDamage(Damage damage) {
+        healthPoints -= damage.getDamage();
+        return true;
+    }
+
     public void updatePos() {
         pos.x = bounds.x;
         pos.y = bounds.y;
-    };
+    }
+
+    public void die() {
+        healthPoints = 0;
+    }
+
+    public boolean isDead() {
+        return healthPoints <= 0;
+    }
 }

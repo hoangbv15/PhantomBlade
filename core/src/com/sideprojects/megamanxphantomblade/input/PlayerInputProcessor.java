@@ -20,10 +20,14 @@ public class PlayerInputProcessor implements InputProcessor {
                 return Gdx.input.isKeyPressed(keyMap.left);
             case RIGHT:
                 return Gdx.input.isKeyPressed(keyMap.right);
+            case UP:
+                return Gdx.input.isKeyPressed(keyMap.up);
             case JUMP:
                 return Gdx.input.isKeyPressed(keyMap.jump);
             case DASH:
                 return Gdx.input.isKeyPressed(keyMap.dash);
+            case ATTACK:
+                return Gdx.input.isKeyPressed(keyMap.attack);
             default:
                 return false;
         }
@@ -36,10 +40,14 @@ public class PlayerInputProcessor implements InputProcessor {
                 return Gdx.input.isKeyJustPressed(keyMap.left);
             case RIGHT:
                 return Gdx.input.isKeyJustPressed(keyMap.right);
+            case UP:
+                return Gdx.input.isKeyJustPressed(keyMap.up);
             case JUMP:
                 return Gdx.input.isKeyJustPressed(keyMap.jump);
             case DASH:
                 return Gdx.input.isKeyJustPressed(keyMap.dash);
+            case ATTACK:
+                return Gdx.input.isKeyJustPressed(keyMap.attack);
             default:
                 return false;
         }

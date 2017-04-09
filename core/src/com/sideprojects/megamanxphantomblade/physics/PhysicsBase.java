@@ -3,6 +3,8 @@ package com.sideprojects.megamanxphantomblade.physics;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
+import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
+import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.math.GeoMath;
@@ -10,6 +12,7 @@ import com.sideprojects.megamanxphantomblade.math.NumberMath;
 import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
+import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,21 +22,26 @@ import java.util.List;
  */
 public abstract class PhysicsBase {
     // Debug property, used for rendering collisions to the screen. Needs to be public
-    public List<Collision> collisions;
+    public CollisionList collisions;
 
-    protected InputProcessor input;
+    // Variables for push back
+    private float currentPushBackDurationToGo;
+    protected abstract float getPushBackDuration();
+    protected abstract float getPushBackSpeed();
+    private int pushBackDirection;
+    private boolean isBeingPushedBack;
 
-    public PhysicsBase(InputProcessor input) {
-        this.input = input;
-        collisions = new ArrayList<Collision>();
+    public PhysicsBase() {
+        collisions = new CollisionList(new ArrayList<Collision>());
+        isBeingPushedBack = false;
     }
 
-    public CollisionList getMapCollision(MovingObject object, float deltaTime, MapBase map) {
+    public final CollisionList getMapCollision(MovingObject object, float deltaTime, MapBase map) {
         int direction = object.direction;
         Vector2 vel = object.vel;
         Rectangle bounds = object.bounds;
 
-        collisions.clear();
+        collisions.toList.clear();
         // From inside out, find the first tile that collides with the player
         float stepX = vel.x * deltaTime;
         float stepY = vel.y * deltaTime;
@@ -52,8 +60,10 @@ public abstract class PhysicsBase {
 
         // Setup collision detection rays
         List<CollisionDetectionRay> detectionRayList = new ArrayList<CollisionDetectionRay>(5);
-        detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, 0, paddingY));
-        detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, bounds.width, paddingY));
+        if (vel.y != 0) {
+            detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, 0, paddingY));
+            detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, bounds.width, paddingY));
+        }
         if (vel.x != 0) {
             detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, 0));
             detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, bounds.height));
@@ -99,7 +109,7 @@ public abstract class PhysicsBase {
                             tileUp, tileDown, tileLeft, tileRight);
                     if (collision != null) {
                         collisionList.add(collision);
-                        collisions.add(collision);
+                        collisions.toList.add(collision);
                     }
                 }
             }
@@ -122,19 +132,19 @@ public abstract class PhysicsBase {
 
         // Find intersection on each side of the tile
         if (tileLeft == null) {
-            Collision left = new Collision(GeoMath.findIntersectionLeft(tile, start, end), Collision.Side.LEFT, ray, tile);
+            Collision left = new Collision(GeoMath.findIntersectionLeft(tile, start, end), Collision.Side.Left, ray, tile);
             if (left.point != null) collisionList.add(left);
         }
         if (tileRight == null) {
-            Collision right = new Collision(GeoMath.findIntersectionRight(tile, start, end), Collision.Side.RIGHT, ray, tile);
+            Collision right = new Collision(GeoMath.findIntersectionRight(tile, start, end), Collision.Side.Right, ray, tile);
             if (right.point != null) collisionList.add(right);
         }
         if (tileUp == null) {
-            Collision up = new Collision(GeoMath.findIntersectionUp(tile, start, end), Collision.Side.UP, ray, tile);
+            Collision up = new Collision(GeoMath.findIntersectionUp(tile, start, end), Collision.Side.Up, ray, tile, tileLeft, tileRight);
             if (up.point != null) collisionList.add(up);
         }
         if (tileDown == null) {
-            Collision down = new Collision(GeoMath.findIntersectionDown(tile, start, end), Collision.Side.DOWN, ray, tile);
+            Collision down = new Collision(GeoMath.findIntersectionDown(tile, start, end), Collision.Side.Down, ray, tile);
             if (down.point != null) collisionList.add(down);
         }
 
@@ -145,5 +155,72 @@ public abstract class PhysicsBase {
         return Collision.getCollisionNearestToStart(collisionList, start);
     }
 
-    public abstract void update(float delta, MapBase map);
+    public final Damage getEnemyCollisionDamage(MovingObject object, MapBase map) {
+        EnemyBase enemy = getCollidingEnemy(object, map);
+        if (enemy == null) {
+            return null;
+        }
+        float playerX = object.bounds.x + object.bounds.width / 2;
+        float enemyX = enemy.bounds.x + enemy.bounds.width / 2;
+        Damage.Side side = Damage.Side.Left;
+        if (playerX < enemyX) {
+            side = Damage.Side.Right;
+        }
+        enemy.damage.side = side;
+        return enemy.damage;
+    }
+
+    public final void dealDamageIfPlayerAttackHitsEnemy(PlayerAttack attack, MapBase map) {
+        if (attack.isDead()) {
+            return;
+        }
+        EnemyBase enemy = getCollidingEnemy(attack, map);
+        if (enemy == null) {
+            return;
+        }
+        boolean enemyTookDamage = enemy.takeDamage(attack.damage);
+        if (!enemy.isDead() || attack.damage.type != Damage.Type.Heavy) {
+            attack.die(enemyTookDamage);
+        }
+    }
+
+    private EnemyBase getCollidingEnemy(MovingObject object, MapBase map) {
+        for (EnemyBase enemy: map.enemyList) {
+            if (enemy.isDead() || !enemy.spawned) {
+                continue;
+            }
+            if (object.bounds.overlaps(enemy.bounds)) {
+                return enemy;
+            }
+        }
+        return null;
+    }
+
+    public void pushBack(int direction) {
+        pushBackDirection = direction;
+        currentPushBackDurationToGo = getPushBackDuration();
+        isBeingPushedBack = true;
+    }
+
+    private void doesPushBack(MovingObject object, float delta) {
+        if (currentPushBackDurationToGo > 0) {
+            object.vel.x = getPushBackSpeed() * pushBackDirection;
+            currentPushBackDurationToGo -= delta;
+        } else if (isBeingPushedBack) {
+            isBeingPushedBack = false;
+            object.vel.x = 0;
+        }
+    }
+
+    public final void update(MovingObject object, float delta, MapBase map) {
+        if (object.isDead()) {
+            return;
+        }
+        if (isBeingPushedBack) {
+            doesPushBack(object, delta);
+        }
+        internalUpdate(object, delta, map);
+    }
+
+    public abstract void internalUpdate(MovingObject object, float delta, MapBase map);
 }

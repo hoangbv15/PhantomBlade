@@ -88,11 +88,11 @@ public class GeoMath {
     public static Vector2 findIntersectionUp(Rectangle tile, Vector2 start, Vector2 end) {
         float y = tile.y + tile.height;
 
-        // Quickly fail if x is outside of range
+        // Quickly fail if y is outside of range
         if (!numberIsBetween(y, start.y, end.y)) {
             return null;
         }
-        // Ignore if the collision is from outside of the tile's x range
+        // Ignore if the collision is from outside of the tile's y range
         if (start.y < tile.y + tile.height) {
             return null;
         }

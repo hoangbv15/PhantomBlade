@@ -1,0 +1,26 @@
+bullet_heavy.png
+size: 183, 30
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+0
+  rotate: false
+  xy: 0, 0
+  size: 61, 30
+  orig: 61, 30
+  offset: 0, 0
+  index: -1
+1
+  rotate: false
+  xy: 61, 0
+  size: 61, 30
+  orig: 61, 30
+  offset: 0, 0
+  index: -1
+2
+  rotate: false
+  xy: 122, 0
+  size: 61, 30
+  orig: 61, 30
+  offset: 0, 0
+  index: -1

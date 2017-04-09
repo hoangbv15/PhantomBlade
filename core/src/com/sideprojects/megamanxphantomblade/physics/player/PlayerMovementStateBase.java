@@ -10,12 +10,14 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
  * Created by buivuhoang on 22/02/17.
  */
 public abstract class PlayerMovementStateBase implements State {
+    public int startingDirection = MovingObject.NONEDIRECTION;
     protected PlayerStateChangeHandler stateChangeHandler;
 
     public PlayerMovementStateBase(PlayerBase player, PlayerState lastState, PlayerStateChangeHandler stateChangeHandler) {
         player.state = enter(player);
         this.stateChangeHandler = stateChangeHandler;
         stateChangeHandler.callback(lastState, player.state);
+        startingDirection = player.direction;
     }
 
     /**
@@ -31,18 +33,12 @@ public abstract class PlayerMovementStateBase implements State {
     public abstract boolean canWallGlide();
 
     /**
-     * Sliding down slowly by holding on to a wall
-     * @return
-     */
-    public abstract boolean canWallSlide();
-
-    /**
-     * Quick horizontall dash
+     * Quick horizontal dash
      * @return
      */
     public abstract boolean canDash(InputProcessor input);
 
-    public abstract PlayerState enter(MovingObject object);
+    public abstract PlayerState enter(PlayerBase player);
 
     /**
      * Determine what the next state should be

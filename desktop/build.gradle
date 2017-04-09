@@ -25,6 +25,18 @@ task dist(type: Jar) {
     }
 }
 
+task packr(dependsOn: dist, type: JavaExec) {
+    main = '-jar'
+    args = [
+            'packr.jar',
+            'packrconfig.json'
+    ]
+}
+
+task zip(dependsOn: packr, type: Zip) {
+    from './build/out-windows32'
+}
+
 dist.dependsOn classes
 
 eclipse {

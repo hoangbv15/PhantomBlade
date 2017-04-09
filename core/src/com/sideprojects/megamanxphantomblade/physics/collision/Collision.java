@@ -12,6 +12,16 @@ import java.util.List;
  */
 public class Collision {
     /**
+     * The tile on the left of the colliding tile
+     */
+    protected final Rectangle tileLeft;
+
+    /**
+     * The tile on the right of the colliding tile
+     */
+    protected final Rectangle tileRight;
+
+    /**
      * The point of the collision
       */
     public Vector2 point;
@@ -33,7 +43,7 @@ public class Collision {
 
     private CollisionDetectionRay ray;
 
-    public Collision(Vector2 collidePoint, Side collideSide, CollisionDetectionRay ray, Rectangle tile) {
+    public Collision(Vector2 collidePoint, Side collideSide, CollisionDetectionRay ray, Rectangle tile, Rectangle tileLeft, Rectangle tileRight) {
         this.point = collidePoint;
         this.side = collideSide;
         if (collidePoint != null) {
@@ -41,6 +51,12 @@ public class Collision {
         }
         this.tile = tile;
         this.ray = ray;
+        this.tileLeft = tileLeft;
+        this.tileRight = tileRight;
+    }
+
+    public Collision(Vector2 collidePoint, Side collideSide, CollisionDetectionRay ray, Rectangle tile) {
+        this(collidePoint, collideSide, ray, tile, null, null);
     }
 
     public Vector2 getPrecollidePos() {
@@ -48,7 +64,7 @@ public class Collision {
     }
 
     public enum Side {
-        UP, DOWN, LEFT, RIGHT
+        Up, Down, Left, Right
     }
 
     public static Collision getCollisionNearestToStart(List<Collision> list, final Vector2 start) {

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 
@@ -12,22 +13,21 @@ import java.util.List;
 /**
  * Created by buivuhoang on 11/02/17.
  */
-public class DebugRenderer {
-    private WorldRenderer mainRenderer;
+public class DebugRenderer implements Disposable {
     private OrthographicCamera cam;
     private MapBase map;
     ShapeRenderer shapeDebugger;
 
     public DebugRenderer(WorldRenderer mainRenderer) {
-        this.mainRenderer = mainRenderer;
         this.map = mainRenderer.map;
-        this.cam = mainRenderer.cam;
+        this.cam = mainRenderer.gameCam;
         shapeDebugger = new ShapeRenderer();
+        shapeDebugger.setAutoShapeType(true);
     }
 
     public void render(float delta, List<Collision> collisions) {
         Gdx.gl20.glLineWidth(2);
-        shapeDebugger.setProjectionMatrix(cam.combined);
+//        shapeDebugger.setProjectionMatrix(cam.combined);
         shapeDebugger.begin(ShapeRenderer.ShapeType.Line);
         shapeDebugger.setColor(0, 1, 0, 1);
         for (Collision collision: collisions) {
@@ -37,19 +37,19 @@ public class DebugRenderer {
                 continue;
             }
             switch(collision.side) {
-                case UP:
+                case Up:
                     start = new Vector2(collision.tile.x, collision.tile.y + collision.tile.height);
                     end = new Vector2(start.x + collision.tile.width, start.y);
                     break;
-                case DOWN:
+                case Down:
                     start = new Vector2(collision.tile.x, collision.tile.y);
                     end = new Vector2(start.x + collision.tile.width, start.y);
                     break;
-                case LEFT:
+                case Left:
                     start = new Vector2(collision.tile.x, collision.tile.y);
                     end = new Vector2(start.x, start.y + collision.tile.height);
                     break;
-                case RIGHT:
+                case Right:
                     start = new Vector2(collision.tile.x + collision.tile.width, collision.tile.y);
                     end = new Vector2(start.x, start.y + collision.tile.height);
                     break;
@@ -70,6 +70,7 @@ public class DebugRenderer {
         shapeDebugger.end();
     }
 
+    @Override
     public void dispose() {
         shapeDebugger.dispose();
     }

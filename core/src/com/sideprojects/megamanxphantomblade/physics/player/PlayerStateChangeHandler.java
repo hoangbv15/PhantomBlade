@@ -5,4 +5,5 @@ package com.sideprojects.megamanxphantomblade.physics.player;
  */
 public interface PlayerStateChangeHandler {
     void callback(PlayerState previousState, PlayerState nextState);
+    void lowHealthWarning();
 }

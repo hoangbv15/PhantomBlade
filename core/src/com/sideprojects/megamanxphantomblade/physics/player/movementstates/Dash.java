@@ -1,6 +1,5 @@
 package com.sideprojects.megamanxphantomblade.physics.player.movementstates;
 
-import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.input.Command;
 import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
@@ -17,7 +16,6 @@ public class Dash extends PlayerMovementStateBase {
     private boolean enterWhileRunning = false;
     private boolean enterWhileIdle = false;
     private boolean enterWhileAirborne = false;
-    private int startingDirection = MovingObject.NONEDIRECTION;
     private Command directionKeyBeingPressed = Command.LEFT;
 
     public Dash(InputProcessor input, PlayerBase player, PlayerState lastState, PlayerStateChangeHandler stateChangeHandler) {
@@ -36,7 +34,6 @@ public class Dash extends PlayerMovementStateBase {
         } else {
             enterWhileAirborne = true;
         }
-        startingDirection = player.direction;
     }
 
     @Override
@@ -60,26 +57,21 @@ public class Dash extends PlayerMovementStateBase {
     }
 
     @Override
-    public boolean canWallSlide() {
-        return false;
-    }
-
-    @Override
     public boolean canDash(InputProcessor input) {
         return true;
     }
 
     @Override
-    public PlayerState enter(MovingObject object) {
-        object.stateTime = 0;
-        return PlayerState.DASH;
+    public PlayerState enter(PlayerBase player) {
+        player.stateTime = 0;
+        return PlayerState.Dash;
     }
 
     @Override
     public PlayerMovementStateBase nextState(InputProcessor input, PlayerBase player, CollisionList collisionList) {
         if (enterWhileRunning) {
             if (player.stateTime >= dashDuration
-                    || input.isCommandPressed(Command.JUMP)
+                    || input.isCommandJustPressed(Command.JUMP)
                     || !input.isCommandPressed(directionKeyBeingPressed)
                     || hasChangedDirection(player)
                     || player.vel.y < 0
@@ -88,7 +80,7 @@ public class Dash extends PlayerMovementStateBase {
             }
         } else if (enterWhileIdle) {
             if (player.stateTime >= dashDuration
-                    || input.isCommandPressed(Command.JUMP)
+                    || input.isCommandJustPressed(Command.JUMP)
                     || hasChangedDirection(player)
                     || player.vel.y < 0
                     || !input.isCommandPressed(Command.DASH) ||
@@ -102,7 +94,6 @@ public class Dash extends PlayerMovementStateBase {
                     collisionList.isCollidingSide()) {
                 return nextStateIfExit(input, player, collisionList);
             }
-
         }
 
         return this;

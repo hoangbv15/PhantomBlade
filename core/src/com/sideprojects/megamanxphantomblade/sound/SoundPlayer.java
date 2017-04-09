@@ -1,6 +1,7 @@
 package com.sideprojects.megamanxphantomblade.sound;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
 
@@ -10,10 +11,12 @@ import com.badlogic.gdx.math.MathUtils;
 public class SoundPlayer implements SoundPlayerBase {
     public float sfxVolume = 1.0f;
     private LRUCache<String, Sound> soundCache;
+    private LRUCache<String, Music> musicCache;
     private long nonOverlappingSoundBeingPlayed;
 
     public SoundPlayer() {
         soundCache = new LRUCache<String, Sound>(10);
+        musicCache = new LRUCache<String, Music>(2);
         // Dispose of sounds that are removed from the cache automatically
         soundCache.setEntryRemovedListener(new LRUCache.CacheEntryRemovedListener<String, Sound>() {
             @Override
@@ -42,6 +45,7 @@ public class SoundPlayer implements SoundPlayerBase {
     public void playInParallel(String file) {
         Sound sound = loadSound(file);
         sound.play(sfxVolume);
+
     }
 
     @Override
@@ -58,6 +62,18 @@ public class SoundPlayer implements SoundPlayerBase {
     }
 
     @Override
+    public void loopInParallel(String file) {
+        Sound sound = loadSound(file);
+        sound.loop(sfxVolume);
+    }
+
+    @Override
+    public void stop(String file) {
+        Sound sound = loadSound(file);
+        sound.stop();
+    }
+
+    @Override
     public Sound loadSound(String file) {
         if (!soundCache.containsKey(file)) {
             soundCache.put(file, Gdx.audio.newSound(Gdx.files.internal(file)));
@@ -66,10 +82,22 @@ public class SoundPlayer implements SoundPlayerBase {
     }
 
     @Override
+    public Music loadMusic(String file) {
+        if (!musicCache.containsKey(file)) {
+            musicCache.put(file, Gdx.audio.newMusic(Gdx.files.internal(file)));
+        }
+        return musicCache.get(file);
+    }
+
+    @Override
     public void dispose() {
         for (Sound sound: soundCache.values()) {
             sound.dispose();
         }
+        for (Music music: musicCache.values()) {
+            music.dispose();
+        }
         soundCache.clear();
+        musicCache.clear();
     }
 }
