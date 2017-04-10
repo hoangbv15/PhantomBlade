@@ -30,6 +30,19 @@ public class IntroStage extends MapBase {
 
     @Override
     public ParallaxBackground getBackground() {
+        float worldWidth = Gdx.graphics.getWidth();
+        float worldHeight = Utils.calculateOtherDimension(Utils.WH.width, worldWidth, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        TextureAtlas atlas = new TextureAtlas("maps/background.txt");
+
+        TextureRegion background = atlas.getRegions().first();
+        TextureRegionParallaxLayer backgroundLayer = new TextureRegionParallaxLayer(background, worldHeight, new Vector2(0.7f,0.7f), Utils.WH.width);
+
+        ParallaxBackground parallaxBackground = new ParallaxBackground();
+        parallaxBackground.addLayers(backgroundLayer);
+        return parallaxBackground;
+    }
+
+    private ParallaxBackground getBackgroundBackup() {
         float worldHeight = Gdx.graphics.getHeight();
         float worldWidth = Utils.calculateOtherDimension(Utils.WH.height, worldHeight, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         TextureAtlas atlas = new TextureAtlas("maps/background.atlas");
