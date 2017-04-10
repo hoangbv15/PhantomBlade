@@ -16,7 +16,7 @@ import com.rahul.libgdx.parallax.Utils.WH;
  */
 public class TextureRegionParallaxLayer extends ParallaxLayer{
 
-	private TextureRegion texRegion;
+	protected TextureRegion texRegion;
 	private float padLeft=0,padRight=0,padBottom=0,padTop=0;
 	private float regionWidth,regionHeight;
 
@@ -76,7 +76,7 @@ public class TextureRegionParallaxLayer extends ParallaxLayer{
 	 * You might be wondering that why are topPadding and rightPadding not used , what is their use then . Well they are used by ParallaxBackground when it renders this layer . During rendering it pings the {@link #getWidth()}/{@link #getHeight()} method of this layer which in {@link TextureRegionParallaxLayer} implementation return the sum of regionWidth/regionHeight and paddings.
 	 */
 	@Override
-	public void draw(Batch batch, float x, float y) {
+	public void draw(Batch batch, float x, float y, float delta) {
 		batch.draw(texRegion, x+padLeft, y+padBottom, getRegionWidth(), getRegionHeight());
 	}
 

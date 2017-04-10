@@ -88,7 +88,7 @@ public class WorldRenderer implements Disposable {
         gameCam.update();
         Gdx.gl.glDisable(GL20.GL_BLEND);
         batch.begin();
-        background.draw(gameCam, batch);
+        background.draw(gameCam, batch, delta);
         batch.end();
         renderMap();
         batch.setProjectionMatrix(gameCam.combined);
