@@ -41,8 +41,8 @@ public abstract class PhysicsBase {
     }
 
     public final CollisionList getMapCollision(MovingObject object, float deltaTime, MapBase map, boolean overlapMode) {
-        int direction = object.direction;
         Vector2 vel = object.vel;
+        int direction = vel.x >= 0 ? MovingObject.RIGHT : MovingObject.LEFT;
         Rectangle bounds = object.bounds;
 
         collisions.toList.clear();
@@ -132,16 +132,8 @@ public abstract class PhysicsBase {
         Vector2 end = ray.getEnd();
 
         // If we just wants to check collision from overlapping
-        if (overlapMode) {
-            Vector2 collidePoint = null;
-            if (tile.contains(end)) {
-                collidePoint = end;
-            } else if (tile.contains(start)) {
-                collidePoint = start;
-            }
-            if (collidePoint != null) {
-                return new Collision(collidePoint, Collision.Side.None, ray, tile);
-            }
+        if (overlapMode && tile.contains(start)) {
+            return new Collision(start, Collision.Side.None, ray, tile);
         }
 
         // Put non-null ones in an array, then sort by distance to start
@@ -229,7 +221,7 @@ public abstract class PhysicsBase {
 
     private void doesPushBack(MovingObject object, float delta) {
         if (currentPushBackDurationToGo > 0) {
-            object.vel.x = getPushBackSpeed() * pushBackDirection;
+            object.vel.x = getPushBackSpeed() * pushBackDirection * currentPushBackDurationToGo / getPushBackDuration();
             currentPushBackDurationToGo -= delta;
         } else if (isBeingPushedBack) {
             isBeingPushedBack = false;

@@ -181,7 +181,7 @@ public class PlayerXAnimation extends PlayerAnimation {
 
         switch (type) {
             case DamagedNormal:
-                return VectorCache.get(0, -5);
+                return VectorCache.get(-3, -5);
 
         }
 
