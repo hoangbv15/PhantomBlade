@@ -42,7 +42,7 @@ public class Mettool extends EnemyBase<Mettool.State> {
                 takeDamageBounds.setSize(0.4f, 0.4f);
                 break;
             default:
-                takeDamageBounds.setSize(0.4f, 0.5f);
+                takeDamageBounds.setSize(0.4f, 0.55f);
                 break;
         }
     }
