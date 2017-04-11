@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.Damage;
-import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyAnimationBase;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
@@ -20,7 +19,9 @@ import java.util.*;
 public class Mettool extends EnemyBase<Mettool.State> {
     public Mettool(float x, float y, MapBase map, SoundPlayer soundPlayer, int difficulty) {
         super(x, y, map);
-        bounds = new Rectangle(x, y, 0.4f, 0.5f);
+        mapCollisionBounds.setPosition(x, y);
+        mapCollisionBounds.setSize(0.4f, 0.4f);
+        takeDamageBounds.setPosition(x, y);
         damage = new Damage(Damage.Type.Normal, Damage.Side.None, -difficulty);
         script = new MettoolScript(this, map.player);
         auxiliaryFrames = new HashMap<>(2);
@@ -32,6 +33,18 @@ public class Mettool extends EnemyBase<Mettool.State> {
     @Override
     protected float deathExplosionTime() {
         return 2;
+    }
+
+    @Override
+    protected void updateTakeDamageBounds() {
+        switch (state) {
+            case BuckledUp:
+                takeDamageBounds.setSize(0.4f, 0.4f);
+                break;
+            default:
+                takeDamageBounds.setSize(0.4f, 0.5f);
+                break;
+        }
     }
 
     @Override

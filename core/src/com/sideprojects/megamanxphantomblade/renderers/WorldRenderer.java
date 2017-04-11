@@ -82,7 +82,7 @@ public class WorldRenderer implements Disposable {
 
         // Apply linear interpolation to the camera in order to smooth the camera movement
         gameCam.position.lerp(lerpTarget.set(pos.x, pos.y, 0), 0.5f);
-        // Keep the camera within bounds
+        // Keep the camera within mapCollisionBounds
         gameCam.position.x = MathUtils.clamp(gameCam.position.x, camViewportHalfX, mapWidthMinusCamViewportHalfX);
         gameCam.position.y = MathUtils.clamp(gameCam.position.y, camViewportHalfY, mapHeightMinusCamViewportHalfY);
         gameCam.update();

@@ -5,7 +5,6 @@ import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
-import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 
 /**
  * Created by buivuhoang on 04/04/17.
@@ -38,19 +37,19 @@ public abstract class Physics extends PhysicsBase {
                 case Left:
                 case Right:
                     object.vel.x = 0;
-                    object.bounds.x = preCollide.x;
+                    object.mapCollisionBounds.x = preCollide.x;
                     break;
                 case Up:
                     object.grounded = true;
                 case Down:
                     object.vel.y = 0;
-                    object.bounds.y = preCollide.y;
+                    object.mapCollisionBounds.y = preCollide.y;
                     break;
             }
         }
 
-        object.bounds.x += object.vel.x * delta;
-        object.bounds.y += object.vel.y * delta;
+        object.mapCollisionBounds.x += object.vel.x * delta;
+        object.mapCollisionBounds.y += object.vel.y * delta;
         object.updatePos();
         return collisionList;
     }

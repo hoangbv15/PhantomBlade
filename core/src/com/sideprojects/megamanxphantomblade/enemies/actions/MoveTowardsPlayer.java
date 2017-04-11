@@ -1,7 +1,6 @@
 package com.sideprojects.megamanxphantomblade.enemies.actions;
 
 import com.sideprojects.megamanxphantomblade.MovingObject;
-import com.sideprojects.megamanxphantomblade.physics.actions.Move;
 import com.sideprojects.megamanxphantomblade.physics.actions.MoveTillEdge;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
@@ -21,7 +20,7 @@ public class MoveTowardsPlayer extends MoveTillEdge {
     @Override
     public void execute(CollisionList collisions, float delta) {
         direction = MovingObject.LEFT;
-        if (object.bounds.x < player.bounds.x) {
+        if (object.mapCollisionBounds.x < player.mapCollisionBounds.x) {
             direction = MovingObject.RIGHT;
         }
         super.execute(collisions, delta);
@@ -29,7 +28,7 @@ public class MoveTowardsPlayer extends MoveTillEdge {
 
     @Override
     public boolean finish(CollisionList collisions) {
-        boolean finish = Math.abs(object.bounds.x - player.bounds.x) < threshold;
+        boolean finish = Math.abs(object.mapCollisionBounds.x - player.mapCollisionBounds.x) < threshold;
         return finish || super.finish(collisions);
     }
 }

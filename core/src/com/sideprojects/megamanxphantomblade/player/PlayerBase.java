@@ -9,6 +9,7 @@ import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
+import com.sideprojects.megamanxphantomblade.physics.player.movementstates.Idle;
 
 import java.util.Map;
 
@@ -54,17 +55,14 @@ public abstract class PlayerBase extends MovingObject {
         this.difficulty = difficulty;
         spawnPos = new Vector2(x, y);
         animationPadding = new Vector2(0, 0);
-        bounds = new Rectangle();
         pos = new Vector2();
         createAnimations();
         spawn();
     }
 
     public void spawn() {
-        bounds.x = spawnPos.x;
-        bounds.y = spawnPos.y;
-        pos.x = bounds.x;
-        pos.y = bounds.y;
+        mapCollisionBounds.x = spawnPos.x;
+        mapCollisionBounds.y = spawnPos.y;
         updatePos();
         vel = new Vector2(0, 0);
         initialiseHealthPoints(100);
@@ -73,6 +71,7 @@ public abstract class PlayerBase extends MovingObject {
 
     public void update(MapBase map, float delta) {
         updateAnimation(map);
+        updateTakeDamageBounds();
         internalUpdate(delta);
     }
 
@@ -98,13 +97,13 @@ public abstract class PlayerBase extends MovingObject {
             type = PlayerAnimationBase.Type.Touchdown;
         } else if (state == PlayerState.Wallslide) {
             type = PlayerAnimationBase.Type.Wallslide;
-            float paddingX = direction == RIGHT ? (bounds.getWidth() - 0.15f) : - 0.1f;
+            float paddingX = direction == RIGHT ? (mapCollisionBounds.getWidth() - 0.15f) : - 0.1f;
             float paddingY = -0.1f;
             map.addParticle(Particle.ParticleType.WALLSLIDE, pos.x + paddingX, pos.y + paddingY, true);
         } else if (state == PlayerState.Walljump) {
             type = PlayerAnimationBase.Type.Walljump;
             if (previousState != state) {
-                float paddingX = map.playerPhysics.movementState.startingDirection == RIGHT ? (bounds.getWidth() - 0.1f) : - 0.3f;
+                float paddingX = map.playerPhysics.movementState.startingDirection == RIGHT ? (mapCollisionBounds.getWidth() - 0.1f) : - 0.3f;
                 float paddingY = 0f;
                 map.addParticle(Particle.ParticleType.WALLKICK, pos.x + paddingX, pos.y + paddingY, false);
             }
@@ -117,7 +116,7 @@ public abstract class PlayerBase extends MovingObject {
             if (previousState != state && grounded) {
                 float padding = xDashRocketPadding;
                 if (direction == RIGHT) {
-                    padding = - bounds.width - xDashRocketPadding;
+                    padding = - mapCollisionBounds.width - xDashRocketPadding;
                 }
                 map.addParticle(Particle.ParticleType.DASH, pos.x + padding, pos.y, false);
             }
@@ -163,6 +162,8 @@ public abstract class PlayerBase extends MovingObject {
         currentAnimation.setPlayMode(prevPlayMode);
         return frameIndex;
     }
+
+    protected abstract void updateTakeDamageBounds();
 
     public abstract void createAnimations();
 

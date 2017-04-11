@@ -122,7 +122,7 @@ public abstract class MapBase implements Disposable {
      * We allow a bit of leeway by giving another 1/4th of the values here.
      */
     private boolean isPointInPlayerRange(float x, float y) {
-        return Math.abs((int)x - (int)player.bounds.x) < 12 && Math.abs((int)y - (int)player.bounds.y) < 7;
+        return Math.abs((int)x - (int)player.mapCollisionBounds.x) < 12 && Math.abs((int)y - (int)player.mapCollisionBounds.y) < 7;
     }
 
     public void update(float deltaTime) {
@@ -133,7 +133,7 @@ public abstract class MapBase implements Disposable {
         while (i.hasNext()) {
             PlayerAttack attack = i.next();
             attack.update(player, deltaTime);
-            if (!isPointInPlayerRange(attack.bounds.x, attack.bounds.y)) {
+            if (!isPointInPlayerRange(attack.mapCollisionBounds.x, attack.mapCollisionBounds.y)) {
                 attack.shouldBeRemoved = true;
             }
             if (attack.shouldBeRemoved) {
@@ -148,7 +148,7 @@ public abstract class MapBase implements Disposable {
 
         for (EnemyBase enemy : enemyList) {
             // If the enemy is outside of player's range, kill it
-            if (!isPointInPlayerRange(enemy.bounds.x, enemy.bounds.y)) {
+            if (!isPointInPlayerRange(enemy.mapCollisionBounds.x, enemy.mapCollisionBounds.y)) {
                 if (isPointInPlayerRange(enemy.spawnPos.x, enemy.spawnPos.y)) {
                     enemy.despawn(false);
                 } else {

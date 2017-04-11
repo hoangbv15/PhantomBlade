@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.Damage;
-import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.math.GeoMath;
 import com.sideprojects.megamanxphantomblade.math.NumberMath;
@@ -43,7 +42,7 @@ public abstract class PhysicsBase {
     public final CollisionList getMapCollision(MovingObject object, float deltaTime, MapBase map, boolean overlapMode) {
         Vector2 vel = object.vel;
         int direction = vel.x >= 0 ? MovingObject.RIGHT : MovingObject.LEFT;
-        Rectangle bounds = object.bounds;
+        Rectangle bounds = object.mapCollisionBounds;
 
         collisions.toList.clear();
         // From inside out, find the first tile that collides with the player
@@ -166,12 +165,12 @@ public abstract class PhysicsBase {
     }
 
     public final Damage getEnemyCollisionDamage(MovingObject object, MapBase map) {
-        EnemyBase enemy = getCollidingEnemy(object, map);
+        EnemyBase enemy = getCollidingEnemy(object, map, false);
         if (enemy == null) {
             return null;
         }
-        float playerX = object.bounds.x + object.bounds.width / 2;
-        float enemyX = enemy.bounds.x + enemy.bounds.width / 2;
+        float playerX = object.takeDamageBounds.x + object.takeDamageBounds.width / 2;
+        float enemyX = enemy.mapCollisionBounds.x + enemy.mapCollisionBounds.width / 2;
         Damage.Side side = Damage.Side.Left;
         if (playerX < enemyX) {
             side = Damage.Side.Right;
@@ -184,7 +183,7 @@ public abstract class PhysicsBase {
         if (attack.isDead()) {
             return;
         }
-        EnemyBase enemy = getCollidingEnemy(attack, map);
+        EnemyBase enemy = getCollidingEnemy(attack, map, true);
         if (enemy == null) {
             return;
         }
@@ -201,12 +200,17 @@ public abstract class PhysicsBase {
         }
     }
 
-    private EnemyBase getCollidingEnemy(MovingObject object, MapBase map) {
+    private EnemyBase getCollidingEnemy(MovingObject object, MapBase map, boolean isEnemyTakingDamage) {
         for (EnemyBase enemy: map.enemyList) {
             if (enemy.isDead() || !enemy.spawned) {
                 continue;
             }
-            if (object.bounds.overlaps(enemy.bounds)) {
+            if (isEnemyTakingDamage) {
+                if (object.mapCollisionBounds.overlaps(enemy.takeDamageBounds)) {
+                    return enemy;
+                }
+            }
+            else if (object.takeDamageBounds.overlaps(enemy.mapCollisionBounds)) {
                 return enemy;
             }
         }
