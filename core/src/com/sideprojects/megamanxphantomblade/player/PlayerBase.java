@@ -51,6 +51,8 @@ public abstract class PlayerBase extends MovingObject {
     public static float xDashRocketPadding = 0.4f;
     public Vector2 animationPadding;
 
+    private float wallslideParticleTimeStart = 0.05f;
+
     public PlayerBase(float x, float y, int difficulty) {
         this.difficulty = difficulty;
         spawnPos = new Vector2(x, y);
@@ -97,9 +99,11 @@ public abstract class PlayerBase extends MovingObject {
             type = PlayerAnimationBase.Type.Touchdown;
         } else if (state == PlayerState.Wallslide) {
             type = PlayerAnimationBase.Type.Wallslide;
-            float paddingX = direction == RIGHT ? (mapCollisionBounds.getWidth() - 0.15f) : - 0.1f;
-            float paddingY = -0.1f;
-            map.addParticle(Particle.ParticleType.WALLSLIDE, pos.x + paddingX, pos.y + paddingY, true);
+            if (stateTime > wallslideParticleTimeStart) {
+                float paddingX = direction == RIGHT ? (mapCollisionBounds.getWidth() - 0.15f) : -0.1f;
+                float paddingY = -0.1f;
+                map.addParticle(Particle.ParticleType.WALLSLIDE, pos.x + paddingX, pos.y + paddingY, true);
+            }
         } else if (state == PlayerState.Walljump) {
             type = PlayerAnimationBase.Type.Walljump;
             if (previousState != state) {
