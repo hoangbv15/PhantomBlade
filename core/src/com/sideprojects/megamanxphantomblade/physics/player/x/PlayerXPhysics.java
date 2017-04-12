@@ -25,8 +25,8 @@ public class PlayerXPhysics extends PlayerPhysics {
 
     // Timing for charging
     private static float waitBeforeCharging = 0.2f;
-    private static float timeToFullyCharged = 1.9f;
-    private static float timeToAlmostFullyCharged = 1.5f;
+    private static float timeToFullyCharged = 1.7f;
+    private static float timeToAlmostFullyCharged = 1.3f;
 
     private float attackStateTime;
     private PlayerState prevState;
