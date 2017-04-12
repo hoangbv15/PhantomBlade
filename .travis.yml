@@ -1,0 +1,19 @@
+language: java
+
+jdk:
+  - oraclejdk7
+
+os:
+  - linux
+
+branches:
+  only:
+    - master
+
+cache:
+  directories:
+  - $HOME/.gradle
+
+script:
+  - ./gradlew desktop:zip
+  - ./gradlew html:dist
