@@ -20,7 +20,8 @@ public abstract class MovingObject {
 
     public Vector2 pos;
     public Vector2 vel;
-    public Rectangle bounds;
+    public Rectangle mapCollisionBounds = new Rectangle();
+    public Rectangle takeDamageBounds = new Rectangle();
 
     public float stateTime;
 
@@ -43,8 +44,10 @@ public abstract class MovingObject {
     }
 
     public void updatePos() {
-        pos.x = bounds.x;
-        pos.y = bounds.y;
+        pos.x = mapCollisionBounds.x;
+        pos.y = mapCollisionBounds.y;
+        takeDamageBounds.x = mapCollisionBounds.x;
+        takeDamageBounds.y = mapCollisionBounds.y;
     }
 
     public void die() {

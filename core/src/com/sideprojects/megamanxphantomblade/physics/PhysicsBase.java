@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.Damage;
-import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.math.GeoMath;
 import com.sideprojects.megamanxphantomblade.math.NumberMath;
@@ -37,9 +36,13 @@ public abstract class PhysicsBase {
     }
 
     public final CollisionList getMapCollision(MovingObject object, float deltaTime, MapBase map) {
-        int direction = object.direction;
+        return getMapCollision(object, deltaTime, map, false);
+    }
+
+    public final CollisionList getMapCollision(MovingObject object, float deltaTime, MapBase map, boolean overlapMode) {
         Vector2 vel = object.vel;
-        Rectangle bounds = object.bounds;
+        int direction = vel.x >= 0 ? MovingObject.RIGHT : MovingObject.LEFT;
+        Rectangle bounds = object.mapCollisionBounds;
 
         collisions.toList.clear();
         // From inside out, find the first tile that collides with the player
@@ -106,7 +109,7 @@ public abstract class PhysicsBase {
 
                 for (CollisionDetectionRay ray: detectionRayList) {
                     Collision collision = getSideOfCollisionWithTile(ray, tile,
-                            tileUp, tileDown, tileLeft, tileRight);
+                            tileUp, tileDown, tileLeft, tileRight, overlapMode);
                     if (collision != null) {
                         collisionList.add(collision);
                         collisions.toList.add(collision);
@@ -122,9 +125,15 @@ public abstract class PhysicsBase {
                                                  Rectangle tileUp,
                                                  Rectangle tileDown,
                                                  Rectangle tileLeft,
-                                                 Rectangle tileRight) {
+                                                 Rectangle tileRight,
+                                                 boolean overlapMode) {
         Vector2 start = ray.getStart();
         Vector2 end = ray.getEnd();
+
+        // If we just wants to check collision from overlapping
+        if (overlapMode && tile.contains(start)) {
+            return new Collision(start, Collision.Side.None, ray, tile);
+        }
 
         // Put non-null ones in an array, then sort by distance to start
         // A line can only have at most 2 intersections with a rectangle
@@ -156,12 +165,12 @@ public abstract class PhysicsBase {
     }
 
     public final Damage getEnemyCollisionDamage(MovingObject object, MapBase map) {
-        EnemyBase enemy = getCollidingEnemy(object, map);
+        EnemyBase enemy = getCollidingEnemy(object, map, false);
         if (enemy == null) {
             return null;
         }
-        float playerX = object.bounds.x + object.bounds.width / 2;
-        float enemyX = enemy.bounds.x + enemy.bounds.width / 2;
+        float playerX = object.takeDamageBounds.x + object.takeDamageBounds.width / 2;
+        float enemyX = enemy.mapCollisionBounds.x + enemy.mapCollisionBounds.width / 2;
         Damage.Side side = Damage.Side.Left;
         if (playerX < enemyX) {
             side = Damage.Side.Right;
@@ -174,7 +183,7 @@ public abstract class PhysicsBase {
         if (attack.isDead()) {
             return;
         }
-        EnemyBase enemy = getCollidingEnemy(attack, map);
+        EnemyBase enemy = getCollidingEnemy(attack, map, true);
         if (enemy == null) {
             return;
         }
@@ -184,12 +193,24 @@ public abstract class PhysicsBase {
         }
     }
 
-    private EnemyBase getCollidingEnemy(MovingObject object, MapBase map) {
+    public final void stopAttackIfHitWall(PlayerAttack attack, float delta, MapBase map) {
+        CollisionList collisions = getMapCollision(attack, delta, map, true);
+        if (!collisions.toList.isEmpty()) {
+            attack.die(true);
+        }
+    }
+
+    private EnemyBase getCollidingEnemy(MovingObject object, MapBase map, boolean isEnemyTakingDamage) {
         for (EnemyBase enemy: map.enemyList) {
             if (enemy.isDead() || !enemy.spawned) {
                 continue;
             }
-            if (object.bounds.overlaps(enemy.bounds)) {
+            if (isEnemyTakingDamage) {
+                if (object.mapCollisionBounds.overlaps(enemy.takeDamageBounds)) {
+                    return enemy;
+                }
+            }
+            else if (object.takeDamageBounds.overlaps(enemy.mapCollisionBounds)) {
                 return enemy;
             }
         }
@@ -204,7 +225,7 @@ public abstract class PhysicsBase {
 
     private void doesPushBack(MovingObject object, float delta) {
         if (currentPushBackDurationToGo > 0) {
-            object.vel.x = getPushBackSpeed() * pushBackDirection;
+            object.vel.x = getPushBackSpeed() * pushBackDirection * currentPushBackDurationToGo / getPushBackDuration();
             currentPushBackDurationToGo -= delta;
         } else if (isBeingPushedBack) {
             isBeingPushedBack = false;

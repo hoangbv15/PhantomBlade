@@ -25,6 +25,9 @@ public class Touchdown extends Idle {
 
     @Override
     public PlayerMovementStateBase nextState(InputProcessor input, PlayerBase player, CollisionList collisionList) {
+        if (player.vel.y > 0) {
+            return new Jump(input, player, player.state, stateChangeHandler);
+        }
         if (input.isCommandPressed(Command.DASH) && canDash(input)) {
             if (input.isCommandPressed(Command.UP)) {
                 return new Updash(player, player.state, stateChangeHandler);
@@ -33,9 +36,6 @@ public class Touchdown extends Idle {
         }
         if (player.vel.x != 0 && player.grounded) {
             return new Run(input, player, player.state, stateChangeHandler);
-        }
-        if (player.vel.y > 0) {
-            return new Jump(input, player, player.state, stateChangeHandler);
         }
         if (player.stateTime >= player.animations.get(PlayerAnimationBase.Type.Touchdown).getAnimationDuration()) {
             return new Idle(input, player, player.state, stateChangeHandler);

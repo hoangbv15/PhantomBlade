@@ -79,21 +79,21 @@ public abstract class ParallaxLayer {
 
 
 	/**
-	 * draw this layer at specified position. Make sure that when you implement or extend this method you draw this layer within bounds returned by {@link #getWidth()} and {@link #getHeight()}. 
+	 * draw this layer at specified position. Make sure that when you implement or extend this method you draw this layer within bounds returned by {@link #getWidth()} and {@link #getHeight()}.
 	 * @param batch the batch used for rendering
 	 * @param pos the position of the lower left corner where rendering should be done
 	 */
-	public void draw(Batch batch,Vector2 pos){
-		this.draw(batch, pos.x, pos.y);
+	public void draw(Batch batch, Vector2 pos, float delta){
+		this.draw(batch, pos.x, pos.y, delta);
 	}
 	
 	/**
-	 * draw this layer at specified position. Make sure that when you implement or extend this method you draw this layer within bounds returned by {@link #getWidth()} and {@link #getHeight()}. 
+	 * draw this layer at specified position. Make sure that when you implement or extend this method you draw this layer within bounds returned by {@link #getWidth()} and {@link #getHeight()}.
 	 * @param batch the batch used for rendering
 	 * @param x the x position of the lower left corner where rendering should be done
 	 * @param y the y position of the lower left corner where rendering should be done
 	 */
-	public abstract void draw(Batch batch,float x, float y);
+	public abstract void draw(Batch batch, float x, float y, float delta);
 
 	/**
 	 * get the {@link TileMode} in x direction

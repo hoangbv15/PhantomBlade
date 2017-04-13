@@ -29,7 +29,7 @@ public abstract class PlayerPhysics extends Physics {
     protected float getPushBackDuration() { return 0.08f; }
 
     @Override
-    protected float getPushBackSpeed() { return 3f; }
+    protected float getPushBackSpeed() { return 5f; }
 
     public PlayerMovementStateBase movementState;
     public PlayerDamageState damageState;

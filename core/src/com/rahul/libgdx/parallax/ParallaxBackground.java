@@ -64,7 +64,7 @@ public class ParallaxBackground {
 	 * @param worldCamera The Orthographic WorldCamera , all layers are rendered relative to its position.
 	 * @param batch The batch which is used to render the layers.
 	 */
-	public void draw(OrthographicCamera worldCamera, Batch batch){
+	public void draw(OrthographicCamera worldCamera, Batch batch, float delta){
 		cachedProjectionView.set(worldCamera.combined);
 		cachedPos.set(worldCamera.position);
 		cachedZoom = worldCamera.zoom;
@@ -81,7 +81,7 @@ public class ParallaxBackground {
 		            float currentY =  (layer.getTileModeY().equals(TileMode.single)?0:((int)((worldCamera.position.y-worldCamera.viewportHeight*.5f*worldCamera.zoom) / layer.getHeight())) * layer.getHeight())-(((1-layer.getParallaxRatio().y)%1)*worldCamera.viewportHeight*.5f);
 		            do{
 		               if(!((worldCamera.position.x-worldCamera.viewportWidth*worldCamera.zoom*.5f>currentX+layer.getWidth())||(worldCamera.position.x+worldCamera.viewportWidth*worldCamera.zoom*.5f<currentX)||(worldCamera.position.y-worldCamera.viewportHeight*worldCamera.zoom*.5f>currentY+layer.getHeight())||(worldCamera.position.y+worldCamera.viewportHeight*worldCamera.zoom*.5f<currentY)))
-		                   layer.draw(batch, currentX, currentY);
+		                   layer.draw(batch, currentX, currentY, delta);
 		               currentY += layer.getHeight();
 		               if(layer.getTileModeY().equals(TileMode.single))
 			        	     break;

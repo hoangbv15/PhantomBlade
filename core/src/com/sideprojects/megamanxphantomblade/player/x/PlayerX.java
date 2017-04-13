@@ -25,11 +25,14 @@ public class PlayerX extends PlayerBase {
     private float almostChargeStateTime;
     private float fullyChargedStateTime;
 
+    private float idleBoundWidth = 0.4f;
+    private float idleBoundHeight = 0.7f;
+
     protected PlayerX(float x, float y, int difficulty) {
         super(x, y, difficulty);
-        bounds.width = 0.4f;
-        bounds.height = 0.7f;
-        auxiliaryFrames = new HashMap<PlayerAnimationBase.Type, TextureRegion>(2);
+        mapCollisionBounds.width = idleBoundWidth;
+        mapCollisionBounds.height = idleBoundHeight;
+        auxiliaryFrames = new HashMap<>(2);
         List<Integer> outerCircleChargeAnimationIndex = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
         List<Integer> innerCircleChargeAnimationIndex = Arrays.asList(13, 11, 13, 10, 13, 12, 13, 14);
         List<Integer> innerCircleAlmostChargeAnimationIndex = Arrays.asList(10, 14, 11, 14, 12, 10, 13, 11);
@@ -37,6 +40,20 @@ public class PlayerX extends PlayerBase {
         innerCircleChargeAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.ChargeInnerCircles, MovingObject.RIGHT, Sprites.XChargeParticles, innerCircleChargeAnimationIndex, 0.05f);
         innerCircleAlmostChargeAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.ChargeInnerCircles, MovingObject.RIGHT, Sprites.XChargeParticles, innerCircleAlmostChargeAnimationIndex, 0.05f);
         chargeStateTime = 0;
+    }
+
+    @Override
+    protected void updateTakeDamageBounds() {
+        switch (state) {
+            case Dash:
+                takeDamageBounds.setWidth(idleBoundHeight);
+                takeDamageBounds.setHeight(idleBoundWidth);
+                break;
+            default:
+                takeDamageBounds.setWidth(idleBoundWidth);
+                takeDamageBounds.setHeight(idleBoundWidth);
+                break;
+        }
     }
 
     @Override

@@ -1,0 +1,17 @@
+language: java
+
+jdk:
+  - oraclejdk7
+
+os:
+  - linux
+
+cache:
+  directories:
+  - $HOME/.gradle
+
+script:
+  - ./gradlew desktop:zip
+  - ./gradlew html:dist
+  - curl -X POST "https://${BB_AUTH_STRING}@api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"desktop/build/distributions/desktop-1.0.zip"
+  - curl -X POST "https://${BB_AUTH_STRING}@api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"desktop/build/libs/desktop-1.0.jar"
