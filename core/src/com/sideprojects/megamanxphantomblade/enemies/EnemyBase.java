@@ -65,6 +65,7 @@ public abstract class EnemyBase<T> extends MovingObject {
         mapCollisionBounds.y = spawnPos.y;
         pos.x = mapCollisionBounds.x;
         pos.y = mapCollisionBounds.y;
+        explodeFragments.clear();
         this.canSpawn = canSpawn;
     }
 
@@ -98,7 +99,6 @@ public abstract class EnemyBase<T> extends MovingObject {
                 }
             } else {
                 despawn(false);
-                explodeFragments.clear();
             }
         } else {
             stateTime += delta;
