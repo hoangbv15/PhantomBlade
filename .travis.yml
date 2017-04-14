@@ -12,7 +12,7 @@ cache:
 
 before_script:
   - mkdir PhantomBlade
-  - mv * PhantomBlade
+  - mv !(PhantomBlade) PhantomBlade
   - mkdir hoangbv15.github.io
   - cd hoangbv15.github.io
   - git clone git@github.com:hoangbv15/hoangbv15.github.io.git
