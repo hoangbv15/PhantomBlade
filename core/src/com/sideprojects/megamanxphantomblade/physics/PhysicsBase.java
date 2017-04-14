@@ -140,11 +140,11 @@ public abstract class PhysicsBase {
         List<Collision> collisionList = new ArrayList<Collision>(2);
 
         // Find intersection on each side of the tile
-        if (tileLeft == null) {
+        if (shouldThereBeCollisionWithSideTile(tile, tileLeft)) {
             Collision left = new Collision(GeoMath.findIntersectionLeft(tile, start, end), Collision.Side.Left, ray, tile);
             if (left.point != null) collisionList.add(left);
         }
-        if (tileRight == null) {
+        if (shouldThereBeCollisionWithSideTile(tile, tileRight)) {
             Collision right = new Collision(GeoMath.findIntersectionRight(tile, start, end), Collision.Side.Right, ray, tile);
             if (right.point != null) collisionList.add(right);
         }
@@ -162,6 +162,10 @@ public abstract class PhysicsBase {
         }
 
         return Collision.getCollisionNearestToStart(collisionList, start);
+    }
+
+    private boolean shouldThereBeCollisionWithSideTile(Rectangle thisTile, Rectangle otherTile) {
+        return otherTile == null || thisTile.getHeight() > otherTile.getHeight();
     }
 
     public final Damage getEnemyCollisionDamage(MovingObject object, MapBase map) {

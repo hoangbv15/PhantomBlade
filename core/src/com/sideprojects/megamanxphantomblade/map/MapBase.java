@@ -1,6 +1,7 @@
 package com.sideprojects.megamanxphantomblade.map;
 
 import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -27,6 +28,8 @@ import java.util.List;
  * Created by buivuhoang on 04/02/17.
  */
 public abstract class MapBase implements Disposable {
+    public static String HalfTileSize = "Half";
+    public static String TileSize = "Size";
     public static String MapLayer = "Map";
     public static String ObjectLayer = "Objects";
     public static String XSpawn = "XSpawn";
@@ -110,6 +113,10 @@ public abstract class MapBase implements Disposable {
             for (int x = 0; x < mapLayer.getWidth(); x++) {
                 TiledMapTileLayer.Cell cell = mapLayer.getCell(x, y);
                 if (cell != null) {
+                    MapProperties properties = cell.getTile().getProperties();
+                    if (properties.containsKey(TileSize) && HalfTileSize.equals(properties.get(TileSize, String.class))) {
+                        bounds[x][y] = new Rectangle(x, y, 1, 0.5f);
+                    } else
                     bounds[x][y] = new Rectangle(x, y, 1, 1);
                 }
             }
