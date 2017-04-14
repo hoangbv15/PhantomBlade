@@ -13,15 +13,15 @@ cache:
 before_script:
   - mkdir PhantomBlade
   - mv !(PhantomBlade) PhantomBlade
-  - mkdir hoangbv15.github.io
-  - cd hoangbv15.github.io
-  - git clone git@github.com:hoangbv15/hoangbv15.github.io.git
+  - git clone https://github.com/hoangbv15/hoangbv15.github.io.git
   - cd ..
   - cd PhantomBlade
 
 script:
   - ./gradlew desktop:zip
   - ./gradlew html:dist
+
+after_script:
   - curl -X POST "https://${BB_AUTH_STRING}@api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"desktop/build/distributions/desktop-1.0.zip"
   - curl -X POST "https://${BB_AUTH_STRING}@api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"desktop/build/libs/desktop-1.0.jar"
   - cd ..
