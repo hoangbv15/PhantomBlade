@@ -25,7 +25,7 @@ after_script:
   - curl -X POST "https://${BB_AUTH_STRING}@api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"desktop/build/distributions/desktop-1.0.zip"
   - curl -X POST "https://${BB_AUTH_STRING}@api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"desktop/build/libs/desktop-1.0.jar"
   - cd ..
-  - rsync -r /PhantomBlade/html/build/dist/ /hoangbv15.github.io/
+  - rsync -r PhantomBlade/html/build/dist/ hoangbv15.github.io/
   - cd hoangbv15.github.io
   - git config user.email "buivuhoang15@gmail.com"
   - git config user.name "Hoang Bui"
