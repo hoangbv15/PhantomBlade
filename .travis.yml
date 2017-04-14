@@ -11,9 +11,6 @@ cache:
   - $HOME/.gradle
 
 before_script:
-  - git config user.email "buivuhoang15@gmail.com"
-  - git config user.name "Hoang Bui"
-  - git config push.default simple
   - mkdir PhantomBlade
   - mv !(PhantomBlade) PhantomBlade
   - git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/hoangbv15/hoangbv15.github.io.git
@@ -30,6 +27,9 @@ after_script:
   - cd ..
   - rsync -r /PhantomBlade/html/build/dist/ /hoangbv15.github.io/
   - cd hoangbv15.github.io
+  - git config user.email "buivuhoang15@gmail.com"
+  - git config user.name "Hoang Bui"
+  - git config push.default simple
   - git add .
   - git commit -m "Automated deploy script"
   - git push
