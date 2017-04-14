@@ -16,7 +16,7 @@ before_script:
   - git config push.default simple
   - mkdir PhantomBlade
   - mv !(PhantomBlade) PhantomBlade
-  - git clone https://${GIT_USERNAME}:${GIT_PASSWORD}github.com/hoangbv15/hoangbv15.github.io.git
+  - git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/hoangbv15/hoangbv15.github.io.git
 
 script:
   - cd PhantomBlade
