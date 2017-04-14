@@ -11,9 +11,12 @@ cache:
   - $HOME/.gradle
 
 before_script:
+  - git config user.email "buivuhoang15@gmail.com"
+  - git config user.name "Hoang Bui"
+  - git config push.default simple
   - mkdir PhantomBlade
   - mv !(PhantomBlade) PhantomBlade
-  - git clone https://github.com/hoangbv15/hoangbv15.github.io.git
+  - git clone https://${GIT_USERNAME}:${GIT_PASSWORD}github.com/hoangbv15/hoangbv15.github.io.git
 
 script:
   - cd PhantomBlade
