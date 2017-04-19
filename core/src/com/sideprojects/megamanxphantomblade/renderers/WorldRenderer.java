@@ -60,7 +60,7 @@ public class WorldRenderer implements Disposable {
         guiCam = new OrthographicCamera(16, 9);
         guiCam.zoom = 0.4f;
         damagedShader = DamagedShader.getShader();
-        playerRenderer = new PlayerRenderer(map.player, map.getTileWidth(), gameCam, batch, damagedShader);
+        playerRenderer = new PlayerRenderer(map.player, map.getTileWidth(), batch, damagedShader);
         playerHealthRenderer = new PlayerHealthRenderer(batch);
         lerpTarget = new Vector3();
         playerYOffset = 1/5f * map.getTileHeight();

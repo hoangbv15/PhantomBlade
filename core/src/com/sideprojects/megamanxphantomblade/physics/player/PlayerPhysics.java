@@ -138,6 +138,12 @@ public abstract class PlayerPhysics extends Physics {
             // Do any optional update
             movementState.update(input, player);
         }
+
+        // Check if player is dead
+        if (player.isDead() && player.state != PlayerState.Dead) {
+            playerSound.callback(player.state, PlayerState.Dead);
+            player.state = PlayerState.Dead;
+        }
     }
 
     public void setStateToIdle() {

@@ -6,7 +6,6 @@ import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
-import com.sideprojects.megamanxphantomblade.math.GeoMath;
 import com.sideprojects.megamanxphantomblade.math.NumberMath;
 import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay;
@@ -63,13 +62,13 @@ public abstract class PhysicsBase {
 
         // Setup collision detection rays
         List<CollisionDetectionRay> detectionRayList = new ArrayList<CollisionDetectionRay>(5);
-        if (vel.y != 0) {
-            detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, 0, paddingY));
-            detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, bounds.width, paddingY));
-        }
         if (vel.x != 0) {
             detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, 0));
             detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, bounds.height));
+        }
+        if (vel.y != 0) {
+            detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, 0, paddingY));
+            detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, bounds.width, paddingY));
         }
         if (vel.x != 0 && vel.y != 0) {
             detectionRayList.add(new CollisionDetectionRay(bounds, endPos, paddingX, paddingY));
@@ -97,18 +96,18 @@ public abstract class PhysicsBase {
         List<Collision> collisionList = new ArrayList<Collision>(2);
         for (int y = yStart; NumberMath.hasNotExceeded(y, yStart, yEnd); y = NumberMath.iteratorNext(y, yStart, yEnd)) {
             for (int x = xStart; NumberMath.hasNotExceeded(x, xStart, xEnd); x = NumberMath.iteratorNext(x, xStart, xEnd)) {
-                Rectangle tile = map.getCollidableBox(x, y);
+                TileBase tile = map.getCollidableBox(x, y);
                 if (tile == null) {
                     continue;
                 }
                 // Get the tiles surrounding this one
-                Rectangle tileUp = map.getCollidableBox(x, y + 1);
-                Rectangle tileDown = map.getCollidableBox(x, y - 1);
-                Rectangle tileLeft = map.getCollidableBox(x - 1, y);
-                Rectangle tileRight = map.getCollidableBox(x + 1, y);
+                TileBase tileUp = map.getCollidableBox(x, y + 1);
+                TileBase tileDown = map.getCollidableBox(x, y - 1);
+                TileBase tileLeft = map.getCollidableBox(x - 1, y);
+                TileBase tileRight = map.getCollidableBox(x + 1, y);
 
                 for (CollisionDetectionRay ray: detectionRayList) {
-                    Collision collision = getSideOfCollisionWithTile(ray, tile,
+                    Collision collision = tile.getCollisionWithTile(ray,
                             tileUp, tileDown, tileLeft, tileRight, overlapMode);
                     if (collision != null) {
                         collisionList.add(collision);
@@ -119,53 +118,6 @@ public abstract class PhysicsBase {
         }
 
         return new CollisionList(collisionList);
-    }
-
-    private Collision getSideOfCollisionWithTile(CollisionDetectionRay ray, Rectangle tile,
-                                                 Rectangle tileUp,
-                                                 Rectangle tileDown,
-                                                 Rectangle tileLeft,
-                                                 Rectangle tileRight,
-                                                 boolean overlapMode) {
-        Vector2 start = ray.getStart();
-        Vector2 end = ray.getEnd();
-
-        // If we just wants to check collision from overlapping
-        if (overlapMode && tile.contains(start)) {
-            return new Collision(start, Collision.Side.None, ray, tile);
-        }
-
-        // Put non-null ones in an array, then sort by distance to start
-        // A line can only have at most 2 intersections with a rectangle
-        List<Collision> collisionList = new ArrayList<Collision>(2);
-
-        // Find intersection on each side of the tile
-        if (shouldThereBeCollisionWithSideTile(tile, tileLeft)) {
-            Collision left = new Collision(GeoMath.findIntersectionLeft(tile, start, end), Collision.Side.Left, ray, tile);
-            if (left.point != null) collisionList.add(left);
-        }
-        if (shouldThereBeCollisionWithSideTile(tile, tileRight)) {
-            Collision right = new Collision(GeoMath.findIntersectionRight(tile, start, end), Collision.Side.Right, ray, tile);
-            if (right.point != null) collisionList.add(right);
-        }
-        if (tileUp == null) {
-            Collision up = new Collision(GeoMath.findIntersectionUp(tile, start, end), Collision.Side.Up, ray, tile, tileLeft, tileRight);
-            if (up.point != null) collisionList.add(up);
-        }
-        if (tileDown == null) {
-            Collision down = new Collision(GeoMath.findIntersectionDown(tile, start, end), Collision.Side.Down, ray, tile);
-            if (down.point != null) collisionList.add(down);
-        }
-
-        if (collisionList.isEmpty()) {
-            return null;
-        }
-
-        return Collision.getCollisionNearestToStart(collisionList, start);
-    }
-
-    private boolean shouldThereBeCollisionWithSideTile(Rectangle thisTile, Rectangle otherTile) {
-        return otherTile == null || thisTile.getHeight() > otherTile.getHeight();
     }
 
     public final Damage getEnemyCollisionDamage(MovingObject object, MapBase map) {

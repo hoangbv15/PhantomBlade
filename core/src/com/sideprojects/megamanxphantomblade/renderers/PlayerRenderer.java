@@ -20,7 +20,6 @@ import com.sideprojects.megamanxphantomblade.renderers.shaders.TraceShader;
 public class PlayerRenderer implements Disposable {
     private PlayerBase player;
 
-    private OrthographicCamera cam;
     private SpriteBatch batch;
     private ShaderProgram traceShader;
     private ShaderProgram damagedShader;
@@ -53,15 +52,14 @@ public class PlayerRenderer implements Disposable {
     private float flickerStateTime = 0;
 
 
-    public PlayerRenderer(PlayerBase player, float mapTileWidth, OrthographicCamera cam, SpriteBatch batch, ShaderProgram damagedShader) {
+    public PlayerRenderer(PlayerBase player, float mapTileWidth, SpriteBatch batch, ShaderProgram damagedShader) {
         this.player = player;
-        this.cam = cam;
         this.mapTileWidth = mapTileWidth;
         this.batch = batch;
 
         traceShader = TraceShader.getShaderColor(player.getTraceColour());
-        lastPlayerFrameQueue = new Queue<TextureRegion>(numOfTraces);
-        lastPlayerPositionQueue = new Queue<Vector2>(numOfTraces);
+        lastPlayerFrameQueue = new Queue<>(numOfTraces);
+        lastPlayerPositionQueue = new Queue<>(numOfTraces);
         startRemovingTraces = false;
         // Calculate dash rocket padding
         leftDashRocketPadding = player.animations.get(PlayerAnimationBase.Type.Dash).getKeyFrame(0).getRegionWidth();

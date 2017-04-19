@@ -2,6 +2,7 @@ package com.sideprojects.megamanxphantomblade.physics.collision;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.sideprojects.megamanxphantomblade.physics.TileBase;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -14,12 +15,12 @@ public class Collision {
     /**
      * The tile on the left of the colliding tile
      */
-    protected final Rectangle tileLeft;
+    protected final TileBase tileLeft;
 
     /**
      * The tile on the right of the colliding tile
      */
-    protected final Rectangle tileRight;
+    protected final TileBase tileRight;
 
     /**
      * The point of the collision
@@ -39,11 +40,11 @@ public class Collision {
     /**
      * The position of the map tile
      */
-    public Rectangle tile;
+    public TileBase tile;
 
     private CollisionDetectionRay ray;
 
-    public Collision(Vector2 collidePoint, Side collideSide, CollisionDetectionRay ray, Rectangle tile, Rectangle tileLeft, Rectangle tileRight) {
+    public Collision(Vector2 collidePoint, Side collideSide, CollisionDetectionRay ray, TileBase tile, TileBase tileLeft, TileBase tileRight) {
         this.point = collidePoint;
         this.side = collideSide;
         if (collidePoint != null) {
@@ -55,7 +56,7 @@ public class Collision {
         this.tileRight = tileRight;
     }
 
-    public Collision(Vector2 collidePoint, Side collideSide, CollisionDetectionRay ray, Rectangle tile) {
+    public Collision(Vector2 collidePoint, Side collideSide, CollisionDetectionRay ray, TileBase tile) {
         this(collidePoint, collideSide, ray, tile, null, null);
     }
 
@@ -64,7 +65,7 @@ public class Collision {
     }
 
     public enum Side {
-        Up, Down, Left, Right, None
+        Up, Down, Left, Right, UpRamp, None
     }
 
     public static Collision getCollisionNearestToStart(List<Collision> list, final Vector2 start) {
