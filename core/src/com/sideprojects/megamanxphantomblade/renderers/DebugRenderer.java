@@ -84,6 +84,9 @@ public class DebugRenderer implements Disposable {
                     end = new Vector2(tile.xTopHigher, tile.yTopHigher);
                     break;
             }
+            if (start == null) {
+                continue;
+            }
             start.x *= map.getTileWidth();
             start.y *= map.getTileHeight();
             end.x *= map.getTileWidth();
@@ -95,6 +98,8 @@ public class DebugRenderer implements Disposable {
                 map.player.pos.y * map.getTileHeight());
         Vector2 playerEnd = new Vector2((map.player.pos.x + map.player.vel.x * delta) * map.getTileWidth(),
                 (map.player.pos.y + map.player.vel.y * delta) * map.getTileHeight());
+
+        shapeDebugger.setColor(1, 0, 0, 1);
         shapeDebugger.line(playerStart, playerEnd);
 
         shapeDebugger.end();

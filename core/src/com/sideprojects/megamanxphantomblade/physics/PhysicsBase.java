@@ -9,6 +9,8 @@ import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.math.NumberMath;
 import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay;
+import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay.Orientation;
+import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay.Side;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
 import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
 
@@ -61,17 +63,20 @@ public abstract class PhysicsBase {
         Vector2 endPos = new Vector2(bounds.x + stepX, bounds.y + stepY);
 
         // Setup collision detection rays
-        List<CollisionDetectionRay> detectionRayList = new ArrayList<CollisionDetectionRay>(5);
+        List<CollisionDetectionRay> detectionRayList = object.detectionRayList;
+        detectionRayList.clear();
         if (vel.x != 0) {
-            detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, 0));
-            detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, bounds.height));
+            detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, 0, Side.Front, Orientation.Horizontal));
+            detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, bounds.height, Side.Front, Orientation.Horizontal));
         }
         if (vel.y != 0) {
-            detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, 0, paddingY));
-            detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, bounds.width, paddingY));
+            Side side1 = direction == MovingObject.LEFT ? Side.Front : Side.Back;
+            Side side2 = direction == MovingObject.RIGHT ? Side.Front : Side.Back;
+            detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, 0, paddingY, side1, Orientation.Vertical));
+            detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, bounds.width, paddingY, side2, Orientation.Vertical));
         }
         if (vel.x != 0 && vel.y != 0) {
-            detectionRayList.add(new CollisionDetectionRay(bounds, endPos, paddingX, paddingY));
+            detectionRayList.add(new CollisionDetectionRay(bounds, endPos, paddingX, paddingY, Side.Front, Orientation.Diagonal));
         }
 
         // Loop through map and use collision detection rays to detect...well..collisions.
@@ -107,7 +112,7 @@ public abstract class PhysicsBase {
                 TileBase tileRight = map.getCollidableBox(x + 1, y);
 
                 for (CollisionDetectionRay ray: detectionRayList) {
-                    Collision collision = tile.getCollisionWithTile(ray,
+                    Collision collision = tile.getCollisionWithTile(object, ray,
                             tileUp, tileDown, tileLeft, tileRight, overlapMode);
                     if (collision != null) {
                         collisionList.add(collision);

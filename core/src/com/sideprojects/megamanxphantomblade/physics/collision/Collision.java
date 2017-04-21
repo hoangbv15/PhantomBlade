@@ -1,7 +1,7 @@
 package com.sideprojects.megamanxphantomblade.physics.collision;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.physics.TileBase;
 
 import java.util.Arrays;
@@ -42,9 +42,18 @@ public class Collision {
      */
     public TileBase tile;
 
-    private CollisionDetectionRay ray;
+    /**
+     * The ray used to detect this collision
+     */
+    public CollisionDetectionRay ray;
 
-    public Collision(Vector2 collidePoint, Side collideSide, CollisionDetectionRay ray, TileBase tile, TileBase tileLeft, TileBase tileRight) {
+    /**
+     * The source moving object colliding with the tile
+     */
+    public MovingObject object;
+
+    public Collision(MovingObject object, Vector2 collidePoint, Side collideSide, CollisionDetectionRay ray, TileBase tile, TileBase tileLeft, TileBase tileRight) {
+        this.object = object;
         this.point = collidePoint;
         this.side = collideSide;
         if (collidePoint != null) {
@@ -56,19 +65,19 @@ public class Collision {
         this.tileRight = tileRight;
     }
 
-    public Collision(Vector2 collidePoint, Side collideSide, CollisionDetectionRay ray, TileBase tile) {
-        this(collidePoint, collideSide, ray, tile, null, null);
+    public Collision(MovingObject object, Vector2 collidePoint, Side collideSide, CollisionDetectionRay ray, TileBase tile) {
+        this(object, collidePoint, collideSide, ray, tile, null, null);
     }
 
     public Vector2 getPrecollidePos() {
-        return ray.getOrigin(point);
+        return tile.getPostCollisionPos(this);
     }
 
     public enum Side {
         Up, Down, Left, Right, UpRamp, None
     }
 
-    public static Collision getCollisionNearestToStart(List<Collision> list, final Vector2 start) {
+    public static Collision getCollisionNearestToStart(List<Collision> list) {
         Collision[] collisionArray = new Collision[list.size()];
         collisionArray = list.toArray(collisionArray);
 

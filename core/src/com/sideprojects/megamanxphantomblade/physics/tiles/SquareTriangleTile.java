@@ -1,10 +1,8 @@
 package com.sideprojects.megamanxphantomblade.physics.tiles;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
-import com.sideprojects.megamanxphantomblade.math.GeoMathRectangle;
 import com.sideprojects.megamanxphantomblade.math.GeoMathTriangle;
 import com.sideprojects.megamanxphantomblade.physics.TileBase;
 import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
@@ -135,14 +133,14 @@ public class SquareTriangleTile extends TileBase {
     }
 
     @Override
-    public Collision getCollisionWithTile(CollisionDetectionRay ray, TileBase tileUp, TileBase tileDown, TileBase tileLeft, TileBase tileRight, boolean overlapMode) {
+    public Collision getCollisionWithTile(MovingObject object, CollisionDetectionRay ray, TileBase tileUp, TileBase tileDown, TileBase tileLeft, TileBase tileRight, boolean overlapMode) {
         Vector2 start = ray.getStart();
         Vector2 end = ray.getEnd();
 
         // If we just wants to check collision from overlapping
         if (overlapMode) {
             if (tile.contains(start)) {
-                return new Collision(start, Collision.Side.None, ray, this);
+                return new Collision(object, start, Collision.Side.None, ray, this);
             } else {
                 return null;
             }
@@ -165,7 +163,7 @@ public class SquareTriangleTile extends TileBase {
 //        }
         if (squareAngle != SquareAngle.TopLeft && squareAngle != SquareAngle.TopRight &&
                 tileUp == null) {
-            Collision up = new Collision(GeoMathTriangle.findIntersectionUp(this, start, end), Collision.Side.UpRamp, ray, this, tileLeft, tileRight);
+            Collision up = new Collision(object, GeoMathTriangle.findVertexIntersectionUp(this, start, end), Collision.Side.UpRamp, ray, this, tileLeft, tileRight);
             if (up.point != null) collisionList.add(up);
         }
 //        if (squareAngle != SquareAngle.BottomLeft && squareAngle != SquareAngle.BottomRight &&
@@ -178,22 +176,54 @@ public class SquareTriangleTile extends TileBase {
             return null;
         }
 
-        return Collision.getCollisionNearestToStart(collisionList, start);
+        return Collision.getCollisionNearestToStart(collisionList);
     }
 
     @Override
-    public void postCollisionProcessing(MovingObject object, Collision collision, float delta) {
-        if (collision.side == Collision.Side.UpRamp) {
-            object.grounded = true;
-            object.mapCollisionBounds.y = collision.getPrecollidePos().y;
-            object.vel.y = 0;
-            if (object.vel.x != 0) {
-//                object.vel.x *= MathUtils.cos(45 * MathUtils.degreesToRadians);
-//                object.vel.y = object.vel.x * MathUtils.sin(45 * MathUtils.degreesToRadians) / MathUtils.cos(45 * MathUtils.degreesToRadians);
-                object.mapCollisionBounds.y += (object.vel.x - Math.abs(collision.point.x - object.mapCollisionBounds.x)) * delta;
-                System.out.println("upramp detected " + object.mapCollisionBounds.y);
+    public Vector2 getPostCollisionPos(Collision collision) {
+        CollisionDetectionRay ray = collision.ray;
+        MovingObject object = collision.object;
+        Vector2 finalPos = ray.getOrigin(collision.point);
+
+        // Filter out which ray can be used for the direction of the player and the triangle
+        if (squareAngle == SquareAngle.BottomRight) {
+            // player entering from left to right
+            if (object.direction == MovingObject.RIGHT && ray.side == CollisionDetectionRay.Side.Front) {
+                switch (ray.orientation) {
+                    case Diagonal:
+                    case Horizontal:
+                        finalPos.y += ray.getEnd().x - collision.point.x;
+                        System.out.println("Right upramp detected " + finalPos.y);
+                        break;
+                }
             }
+            // player entering from right to left
+            if (object.direction == MovingObject.LEFT && ray.side == CollisionDetectionRay.Side.Back && object.vel.x != 0) {
+                // This case needs to be handled differently since only the vertical back ray is detecting the collision
+                // Find the intersection between the extended horizontal line with the triangle upside
+                // TODO: Java 7 has no lambdas :(
+                CollisionDetectionRay horizontalRay = null;
+                for (CollisionDetectionRay r: object.detectionRayList) {
+                    if (r.orientation == CollisionDetectionRay.Orientation.Horizontal) {
+                        horizontalRay = r;
+                        break;
+                    }
+                }
+
+                if (horizontalRay != null) {
+                    Vector2 intersection = GeoMathTriangle.findLineIntersectionUp(this, horizontalRay.getStart(), horizontalRay.getEnd());
+                    if (intersection != null) {
+                        finalPos.y += horizontalRay.getEnd().x + object.mapCollisionBounds.getWidth() - intersection.x - object.mapCollisionBounds.y + collision.point.y;
+                        System.out.println("Left upramp detected " + finalPos.y);
+                    }
+                }
+            }
+        } else if (squareAngle == SquareAngle.BottomLeft) {
+        } else {
+            return finalPos;
         }
+
+        return finalPos;
     }
 
     private boolean shouldThereBeCollisionWithSideTile(TileBase thisTile, TileBase otherTile) {

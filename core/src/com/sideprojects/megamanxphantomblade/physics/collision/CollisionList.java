@@ -55,7 +55,7 @@ public class CollisionList {
     public Collision.Side collidingSide() { return collidingSide; }
 
     public boolean isAtEdge() {
-        return isAtEdgeLeft || isAtEdgeRight;
+        return isAtEdgeLeft() || isAtEdgeRight();
     }
 
     public boolean isAtEdgeLeft() {

@@ -2,6 +2,10 @@ package com.sideprojects.megamanxphantomblade;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by buivuhoang on 13/02/17.
@@ -10,6 +14,9 @@ import com.badlogic.gdx.math.Vector2;
  * These objects can collide with the map and with each other.
  */
 public abstract class MovingObject {
+    // Property for collision detection
+    public List<CollisionDetectionRay> detectionRayList = new ArrayList<>(5);
+
     // Directions
     public static final int LEFT = -1;
     public static final int RIGHT = 1;

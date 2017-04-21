@@ -1,6 +1,5 @@
 package com.sideprojects.megamanxphantomblade.physics;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
@@ -46,8 +45,12 @@ public abstract class Physics extends PhysicsBase {
                     object.vel.y = 0;
                     object.mapCollisionBounds.y = preCollide.y;
                     break;
+                case UpRamp:
+                    object.grounded = true;
+                    object.vel.y = 0;
+                    object.mapCollisionBounds.y = preCollide.y;
+                    break;
             }
-            collision.tile.postCollisionProcessing(object, collision, delta);
         }
 
         object.mapCollisionBounds.x += object.vel.x * delta;

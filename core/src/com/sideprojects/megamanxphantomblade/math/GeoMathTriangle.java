@@ -27,7 +27,21 @@ public class GeoMathTriangle {
         return intersect;
     }
 
-    public static Vector2 findIntersectionUp(SquareTriangleTile tile, Vector2 start, Vector2 end) {
+    public static Vector2 findVertexIntersectionUp(SquareTriangleTile tile, Vector2 start, Vector2 end) {
+        Vector2 intersect = findLineIntersectionUp(tile, start, end);
+
+        if (intersect == null) {
+            return null;
+        }
+
+        if (!numberIsBetween(intersect.x, start.x, end.x) || !numberIsBetween(intersect.y, start.y, end.y)) {
+            return null;
+        }
+
+        return intersect;
+    }
+
+    public static Vector2 findLineIntersectionUp(SquareTriangleTile tile, Vector2 start, Vector2 end) {
         // Ignore if the collision is from outside of the tile's y range
         if (start.y < tile.yBottomLower) {
             return null;
@@ -38,10 +52,6 @@ public class GeoMathTriangle {
 
         // Check if y is outside of the tile
         if (!numberIsBetween(intersect.x, tile.xCorner, tile.xHorizontal)) {
-            return null;
-        }
-
-        if (!numberIsBetween(intersect.x, start.x, end.x) || !numberIsBetween(intersect.y, start.y, end.y)) {
             return null;
         }
 

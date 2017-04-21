@@ -48,14 +48,14 @@ public class RectangleTile extends TileBase {
     }
 
     @Override
-    public Collision getCollisionWithTile(CollisionDetectionRay ray, TileBase tileUp, TileBase tileDown, TileBase tileLeft, TileBase tileRight, boolean overlapMode) {
+    public Collision getCollisionWithTile(MovingObject object, CollisionDetectionRay ray, TileBase tileUp, TileBase tileDown, TileBase tileLeft, TileBase tileRight, boolean overlapMode) {
         Vector2 start = ray.getStart();
         Vector2 end = ray.getEnd();
 
         // If we just wants to check collision from overlapping
         if (overlapMode) {
             if (tile.contains(start)) {
-                return new Collision(start, Collision.Side.None, ray, this);
+                return new Collision(object, start, Collision.Side.None, ray, this);
             } else {
                 return null;
             }
@@ -67,19 +67,19 @@ public class RectangleTile extends TileBase {
 
         // Find intersection on each side of the tile
         if (shouldThereBeCollisionWithSideTile(this, tileLeft)) {
-            Collision left = new Collision(GeoMathRectangle.findIntersectionLeft(this, start, end), Collision.Side.Left, ray, this);
+            Collision left = new Collision(object, GeoMathRectangle.findIntersectionLeft(this, start, end), Collision.Side.Left, ray, this);
             if (left.point != null) collisionList.add(left);
         }
         if (shouldThereBeCollisionWithSideTile(this, tileRight)) {
-            Collision right = new Collision(GeoMathRectangle.findIntersectionRight(this, start, end), Collision.Side.Right, ray, this);
+            Collision right = new Collision(object, GeoMathRectangle.findIntersectionRight(this, start, end), Collision.Side.Right, ray, this);
             if (right.point != null) collisionList.add(right);
         }
         if (tileUp == null) {
-            Collision up = new Collision(GeoMathRectangle.findIntersectionUp(this, start, end), Collision.Side.Up, ray, this, tileLeft, tileRight);
+            Collision up = new Collision(object, GeoMathRectangle.findIntersectionUp(this, start, end), Collision.Side.Up, ray, this, tileLeft, tileRight);
             if (up.point != null) collisionList.add(up);
         }
         if (tileDown == null) {
-            Collision down = new Collision(GeoMathRectangle.findIntersectionDown(this, start, end), Collision.Side.Down, ray, this);
+            Collision down = new Collision(object, GeoMathRectangle.findIntersectionDown(this, start, end), Collision.Side.Down, ray, this);
             if (down.point != null) collisionList.add(down);
         }
 
@@ -87,13 +87,14 @@ public class RectangleTile extends TileBase {
             return null;
         }
 
-        return Collision.getCollisionNearestToStart(collisionList, start);
+        return Collision.getCollisionNearestToStart(collisionList);
     }
 
     @Override
-    public void postCollisionProcessing(MovingObject object, Collision collision, float delta) {
-        // No need to do anything
+    public Vector2 getPostCollisionPos(Collision collision) {
+        return collision.ray.getOrigin(collision.point);
     }
+
 
     private boolean shouldThereBeCollisionWithSideTile(TileBase thisTile, TileBase otherTile) {
         return otherTile == null || thisTile.getHeight() > otherTile.getHeight();
