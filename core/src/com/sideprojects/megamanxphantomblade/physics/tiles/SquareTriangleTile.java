@@ -1,5 +1,6 @@
 package com.sideprojects.megamanxphantomblade.physics.tiles;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
@@ -210,24 +211,8 @@ public class SquareTriangleTile extends TileBase {
             if (object.direction == MovingObject.RIGHT && ray.side == CollisionDetectionRay.Side.Front) {
                 switch (ray.orientation) {
                     case Diagonal:
-                    case Horizontal:
                         float finalX = ray.getEnd().x;
-                        float rightSideOfFloatingX = finalX - (int)finalX;
-                        float xDifference = finalX - (int)ray.getStart().x;
-                        if (xDifference != 0) {
-                            System.out.println("LOOOOOOOOOOOK");
-                            if (tileTopRight != null && tileTopRight instanceof SquareTriangleTile &&
-                                    ((SquareTriangleTile)tileTopRight).squareAngle == SquareAngle.BottomRight) {
-                                System.out.println("LOOOOOOOOOOOK 1");
-                                    finalPos.y = (int)object.mapCollisionBounds.y + (int)xDifference + rightSideOfFloatingX;
-                            } else {
-                                System.out.println("LOOOOOOOOOOOK 2");
-                                finalPos.y = (int)object.mapCollisionBounds.y + (int)xDifference;
-                            }
-                        } else {
-                            finalPos.y = (int)object.mapCollisionBounds.y + rightSideOfFloatingX;
-                        }
-                        System.out.println("Right upramp detected " + xDifference + " " + ray.orientation + " " + rightSideOfFloatingX);
+                        finalPos.y = calculateFinalY(finalX, tileTopRight);
                         break;
                 }
             }
@@ -247,8 +232,8 @@ public class SquareTriangleTile extends TileBase {
                 if (horizontalRay != null) {
                     Vector2 intersection = GeoMathTriangle.findLineIntersectionUp(this, horizontalRay.getStart(), horizontalRay.getEnd());
                     if (intersection != null) {
-                        finalPos.y += horizontalRay.getEnd().x + object.mapCollisionBounds.getWidth() - intersection.x - object.mapCollisionBounds.y + collision.point.y;
-                        System.out.println("Left upramp detected " + finalPos.y);
+                        float finalX = horizontalRay.getOrigin(horizontalRay.getEnd()).x + object.mapCollisionBounds.getWidth();
+                        finalPos.y = calculateFinalY(finalX, tileBottomLeft);
                     }
                 }
             }
@@ -258,6 +243,32 @@ public class SquareTriangleTile extends TileBase {
         }
 
         return finalPos;
+    }
+
+    @Override
+    public float getYPositionIfStandingOnTile(float x) {
+        switch (squareAngle) {
+            case BottomRight:
+                return y() + (x - (int)x);
+            default:
+                return y() + (x - (int)x);
+        }
+    }
+
+    private float calculateFinalY(float finalX, TileBase nextTile) {
+        float finalY;
+        int xDifference = (int)finalX - (int)x();
+        float rightSideOfFloatingX = finalX - (int)finalX;
+        if (xDifference != 0) {
+            if (nextTile != null) {
+                finalY = nextTile.getYPositionIfStandingOnTile(finalX);
+            } else {
+                finalY = y() + xDifference;
+            }
+        } else {
+            finalY = y() + rightSideOfFloatingX;
+        }
+        return finalY;
     }
 
     private boolean shouldThereBeCollisionWithSideTile(TileBase thisTile, TileBase otherTile) {

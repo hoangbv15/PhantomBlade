@@ -104,6 +104,11 @@ public class RectangleTile extends TileBase {
         return collision.ray.getOrigin(collision.point);
     }
 
+    @Override
+    public float getYPositionIfStandingOnTile(float x) {
+        return y() + getHeight();
+    }
+
 
     private boolean shouldThereBeCollisionWithSideTile(TileBase thisTile, TileBase otherTile) {
         return otherTile == null || thisTile.getHeight() > otherTile.getHeight();

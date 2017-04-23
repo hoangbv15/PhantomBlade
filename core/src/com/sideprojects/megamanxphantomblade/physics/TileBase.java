@@ -25,4 +25,5 @@ public abstract class TileBase {
                                                    TileBase tileBottomLRight,
                                                    boolean overlapMode);
     public abstract Vector2 getPostCollisionPos(Collision collision);
+    public abstract float getYPositionIfStandingOnTile(float x);
 }
