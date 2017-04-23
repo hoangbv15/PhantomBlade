@@ -96,8 +96,8 @@ public class DebugRenderer implements Disposable {
 
         Vector2 playerStart = new Vector2(map.player.pos.x * map.getTileWidth(),
                 map.player.pos.y * map.getTileHeight());
-        Vector2 playerEnd = new Vector2((map.player.pos.x + map.player.vel.x * delta) * map.getTileWidth(),
-                (map.player.pos.y + map.player.vel.y * delta) * map.getTileHeight());
+        Vector2 playerEnd = new Vector2((map.player.pos.x + map.player.vel.x * delta * 10) * map.getTileWidth(),
+                (map.player.pos.y + map.player.vel.y * delta * 10) * map.getTileHeight());
 
         shapeDebugger.setColor(1, 0, 0, 1);
         shapeDebugger.line(playerStart, playerEnd);

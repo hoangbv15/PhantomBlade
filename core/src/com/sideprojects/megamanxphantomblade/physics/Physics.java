@@ -39,14 +39,10 @@ public abstract class Physics extends PhysicsBase {
                     object.vel.x = 0;
                     object.mapCollisionBounds.x = preCollide.x;
                     break;
+                case UpRamp:
                 case Up:
                     object.grounded = true;
                 case Down:
-                    object.vel.y = 0;
-                    object.mapCollisionBounds.y = preCollide.y;
-                    break;
-                case UpRamp:
-                    object.grounded = true;
                     object.vel.y = 0;
                     object.mapCollisionBounds.y = preCollide.y;
                     break;
@@ -56,6 +52,7 @@ public abstract class Physics extends PhysicsBase {
         object.mapCollisionBounds.x += object.vel.x * delta;
         object.mapCollisionBounds.y += object.vel.y * delta;
         object.updatePos();
+
         return collisionList;
     }
 

@@ -1,6 +1,5 @@
 package com.sideprojects.megamanxphantomblade.physics.tiles;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
@@ -168,7 +167,7 @@ public class SquareTriangleTile extends TileBase {
 
         // Put non-null ones in an array, then sort by distance to start
         // A line can only have at most 2 intersections with a rectangle
-        List<Collision> collisionList = new ArrayList<Collision>(2);
+        List<Collision> collisionList = new ArrayList<>(2);
 
         // Find intersection on each side of the tile
 //        if (squareAngle != SquareAngle.BottomRight && squareAngle != SquareAngle.TopRight &&
@@ -182,6 +181,7 @@ public class SquareTriangleTile extends TileBase {
 //            if (right.point != null) collisionList.add(right);
 //        }
         if (squareAngle != SquareAngle.TopLeft && squareAngle != SquareAngle.TopRight &&
+                ray.orientation != CollisionDetectionRay.Orientation.Horizontal &&
                 tileUp == null) {
             Collision up = new Collision(object, GeoMathTriangle.findVertexIntersectionUp(this, start, end), Collision.Side.UpRamp, ray, this, tileLeft, tileRight);
             if (up.point != null) collisionList.add(up);
@@ -197,6 +197,10 @@ public class SquareTriangleTile extends TileBase {
         }
 
         return Collision.getCollisionNearestToStart(collisionList);
+    }
+
+    private boolean shouldThereBeCollisionWithSideTile(TileBase thisTile, TileBase otherTile) {
+        return otherTile == null || thisTile.getHeight() > otherTile.getHeight();
     }
 
     @Override
@@ -269,9 +273,5 @@ public class SquareTriangleTile extends TileBase {
             finalY = y() + rightSideOfFloatingX;
         }
         return finalY;
-    }
-
-    private boolean shouldThereBeCollisionWithSideTile(TileBase thisTile, TileBase otherTile) {
-        return otherTile == null || thisTile.getHeight() > otherTile.getHeight();
     }
 }
