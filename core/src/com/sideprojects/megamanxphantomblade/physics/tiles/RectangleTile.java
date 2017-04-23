@@ -48,7 +48,16 @@ public class RectangleTile extends TileBase {
     }
 
     @Override
-    public Collision getCollisionWithTile(MovingObject object, CollisionDetectionRay ray, TileBase tileUp, TileBase tileDown, TileBase tileLeft, TileBase tileRight, boolean overlapMode) {
+    public Collision getCollisionWithTile(MovingObject object, CollisionDetectionRay ray,
+                                                              TileBase tileUp,
+                                                              TileBase tileDown,
+                                                              TileBase tileLeft,
+                                                              TileBase tileRight,
+                                                              TileBase tileTopLeft,
+                                                              TileBase tileTopRight,
+                                                              TileBase tileBottomLeft,
+                                                              TileBase tileBottomLRight,
+                                                              boolean overlapMode) {
         Vector2 start = ray.getStart();
         Vector2 end = ray.getEnd();
 

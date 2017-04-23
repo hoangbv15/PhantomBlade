@@ -26,6 +26,11 @@ public class SquareTriangleTile extends TileBase {
     private float width;
     private SquareAngle squareAngle;
 
+    private TileBase tileTopLeft;
+    private TileBase tileTopRight;
+    private TileBase tileBottomLeft;
+    private TileBase tileBottomRight;
+
     public float xCorner;
     public float yCorner;
     public float xVertical;
@@ -133,7 +138,21 @@ public class SquareTriangleTile extends TileBase {
     }
 
     @Override
-    public Collision getCollisionWithTile(MovingObject object, CollisionDetectionRay ray, TileBase tileUp, TileBase tileDown, TileBase tileLeft, TileBase tileRight, boolean overlapMode) {
+    public Collision getCollisionWithTile(MovingObject object, CollisionDetectionRay ray,
+                                          TileBase tileUp,
+                                          TileBase tileDown,
+                                          TileBase tileLeft,
+                                          TileBase tileRight,
+                                          TileBase tileTopLeft,
+                                          TileBase tileTopRight,
+                                          TileBase tileBottomLeft,
+                                          TileBase tileBottomLRight,
+                                          boolean overlapMode) {
+        this.tileTopLeft = tileTopLeft;
+        this.tileTopRight = tileTopRight;
+        this.tileBottomLeft = tileBottomLeft;
+        this.tileBottomRight = tileBottomLRight;
+
         Vector2 start = ray.getStart();
         Vector2 end = ray.getEnd();
 
@@ -192,13 +211,28 @@ public class SquareTriangleTile extends TileBase {
                 switch (ray.orientation) {
                     case Diagonal:
                     case Horizontal:
-                        finalPos.y += ray.getEnd().x - collision.point.x;
-                        System.out.println("Right upramp detected " + finalPos.y);
+                        float finalX = ray.getEnd().x;
+                        float rightSideOfFloatingX = finalX - (int)finalX;
+                        float xDifference = finalX - (int)ray.getStart().x;
+                        if (xDifference != 0) {
+                            System.out.println("LOOOOOOOOOOOK");
+                            if (tileTopRight != null && tileTopRight instanceof SquareTriangleTile &&
+                                    ((SquareTriangleTile)tileTopRight).squareAngle == SquareAngle.BottomRight) {
+                                System.out.println("LOOOOOOOOOOOK 1");
+                                    finalPos.y = (int)object.mapCollisionBounds.y + (int)xDifference + rightSideOfFloatingX;
+                            } else {
+                                System.out.println("LOOOOOOOOOOOK 2");
+                                finalPos.y = (int)object.mapCollisionBounds.y + (int)xDifference;
+                            }
+                        } else {
+                            finalPos.y = (int)object.mapCollisionBounds.y + rightSideOfFloatingX;
+                        }
+                        System.out.println("Right upramp detected " + xDifference + " " + ray.orientation + " " + rightSideOfFloatingX);
                         break;
                 }
             }
             // player entering from right to left
-            if (object.direction == MovingObject.LEFT && ray.side == CollisionDetectionRay.Side.Back && object.vel.x != 0) {
+            else if (object.direction == MovingObject.LEFT && ray.side == CollisionDetectionRay.Side.Back && object.vel.x != 0) {
                 // This case needs to be handled differently since only the vertical back ray is detecting the collision
                 // Find the intersection between the extended horizontal line with the triangle upside
                 // TODO: Java 7 has no lambdas :(

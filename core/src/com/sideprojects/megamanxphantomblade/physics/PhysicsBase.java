@@ -110,10 +110,15 @@ public abstract class PhysicsBase {
                 TileBase tileDown = map.getCollidableBox(x, y - 1);
                 TileBase tileLeft = map.getCollidableBox(x - 1, y);
                 TileBase tileRight = map.getCollidableBox(x + 1, y);
+                TileBase tileTopLeft = map.getCollidableBox(x - 1, y + 1);
+                TileBase tileTopRight = map.getCollidableBox(x + 1, y + 1);
+                TileBase tileBottomLeft = map.getCollidableBox(x - 1, y - 1);
+                TileBase tileBottomRight = map.getCollidableBox(x + 1, y - 1);
 
                 for (CollisionDetectionRay ray: detectionRayList) {
                     Collision collision = tile.getCollisionWithTile(object, ray,
-                            tileUp, tileDown, tileLeft, tileRight, overlapMode);
+                            tileUp, tileDown, tileLeft, tileRight, tileTopLeft, tileTopRight, tileBottomLeft, tileBottomRight,
+                            overlapMode);
                     if (collision != null) {
                         collisionList.add(collision);
                         collisions.toList.add(collision);

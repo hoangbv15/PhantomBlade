@@ -14,6 +14,15 @@ public abstract class TileBase {
     public abstract float getHeight();
     public abstract float getWidth();
     public abstract float[] getVertices();
-    public abstract Collision getCollisionWithTile(MovingObject object, CollisionDetectionRay ray, TileBase tileUp, TileBase tileDown, TileBase tileLeft, TileBase tileRight, boolean overlapMode);
+    public abstract Collision getCollisionWithTile(MovingObject object, CollisionDetectionRay ray,
+                                                   TileBase tileUp,
+                                                   TileBase tileDown,
+                                                   TileBase tileLeft,
+                                                   TileBase tileRight,
+                                                   TileBase tileTopLeft,
+                                                   TileBase tileTopRight,
+                                                   TileBase tileBottomLeft,
+                                                   TileBase tileBottomLRight,
+                                                   boolean overlapMode);
     public abstract Vector2 getPostCollisionPos(Collision collision);
 }
