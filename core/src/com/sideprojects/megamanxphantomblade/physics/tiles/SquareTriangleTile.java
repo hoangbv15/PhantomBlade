@@ -183,7 +183,7 @@ public class SquareTriangleTile extends TileBase {
         if (squareAngle != SquareAngle.TopLeft && squareAngle != SquareAngle.TopRight &&
                 ray.orientation != CollisionDetectionRay.Orientation.Horizontal &&
                 tileUp == null) {
-            Collision up = new Collision(object, GeoMathTriangle.findVertexIntersectionUp(this, start, end), Collision.Side.UpRamp, ray, this, tileLeft, tileRight);
+            Collision up = new Collision(object, GeoMathTriangle.findVertexIntersectionUp(this, start, end), Collision.Side.UpRamp, ray, this, tileBottomLeft, tileTopRight);
             if (up.point != null) collisionList.add(up);
         }
 //        if (squareAngle != SquareAngle.BottomLeft && squareAngle != SquareAngle.BottomRight &&
