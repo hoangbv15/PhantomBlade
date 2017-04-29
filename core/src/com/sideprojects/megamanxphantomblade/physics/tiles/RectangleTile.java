@@ -111,6 +111,6 @@ public class RectangleTile extends TileBase {
 
 
     private boolean shouldThereBeCollisionWithSideTile(TileBase thisTile, TileBase otherTile) {
-        return otherTile == null || thisTile.getHeight() > otherTile.getHeight();
+        return otherTile == null || (thisTile.y() + thisTile.getHeight()) > (otherTile.y() + otherTile.getHeight());
     }
 }

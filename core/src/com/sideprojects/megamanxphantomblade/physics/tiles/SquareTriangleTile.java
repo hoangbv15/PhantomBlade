@@ -1,5 +1,7 @@
 package com.sideprojects.megamanxphantomblade.physics.tiles;
 
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
@@ -25,11 +27,11 @@ public class SquareTriangleTile extends TileBase {
     private float height;
     private float width;
     private SquareAngle squareAngle;
+    private float angle;// = 45 * MathUtils.degreesToRadians;
+    private float tanAngle;// = (float)Math.tan(angle);
 
-    private TileBase tileTopLeft;
-    private TileBase tileTopRight;
-    private TileBase tileBottomLeft;
-    private TileBase tileBottomRight;
+    private TileBase leftTile;
+    private TileBase rightTile;
 
     public float xCorner;
     public float yCorner;
@@ -51,7 +53,11 @@ public class SquareTriangleTile extends TileBase {
     public float xBottomHigher;
     public float yBottomHigher;
 
-    public SquareTriangleTile(float x, float y, float xCorner, float yCorner, float xVertical, float yVertical, float xHorizontal, float yHorizontal) {
+    // Index of current tile and total number of tiles that lie in a row, before incrementing Y
+    private int index;
+    private int total;
+
+    public SquareTriangleTile(float x, float y, float xCorner, float yCorner, float xVertical, float yVertical, float xHorizontal, float yHorizontal, int index, int total) {
         this.x = x;
         this.y = y;
         this.xCorner = xCorner;
@@ -60,9 +66,13 @@ public class SquareTriangleTile extends TileBase {
         this.yVertical = yVertical;
         this.xHorizontal = xHorizontal;
         this.yHorizontal = yHorizontal;
+        this.index = index;
+        this.total = total;
 
         height = Math.abs(yVertical - yCorner);
         width = Math.abs(xHorizontal - xCorner);
+        angle = MathUtils.atan2(height, width);
+        tanAngle = height;//(float)Math.tan(angle);
 
         if (xCorner == x && yCorner == y) {
             squareAngle = SquareAngle.BottomLeft;
@@ -107,7 +117,7 @@ public class SquareTriangleTile extends TileBase {
         }
 
         float[] vertices = new float[] {
-                xCorner, yCorner, xVertical, yVertical, xHorizontal, yHorizontal
+                xCorner, yCorner, xHorizontal, yHorizontal, xVertical, yVertical
         };
         tile = new Polygon(vertices);
     }
@@ -148,10 +158,16 @@ public class SquareTriangleTile extends TileBase {
                                           TileBase tileBottomLeft,
                                           TileBase tileBottomLRight,
                                           boolean overlapMode) {
-        this.tileTopLeft = tileTopLeft;
-        this.tileTopRight = tileTopRight;
-        this.tileBottomLeft = tileBottomLeft;
-        this.tileBottomRight = tileBottomLRight;
+        if (index > 0) {
+            leftTile = tileLeft;
+        } else {
+            leftTile = tileBottomLeft;
+        }
+        if (index < total - 1 || !(tileTopRight instanceof SquareTriangleTile)) {
+            rightTile = tileRight;
+        } else {
+            rightTile = tileTopRight;
+        }
 
         Vector2 start = ray.getStart();
         Vector2 end = ray.getEnd();
@@ -180,10 +196,13 @@ public class SquareTriangleTile extends TileBase {
 //            Collision right = new Collision(GeoMathRectangle.findIntersectionRight(this, start, end), Collision.Side.Right, ray, this);
 //            if (right.point != null) collisionList.add(right);
 //        }
-        if (squareAngle != SquareAngle.TopLeft && squareAngle != SquareAngle.TopRight &&
-                ray.orientation != CollisionDetectionRay.Orientation.Horizontal &&
-                tileUp == null) {
-            Collision up = new Collision(object, GeoMathTriangle.findVertexIntersectionUp(this, start, end), Collision.Side.UpRamp, ray, this, tileBottomLeft, tileTopRight);
+        if (ray.orientation != CollisionDetectionRay.Orientation.Horizontal && tileUp == null &&
+                (squareAngle == SquareAngle.BottomRight || squareAngle == SquareAngle.BottomLeft)) {
+//                (squareAngle == SquareAngle.BottomRight &&
+//                        (object.direction == MovingObject.RIGHT && ray.side == CollisionDetectionRay.Side.Front ||
+//                                object.direction == MovingObject.LEFT && ray.side == CollisionDetectionRay.Side.Back)
+//                )) {
+            Collision up = new Collision(object, GeoMathTriangle.findVertexIntersectionUp(this, start, end), Collision.Side.UpRamp, ray, this, leftTile, rightTile);
             if (up.point != null) collisionList.add(up);
         }
 //        if (squareAngle != SquareAngle.BottomLeft && squareAngle != SquareAngle.BottomRight &&
@@ -216,7 +235,7 @@ public class SquareTriangleTile extends TileBase {
                 switch (ray.orientation) {
                     case Diagonal:
                         float finalX = ray.getEnd().x;
-                        finalPos.y = calculateFinalY(finalX, tileTopRight);
+                        finalPos.y = calculateFinalY(finalX, rightTile);
                         break;
                 }
             }
@@ -237,7 +256,7 @@ public class SquareTriangleTile extends TileBase {
                     Vector2 intersection = GeoMathTriangle.findLineIntersectionUp(this, horizontalRay.getStart(), horizontalRay.getEnd());
                     if (intersection != null) {
                         float finalX = horizontalRay.getOrigin(horizontalRay.getEnd()).x + object.mapCollisionBounds.getWidth();
-                        finalPos.y = calculateFinalY(finalX, tileBottomLeft);
+                        finalPos.y = calculateFinalY(finalX, leftTile);
                     }
                 }
             }
@@ -253,24 +272,30 @@ public class SquareTriangleTile extends TileBase {
     public float getYPositionIfStandingOnTile(float x) {
         switch (squareAngle) {
             case BottomRight:
-                return y() + (x - (int)x);
+                return y() + (x - (int)x) * getTanAngle();
             default:
-                return y() + (x - (int)x);
+                return y() + (x - (int)x) * getTanAngle();
         }
+//        Vector2 intersect = new Vector2();
+//        Intersector.intersectLines(xTopLower, yTopLower, xTopHigher, yTopHigher, x, 0, x, 1, intersect);
+//        return intersect.y;
+    }
+
+    public float getAngle() {
+        return angle;
+    }
+
+    public float getTanAngle() {
+        return tanAngle;
     }
 
     private float calculateFinalY(float finalX, TileBase nextTile) {
         float finalY;
         int xDifference = (int)finalX - (int)x();
-        float rightSideOfFloatingX = finalX - (int)finalX;
-        if (xDifference != 0) {
-            if (nextTile != null) {
-                finalY = nextTile.getYPositionIfStandingOnTile(finalX);
-            } else {
-                finalY = y() + xDifference;
-            }
+        if (xDifference != 0 && nextTile != null) {
+            finalY = nextTile.getYPositionIfStandingOnTile(finalX);
         } else {
-            finalY = y() + rightSideOfFloatingX;
+            finalY = getYPositionIfStandingOnTile(finalX);
         }
         return finalY;
     }

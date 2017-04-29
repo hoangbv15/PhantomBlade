@@ -31,6 +31,8 @@ import java.util.List;
  * Created by buivuhoang on 04/02/17.
  */
 public abstract class MapBase implements Disposable {
+    public static String TotalNumOfTiles = "Total";
+    public static String TileIndex = "Index";
     public static String Orientation = "Orientation";
     public static String Left = "Left";
     public static String Right = "Right";
@@ -128,10 +130,14 @@ public abstract class MapBase implements Disposable {
                         bounds[x][y] = new RectangleTile(x, y, 1, 45/62f);
                     } else if (properties.containsKey(TileType) && SquareTriangle.equals(properties.get(TileType, String.class))) {
                         String orientation = properties.get(Orientation, String.class);
+                        int totalTiles = properties.get(TotalNumOfTiles, Integer.class);
+                        int tileIndex = properties.get(TileIndex, Integer.class);
+                        float startY = y + tileIndex / (float)totalTiles;
+                        float endY = y + (tileIndex + 1) / (float)totalTiles;
                         if (Left.equals(orientation)) {
-                            bounds[x][y] = new SquareTriangleTile(x, y, x, y, x, y + 1, x + 1, y);
+                            bounds[x][y] = new SquareTriangleTile(x, startY, x, startY, x, endY, x + 1, startY, tileIndex, totalTiles);
                         } else if (Right.equals(orientation)) {
-                            bounds[x][y] = new SquareTriangleTile(x, y, x + 1, y, x + 1, y + 1, x, y);
+                            bounds[x][y] = new SquareTriangleTile(x, startY, x + 1, startY, x + 1, endY, x, startY, tileIndex, totalTiles);
                         }
                     } else {
                         bounds[x][y] = new RectangleTile(x, y, 1, 1);
@@ -171,21 +177,21 @@ public abstract class MapBase implements Disposable {
             }
         }
 
-//        for (EnemyBase enemy : enemyList) {
-//            // If the enemy is outside of player's range, kill it
-//            if (!isPointInPlayerRange(enemy.mapCollisionBounds.x, enemy.mapCollisionBounds.y)) {
-//                if (isPointInPlayerRange(enemy.spawnPos.x, enemy.spawnPos.y)) {
-//                    enemy.despawn(false);
-//                } else {
-//                    enemy.despawn(true);
-//                }
-//            } else if (!enemy.spawned && enemy.canSpawn) {
-//                enemy.spawn();
-//            }
-//            if (enemy.spawned) {
-//                enemy.update(deltaTime);
-//            }
-//        }
+        for (EnemyBase enemy : enemyList) {
+            // If the enemy is outside of player's range, kill it
+            if (!isPointInPlayerRange(enemy.mapCollisionBounds.x, enemy.mapCollisionBounds.y)) {
+                if (isPointInPlayerRange(enemy.spawnPos.x, enemy.spawnPos.y)) {
+                    enemy.despawn(false);
+                } else {
+                    enemy.despawn(true);
+                }
+            } else if (!enemy.spawned && enemy.canSpawn) {
+                enemy.spawn();
+            }
+            if (enemy.spawned) {
+                enemy.update(deltaTime);
+            }
+        }
 
         // If player dies, respawn for now
         if (player.isDead()) {

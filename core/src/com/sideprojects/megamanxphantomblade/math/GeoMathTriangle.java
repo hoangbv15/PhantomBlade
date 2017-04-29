@@ -1,6 +1,7 @@
 package com.sideprojects.megamanxphantomblade.math;
 
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.physics.tiles.SquareTriangleTile;
 
@@ -28,6 +29,14 @@ public class GeoMathTriangle {
     }
 
     public static Vector2 findVertexIntersectionUp(SquareTriangleTile tile, Vector2 start, Vector2 end) {
+//        // Calculate the angle of the speed vector
+//        float angle = MathUtils.atan2(end.y - start.y, end.x - start.x);
+//        // Compare this angle to the tile's angle
+//        // If this angle is larger than the tile's angle, return null
+//        if (angle > tile.getAngle()) {
+//            return null;
+//        }
+
         Vector2 intersect = findLineIntersectionUp(tile, start, end);
 
         if (intersect == null) {
