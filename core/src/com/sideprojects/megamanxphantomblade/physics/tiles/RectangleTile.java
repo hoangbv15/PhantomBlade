@@ -17,6 +17,9 @@ import java.util.List;
 public class RectangleTile extends TileBase {
     private Rectangle tile;
     private float[] vertices;
+    private TileBase leftTile;
+    private TileBase rightTile;
+
     public RectangleTile(float x, float y, float width, float height) {
         tile = new Rectangle(x, y, width, height);
         vertices = new float[] {x, y, x + width, y, x + width, y + height, x, y + height};
@@ -56,8 +59,25 @@ public class RectangleTile extends TileBase {
                                                               TileBase tileTopLeft,
                                                               TileBase tileTopRight,
                                                               TileBase tileBottomLeft,
-                                                              TileBase tileBottomLRight,
+                                                              TileBase tileBottomRight,
                                                               boolean overlapMode) {
+        if (tileTopLeft != null && tileTopLeft instanceof SquareTriangleTile) {
+            leftTile = tileTopLeft;
+        } else if (tileBottomLeft != null && tileBottomLeft instanceof SquareTriangleTile) {
+            leftTile = tileBottomLeft;
+        } else {
+            leftTile = tileLeft;
+        }
+        if (tileTopRight != null && tileTopRight instanceof SquareTriangleTile) {
+            rightTile = tileTopRight;
+        } else if (tileBottomRight != null && tileBottomRight instanceof SquareTriangleTile) {
+            rightTile = tileBottomRight;
+        } else {
+            rightTile = tileRight;
+        }
+
+
+
         Vector2 start = ray.getStart();
         Vector2 end = ray.getEnd();
 
@@ -101,6 +121,25 @@ public class RectangleTile extends TileBase {
 
     @Override
     public Vector2 getPostCollisionPos(Collision collision) {
+        if (collision.side == Collision.Side.Up) {
+            Vector2 finalPos = collision.ray.getOrigin(collision.point);
+            MovingObject object = collision.object;
+            CollisionDetectionRay horizontalRay = null;
+            for (CollisionDetectionRay r: object.detectionRayList) {
+                if (r.orientation == CollisionDetectionRay.Orientation.Horizontal) {
+                    horizontalRay = r;
+                    break;
+                }
+            }
+            if (horizontalRay != null) {
+                if (object.direction == MovingObject.LEFT) {
+                    finalPos.y = calculateFinalY(horizontalRay.getOrigin(horizontalRay.getEnd()).x, leftTile);
+                } else {
+                    finalPos.y = calculateFinalY(horizontalRay.getEnd().x, rightTile);
+                }
+            }
+            return finalPos;
+        }
         return collision.ray.getOrigin(collision.point);
     }
 
@@ -108,7 +147,6 @@ public class RectangleTile extends TileBase {
     public float getYPositionIfStandingOnTile(float x) {
         return y() + getHeight();
     }
-
 
     private boolean shouldThereBeCollisionWithSideTile(TileBase thisTile, TileBase otherTile) {
         return otherTile == null || (thisTile.y() + thisTile.getHeight()) > (otherTile.y() + otherTile.getHeight());

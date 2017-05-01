@@ -1,6 +1,5 @@
 package com.sideprojects.megamanxphantomblade.physics.tiles;
 
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
@@ -156,7 +155,7 @@ public class SquareTriangleTile extends TileBase {
                                           TileBase tileTopLeft,
                                           TileBase tileTopRight,
                                           TileBase tileBottomLeft,
-                                          TileBase tileBottomLRight,
+                                          TileBase tileBottomRight,
                                           boolean overlapMode) {
         if (index > 0) {
             leftTile = tileLeft;
@@ -287,16 +286,5 @@ public class SquareTriangleTile extends TileBase {
 
     public float getTanAngle() {
         return tanAngle;
-    }
-
-    private float calculateFinalY(float finalX, TileBase nextTile) {
-        float finalY;
-        int xDifference = (int)finalX - (int)x();
-        if (xDifference != 0 && nextTile != null) {
-            finalY = nextTile.getYPositionIfStandingOnTile(finalX);
-        } else {
-            finalY = getYPositionIfStandingOnTile(finalX);
-        }
-        return finalY;
     }
 }
