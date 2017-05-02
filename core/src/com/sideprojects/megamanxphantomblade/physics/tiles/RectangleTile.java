@@ -133,7 +133,7 @@ public class RectangleTile extends TileBase {
             }
             if (horizontalRay != null) {
                 if (object.direction == MovingObject.LEFT) {
-                    finalPos.y = calculateFinalY(horizontalRay.getOrigin(horizontalRay.getEnd()).x, leftTile);
+                    finalPos.y = calculateFinalY(horizontalRay.getEnd().x + object.mapCollisionBounds.getWidth(), leftTile);
                 } else {
                     finalPos.y = calculateFinalY(horizontalRay.getEnd().x, rightTile);
                 }

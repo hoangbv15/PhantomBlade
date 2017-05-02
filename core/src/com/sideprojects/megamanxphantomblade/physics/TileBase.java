@@ -32,7 +32,7 @@ public abstract class TileBase {
     protected float calculateFinalY(float finalX, TileBase nextTile) {
         float finalY;
         int xDifference = (int)finalX - (int)x();
-        if (xDifference != 0 && nextTile != null) {
+        if (xDifference != 0 && nextTile != null && (int)nextTile.x() == (int)finalX) {
             finalY = nextTile.getYPositionIfStandingOnTile(finalX);
         } else {
             finalY = getYPositionIfStandingOnTile(finalX);

@@ -26,8 +26,8 @@ public class SquareTriangleTile extends TileBase {
     private float height;
     private float width;
     private SquareAngle squareAngle;
-    private float angle;// = 45 * MathUtils.degreesToRadians;
-    private float tanAngle;// = (float)Math.tan(angle);
+    private float angle;
+    private float tanAngle;
 
     private TileBase leftTile;
     private TileBase rightTile;
@@ -196,11 +196,13 @@ public class SquareTriangleTile extends TileBase {
 //            if (right.point != null) collisionList.add(right);
 //        }
         if (ray.orientation != CollisionDetectionRay.Orientation.Horizontal && tileUp == null &&
-                (squareAngle == SquareAngle.BottomRight || squareAngle == SquareAngle.BottomLeft)) {
-//                (squareAngle == SquareAngle.BottomRight &&
-//                        (object.direction == MovingObject.RIGHT && ray.side == CollisionDetectionRay.Side.Front ||
-//                                object.direction == MovingObject.LEFT && ray.side == CollisionDetectionRay.Side.Back)
-//                )) {
+//                (squareAngle == SquareAngle.BottomRight || squareAngle == SquareAngle.BottomLeft)) {
+                (squareAngle == SquareAngle.BottomRight &&
+                        ((object.direction == MovingObject.RIGHT && ray.side == CollisionDetectionRay.Side.Front) ||
+                                (object.direction == MovingObject.LEFT && ray.side == CollisionDetectionRay.Side.Back && object.vel.x != 0) ||
+                                (object.direction == MovingObject.LEFT && ray.side == CollisionDetectionRay.Side.Front && object.vel.x == 0)
+                        )
+                )) {
             Collision up = new Collision(object, GeoMathTriangle.findVertexIntersectionUp(this, start, end), Collision.Side.UpRamp, ray, this, leftTile, rightTile);
             if (up.point != null) collisionList.add(up);
         }
