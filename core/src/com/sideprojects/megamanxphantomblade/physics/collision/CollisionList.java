@@ -13,6 +13,7 @@ public class CollisionList {
     private Collision.Side collidingSide;
     private boolean isAtEdgeLeft;
     private boolean isAtEdgeRight;
+    private boolean isColliding;
 
     public CollisionList(List<Collision> collisionList) {
         this.toList = collisionList;
@@ -20,6 +21,7 @@ public class CollisionList {
         isAtEdgeLeft = false;
         isAtEdgeRight = false;
         Collision up = null;
+        isColliding = !collisionList.isEmpty();
         for (Collision collision: toList) {
             if (collision.side == Collision.Side.Left ||
                     collision.side == Collision.Side.Right ||
@@ -46,6 +48,10 @@ public class CollisionList {
 
     public boolean isCollidingSide() {
         return isCollidingSide;
+    }
+
+    public boolean isColliding() {
+        return isColliding;
     }
 
     public float distanceToSideCollision() {

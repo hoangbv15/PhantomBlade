@@ -91,7 +91,7 @@ public class Dash extends PlayerMovementStateBase {
             if (player.stateTime >= dashDuration
                     || hasChangedDirection(player)
                     || !input.isCommandPressed(Command.DASH) ||
-                    collisionList.isCollidingSide()) {
+                    collisionList.isColliding()) {
                 return nextStateIfExit(input, player, collisionList);
             }
         }

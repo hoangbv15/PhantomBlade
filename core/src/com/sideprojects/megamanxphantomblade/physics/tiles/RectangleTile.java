@@ -132,10 +132,13 @@ public class RectangleTile extends TileBase {
                 }
             }
             if (horizontalRay != null) {
-                if (object.direction == MovingObject.LEFT) {
-                    finalPos.y = calculateFinalY(horizontalRay.getEnd().x + object.mapCollisionBounds.getWidth(), leftTile);
-                } else {
-                    finalPos.y = calculateFinalY(horizontalRay.getEnd().x, rightTile);
+                TileBase nextTile = object.direction == MovingObject.LEFT ? leftTile : rightTile;
+                if (nextTile instanceof SquareTriangleTile) {
+                    if (object.direction == ((SquareTriangleTile)nextTile).upDirection) {
+                        finalPos.y = calculateFinalY(horizontalRay.getEnd().x, nextTile);
+                    } else {
+                        finalPos.y = calculateFinalY(horizontalRay.getEnd().x - object.mapCollisionBounds.getWidth() * object.direction, nextTile);
+                    }
                 }
             }
             return finalPos;
