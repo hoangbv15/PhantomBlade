@@ -63,10 +63,11 @@ public abstract class PhysicsBase {
         Vector2 endPos = new Vector2(bounds.x + stepX, bounds.y + stepY);
 
         // Setup collision detection rays
-        List<CollisionDetectionRay> detectionRayList = object.detectionRayList;
-        detectionRayList.clear();
+        List<CollisionDetectionRay> detectionRayList = new ArrayList<>();
+        object.resetCollisionDetectionRays();
         if (vel.x != 0) {
-            detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, 0, Side.Front, Orientation.Horizontal));
+            object.horizontalRay = new CollisionDetectionRay(bounds, endPosX, paddingX, 0, Side.Front, Orientation.Horizontal);
+            detectionRayList.add(object.horizontalRay);
             detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, bounds.height, Side.Front, Orientation.Horizontal));
         }
         if (vel.y != 0) {
@@ -76,8 +77,8 @@ public abstract class PhysicsBase {
             detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, bounds.width, paddingY, side2, Orientation.Vertical));
         }
         if (vel.x != 0 && vel.y != 0) {
-            // TODO: Fix bug where the triangle collision detection only takes into account diagonal rays, but while jumping upwards, there is only 1 diagonal ray pointing up from the top, hence collision not detected.
-            detectionRayList.add(new CollisionDetectionRay(bounds, endPos, paddingX, paddingY, Side.Front, Orientation.Diagonal));
+            object.diagonalRay = new CollisionDetectionRay(bounds, endPos, paddingX, paddingY, Side.Front, Orientation.Diagonal);
+            detectionRayList.add(object.diagonalRay);
         }
 
         // Loop through map and use collision detection rays to detect...well..collisions.

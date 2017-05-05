@@ -15,7 +15,8 @@ import java.util.List;
  */
 public abstract class MovingObject {
     // Property for collision detection
-    public List<CollisionDetectionRay> detectionRayList = new ArrayList<>(5);
+    public CollisionDetectionRay horizontalRay;
+    public CollisionDetectionRay diagonalRay;
 
     // Directions
     public static final int LEFT = -1;
@@ -63,5 +64,10 @@ public abstract class MovingObject {
 
     public boolean isDead() {
         return healthPoints <= 0;
+    }
+
+    public void resetCollisionDetectionRays() {
+        horizontalRay = null;
+        diagonalRay = null;
     }
 }
