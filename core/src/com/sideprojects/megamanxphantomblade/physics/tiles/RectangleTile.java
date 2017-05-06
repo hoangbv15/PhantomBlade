@@ -127,10 +127,11 @@ public class RectangleTile extends TileBase {
             if (object.horizontalRay != null) {
                 TileBase nextTile = object.direction == MovingObject.LEFT ? leftTile : rightTile;
                 if (nextTile instanceof SquareTriangleTile) {
-                    if (object.direction == ((SquareTriangleTile)nextTile).upDirection) {
+                    int direction = object.movingDirection();
+                    if (direction == ((SquareTriangleTile)nextTile).upDirection) {
                         finalPos.y = calculateFinalY(object.horizontalRay.getEnd().x, nextTile);
                     } else {
-                        finalPos.y = calculateFinalY(object.horizontalRay.getEnd().x - object.mapCollisionBounds.getWidth() * object.direction, nextTile);
+                        finalPos.y = calculateFinalY(object.horizontalRay.getEnd().x - object.mapCollisionBounds.getWidth() * direction, nextTile);
                     }
                 }
             }

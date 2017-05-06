@@ -58,6 +58,10 @@ public abstract class MovingObject {
         takeDamageBounds.y = mapCollisionBounds.y;
     }
 
+    public int movingDirection() {
+        return vel.x > 0 ? MovingObject.RIGHT : vel.x == 0 ? direction : MovingObject.LEFT;
+    }
+
     public void die() {
         healthPoints = 0;
     }
