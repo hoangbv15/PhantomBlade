@@ -43,6 +43,7 @@ public abstract class PhysicsBase {
     public final CollisionList getMapCollision(MovingObject object, float deltaTime, MapBase map, boolean overlapMode) {
         Vector2 vel = object.vel;
         int direction = vel.x >= 0 ? MovingObject.RIGHT : MovingObject.LEFT;
+        direction = vel.x == 0 ? object.direction : direction;
         Rectangle bounds = object.mapCollisionBounds;
 
         collisions.toList.clear();

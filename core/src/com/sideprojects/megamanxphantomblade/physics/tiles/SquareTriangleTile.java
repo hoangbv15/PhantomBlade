@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
+import com.sideprojects.megamanxphantomblade.math.GeoMathRectangle;
 import com.sideprojects.megamanxphantomblade.math.GeoMathTriangle;
 import com.sideprojects.megamanxphantomblade.physics.TileBase;
 import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
@@ -26,7 +27,6 @@ public class SquareTriangleTile extends TileBase {
     private float height;
     private float width;
     private SquareAngle squareAngle;
-    private float angle;
     private float tanAngle;
 
     private TileBase leftTile;
@@ -71,8 +71,7 @@ public class SquareTriangleTile extends TileBase {
 
         height = Math.abs(yVertical - yCorner);
         width = Math.abs(xHorizontal - xCorner);
-        angle = MathUtils.atan2(height, width);
-        tanAngle = height;//(float)Math.tan(angle);
+        tanAngle = height;
 
         if (xCorner == x && yCorner == y) {
             squareAngle = SquareAngle.BottomLeft;
@@ -162,15 +161,28 @@ public class SquareTriangleTile extends TileBase {
                                           TileBase tileBottomLeft,
                                           TileBase tileBottomRight,
                                           boolean overlapMode) {
-        if (index > 0) {
-            leftTile = tileLeft;
-        } else {
-            leftTile = tileBottomLeft;
-        }
-        if (index < total - 1 || !(tileTopRight instanceof SquareTriangleTile)) {
-            rightTile = tileRight;
-        } else {
-            rightTile = tileTopRight;
+        if (squareAngle == SquareAngle.BottomRight) {
+            if (index > 0) {
+                leftTile = tileLeft;
+            } else {
+                leftTile = tileBottomLeft;
+            }
+            if (index < total - 1 || !(tileTopRight instanceof SquareTriangleTile)) {
+                rightTile = tileRight;
+            } else {
+                rightTile = tileTopRight;
+            }
+        } else if (squareAngle == SquareAngle.BottomLeft) {
+            if (index > 0) {
+                rightTile = tileRight;
+            } else {
+                rightTile = tileBottomRight;
+            }
+            if (index < total - 1 || !(tileTopLeft instanceof SquareTriangleTile)) {
+                leftTile = tileLeft;
+            } else {
+                leftTile = tileTopLeft;
+            }
         }
 
         Vector2 start = ray.getStart();
@@ -190,30 +202,29 @@ public class SquareTriangleTile extends TileBase {
         List<Collision> collisionList = new ArrayList<>(2);
 
         // Find intersection on each side of the tile
-//        if (squareAngle != SquareAngle.BottomRight && squareAngle != SquareAngle.TopRight &&
-//                shouldThereBeCollisionWithSideTile(this, tileLeft)) {
-//            Collision left = new Collision(GeoMathRectangle.findIntersectionLeft(this, start, end), Collision.Side.Left, ray, this);
-//            if (left.point != null) collisionList.add(left);
-//        }
-//        if (squareAngle != SquareAngle.BottomLeft && squareAngle != SquareAngle.TopLeft &&
-//                shouldThereBeCollisionWithSideTile(this, tileRight)) {
-//            Collision right = new Collision(GeoMathRectangle.findIntersectionRight(this, start, end), Collision.Side.Right, ray, this);
-//            if (right.point != null) collisionList.add(right);
-//        }
+        if (squareAngle != SquareAngle.BottomRight && squareAngle != SquareAngle.TopRight &&
+                shouldThereBeCollisionWithSideTile(this, tileLeft)) {
+            Collision left = new Collision(object, GeoMathRectangle.findIntersectionLeft(this, start, end), Collision.Side.Left, ray, this);
+            if (left.point != null) collisionList.add(left);
+        }
+        if (squareAngle != SquareAngle.BottomLeft && squareAngle != SquareAngle.TopLeft &&
+                shouldThereBeCollisionWithSideTile(this, tileRight)) {
+            Collision right = new Collision(object, GeoMathRectangle.findIntersectionRight(this, start, end), Collision.Side.Right, ray, this);
+            if (right.point != null) collisionList.add(right);
+        }
         if (tileUp == null &&
                 ((object.direction == upDirection && ray.side == CollisionDetectionRay.Side.Front && (ray.orientation == CollisionDetectionRay.Orientation.Diagonal || object.diagonalRay == null)) ||
-                        (object.direction != upDirection && ray.side == CollisionDetectionRay.Side.Back && object.vel.x != 0) ||
-                        (object.direction != upDirection && ray.side == CollisionDetectionRay.Side.Front && object.vel.x == 0)
+                        (object.direction != upDirection && ray.side == CollisionDetectionRay.Side.Back)
                 )
             ) {
             Collision up = new Collision(object, GeoMathTriangle.findVertexIntersectionUp(this, start, end), Collision.Side.UpRamp, ray, this, leftTile, rightTile);
             if (up.point != null) collisionList.add(up);
         }
-//        if (squareAngle != SquareAngle.BottomLeft && squareAngle != SquareAngle.BottomRight &&
-//                tileDown == null) {
-//            Collision down = new Collision(GeoMathTriangle.findIntersectionDown(this, start, end), Collision.Side.Down, ray, this);
-//            if (down.point != null) collisionList.add(down);
-//        }
+        if (squareAngle != SquareAngle.BottomLeft && squareAngle != SquareAngle.BottomRight &&
+                tileDown == null) {
+            Collision down = new Collision(object, GeoMathTriangle.findIntersectionDown(this, start, end), Collision.Side.Down, ray, this);
+            if (down.point != null) collisionList.add(down);
+        }
 
         if (collisionList.isEmpty()) {
             return null;
@@ -223,7 +234,7 @@ public class SquareTriangleTile extends TileBase {
     }
 
     private boolean shouldThereBeCollisionWithSideTile(TileBase thisTile, TileBase otherTile) {
-        return otherTile == null || thisTile.getHeight() > otherTile.getHeight();
+        return otherTile == null || (thisTile.y() + thisTile.getHeight()) > (otherTile.y() + otherTile.getHeight());
     }
 
     @Override
@@ -231,10 +242,9 @@ public class SquareTriangleTile extends TileBase {
         CollisionDetectionRay ray = collision.ray;
         MovingObject object = collision.object;
         Vector2 finalPos = ray.getOrigin(collision.point);
-        TileBase nextTile = object.direction == MovingObject.LEFT ? leftTile : rightTile;
 
-        if (squareAngle == SquareAngle.BottomRight || squareAngle == SquareAngle.BottomLeft) {
-            // player entering from left to right
+        if (squareAngle == SquareAngle.BottomRight || squareAngle == SquareAngle.BottomLeft && object.vel.x != 0) {
+            TileBase nextTile = object.direction == MovingObject.LEFT ? leftTile : rightTile;
             if (object.direction == upDirection && ray.side == CollisionDetectionRay.Side.Front) {
                 switch (ray.orientation) {
                     case Horizontal:
@@ -245,15 +255,15 @@ public class SquareTriangleTile extends TileBase {
                 }
             }
             // player entering from right to left
-            else if (object.direction != upDirection && ray.side == CollisionDetectionRay.Side.Back && object.vel.x != 0) {
+            else if (object.direction != upDirection && ray.side == CollisionDetectionRay.Side.Back) {
                 // This case needs to be handled differently since only the vertical back ray is detecting the collision
                 // Find the intersection between the extended horizontal line with the triangle upside
                 if (object.horizontalRay != null) {
-                    Vector2 intersection = GeoMathTriangle.findLineIntersectionUp(this, object.horizontalRay.getStart(), object.horizontalRay.getEnd());
-                    if (intersection != null) {
-                        float finalX = object.horizontalRay.getOrigin(object.horizontalRay.getEnd()).x - object.mapCollisionBounds.getWidth() * object.direction;
-                        finalPos.y = calculateFinalY(finalX, nextTile);
+                    float finalX = object.horizontalRay.getOrigin(object.horizontalRay.getEnd()).x;
+                    if (squareAngle == SquareAngle.BottomRight) {
+                        finalX -= object.mapCollisionBounds.getWidth() * object.direction;
                     }
+                    finalPos.y = calculateFinalY(finalX, nextTile);
                 }
             }
         }
@@ -266,16 +276,15 @@ public class SquareTriangleTile extends TileBase {
         switch (squareAngle) {
             case BottomRight:
                 return y() + (x - (int)x) * getTanAngle();
+            case BottomLeft:
+                return y() + ((int)x + 1 - x) * getTanAngle();
             default:
-                return y() + (x - (int)x) * getTanAngle();
+                // Invalid case
+                return -1;
         }
 //        Vector2 intersect = new Vector2();
 //        Intersector.intersectLines(xTopLower, yTopLower, xTopHigher, yTopHigher, x, 0, x, 1, intersect);
 //        return intersect.y;
-    }
-
-    public float getAngle() {
-        return angle;
     }
 
     public float getTanAngle() {
