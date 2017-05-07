@@ -221,8 +221,8 @@ public class SquareTriangleTile extends TileBase {
             Collision up = new Collision(object, GeoMathTriangle.findVertexIntersectionUp(this, start, end), Collision.Side.UpRamp, ray, this, leftTile, rightTile);
             if (up.point != null) collisionList.add(up);
         }
-        if ((squareAngle == SquareAngle.TopLeft || squareAngle == SquareAngle.TopRight) &&
-                tileDown == null) {
+        if ((squareAngle == SquareAngle.TopLeft || squareAngle == SquareAngle.TopRight) && tileDown == null &&
+                object.vel.y >= 0) {
             Collision down = new Collision(object, GeoMathTriangle.findIntersectionDown(this, start, end), Collision.Side.Down, ray, this);
             if (down.point != null) {
                 collisionList.add(down);

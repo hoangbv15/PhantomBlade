@@ -26,7 +26,7 @@ public class PlayerX extends PlayerBase {
     private float fullyChargedStateTime;
 
     private float idleBoundWidth = 0.4f;
-    private float idleBoundHeight = 0.7f;
+    private float idleBoundHeight = 0.6f;
 
     protected PlayerX(float x, float y, int difficulty) {
         super(x, y, difficulty);
