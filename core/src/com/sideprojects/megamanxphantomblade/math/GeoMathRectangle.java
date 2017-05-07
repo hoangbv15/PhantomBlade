@@ -1,6 +1,5 @@
 package com.sideprojects.megamanxphantomblade.math;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.physics.TileBase;
 

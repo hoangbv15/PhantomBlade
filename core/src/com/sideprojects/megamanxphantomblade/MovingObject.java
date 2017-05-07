@@ -4,9 +4,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by buivuhoang on 13/02/17.
  * Objects that move around in the map, with a position, velocity, direction,

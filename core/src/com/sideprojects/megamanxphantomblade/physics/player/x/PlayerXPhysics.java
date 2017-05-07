@@ -1,6 +1,5 @@
 package com.sideprojects.megamanxphantomblade.physics.player.x;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.input.Command;
