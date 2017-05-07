@@ -2,8 +2,6 @@ package com.sideprojects.megamanxphantomblade.animation;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.sideprojects.megamanxphantomblade.MovingObject;
-import com.sideprojects.megamanxphantomblade.player.PlayerAnimationBase;
 
 import java.util.HashMap;
 import java.util.List;

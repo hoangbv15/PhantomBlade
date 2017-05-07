@@ -1,16 +1,13 @@
 package com.sideprojects.megamanxphantomblade.map.maps;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.rahul.libgdx.parallax.AnimationParallaxLayer;
 import com.rahul.libgdx.parallax.ParallaxBackground;
-import com.rahul.libgdx.parallax.TextureRegionParallaxLayer;
 import com.rahul.libgdx.parallax.Utils;
 import com.sideprojects.megamanxphantomblade.animation.AnimationLoader;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
