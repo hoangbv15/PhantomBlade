@@ -67,8 +67,14 @@ public class DebugRenderer implements Disposable {
                     end = new Vector2(start.x + collision.tile.getWidth(), start.y);
                     break;
                 case Down:
-                    start = new Vector2(collision.tile.x(), collision.tile.y());
-                    end = new Vector2(start.x + collision.tile.getWidth(), start.y);
+                    if (collision.tile instanceof  SquareTriangleTile) {
+                        SquareTriangleTile tile = (SquareTriangleTile)collision.tile;
+                        start = new Vector2(tile.xBottomLower, tile.yBottomLower);
+                        end = new Vector2(tile.xBottomHigher, tile.yBottomHigher);
+                    } else {
+                        start = new Vector2(collision.tile.x(), collision.tile.y());
+                        end = new Vector2(start.x + collision.tile.getWidth(), start.y);
+                    }
                     break;
                 case Left:
                     start = new Vector2(collision.tile.x(), collision.tile.y());

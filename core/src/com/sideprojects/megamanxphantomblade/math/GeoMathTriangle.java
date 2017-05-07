@@ -21,7 +21,11 @@ public class GeoMathTriangle {
         Intersector.intersectLines(tile.xBottomLower, tile.yBottomLower, tile.xBottomHigher, tile.yBottomHigher, start.x, start.y, end.x, end.y, intersect);
 
         // Check if y is outside of the tile
-        if (!numberIsBetween(intersect.x, tile.x(), tile.x() + tile.getWidth())) {
+        if (!numberIsBetween(intersect.x, tile.xCorner, tile.xHorizontal)) {
+            return null;
+        }
+
+        if (!numberIsBetween(intersect.x, start.x, end.x) || !numberIsBetween(intersect.y, start.y, end.y)) {
             return null;
         }
 

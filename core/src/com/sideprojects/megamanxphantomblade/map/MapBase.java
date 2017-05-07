@@ -5,7 +5,6 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Queue;
 import com.rahul.libgdx.parallax.ParallaxBackground;
@@ -34,8 +33,10 @@ public abstract class MapBase implements Disposable {
     public static String TotalNumOfTiles = "Total";
     public static String TileIndex = "Index";
     public static String Orientation = "Orientation";
-    public static String Left = "Left";
-    public static String Right = "Right";
+    public static String BottomLeft = "BottomLeft";
+    public static String BottomRight = "BottomRight";
+    public static String TopLeft = "TopLeft";
+    public static String TopRight = "TopRight";
     public static String TileType = "Type";
     public static String SquareTriangle = "SquareTriangle";
 
@@ -134,10 +135,14 @@ public abstract class MapBase implements Disposable {
                         int tileIndex = properties.get(TileIndex, Integer.class);
                         float startY = y + tileIndex / (float)totalTiles;
                         float endY = y + (tileIndex + 1) / (float)totalTiles;
-                        if (Left.equals(orientation)) {
+                        if (BottomLeft.equals(orientation)) {
                             bounds[x][y] = new SquareTriangleTile(x, startY, x, startY, x, endY, x + 1, startY, tileIndex, totalTiles);
-                        } else if (Right.equals(orientation)) {
+                        } else if (BottomRight.equals(orientation)) {
                             bounds[x][y] = new SquareTriangleTile(x, startY, x + 1, startY, x + 1, endY, x, startY, tileIndex, totalTiles);
+                        } else if (TopRight.equals(orientation)) {
+                            bounds[x][y] = new SquareTriangleTile(x, startY, x, endY, x, startY, x + 1, endY, tileIndex, totalTiles);
+                        } else if (TopLeft.equals(orientation)) {
+                            bounds[x][y] = new SquareTriangleTile(x, startY, x + 1, endY, x + 1, startY, x, endY, tileIndex, totalTiles);
                         }
                     } else {
                         bounds[x][y] = new RectangleTile(x, y, 1, 1);
@@ -177,21 +182,21 @@ public abstract class MapBase implements Disposable {
             }
         }
 
-        for (EnemyBase enemy : enemyList) {
-            // If the enemy is outside of player's range, kill it
-            if (!isPointInPlayerRange(enemy.mapCollisionBounds.x, enemy.mapCollisionBounds.y)) {
-                if (isPointInPlayerRange(enemy.spawnPos.x, enemy.spawnPos.y)) {
-                    enemy.despawn(false);
-                } else {
-                    enemy.despawn(true);
-                }
-            } else if (!enemy.spawned && enemy.canSpawn) {
-                enemy.spawn();
-            }
-            if (enemy.spawned) {
-                enemy.update(deltaTime);
-            }
-        }
+//        for (EnemyBase enemy : enemyList) {
+//            // If the enemy is outside of player's range, kill it
+//            if (!isPointInPlayerRange(enemy.mapCollisionBounds.x, enemy.mapCollisionBounds.y)) {
+//                if (isPointInPlayerRange(enemy.spawnPos.x, enemy.spawnPos.y)) {
+//                    enemy.despawn(false);
+//                } else {
+//                    enemy.despawn(true);
+//                }
+//            } else if (!enemy.spawned && enemy.canSpawn) {
+//                enemy.spawn();
+//            }
+//            if (enemy.spawned) {
+//                enemy.update(deltaTime);
+//            }
+//        }
 
         // If player dies, respawn for now
         if (player.isDead()) {

@@ -213,7 +213,7 @@ public class SquareTriangleTile extends TileBase {
             Collision right = new Collision(object, GeoMathRectangle.findIntersectionRight(this, start, end), Collision.Side.Right, ray, this);
             if (right.point != null) collisionList.add(right);
         }
-        if (tileUp == null &&
+        if ((squareAngle == SquareAngle.BottomLeft || squareAngle == SquareAngle.BottomRight) && tileUp == null &&
                 ((direction == upDirection && ray.side == CollisionDetectionRay.Side.Front && (ray.orientation == CollisionDetectionRay.Orientation.Diagonal || object.diagonalRay == null)) ||
                         (direction != upDirection && ray.side == CollisionDetectionRay.Side.Back)
                 )
@@ -221,10 +221,12 @@ public class SquareTriangleTile extends TileBase {
             Collision up = new Collision(object, GeoMathTriangle.findVertexIntersectionUp(this, start, end), Collision.Side.UpRamp, ray, this, leftTile, rightTile);
             if (up.point != null) collisionList.add(up);
         }
-        if (squareAngle != SquareAngle.BottomLeft && squareAngle != SquareAngle.BottomRight &&
+        if ((squareAngle == SquareAngle.TopLeft || squareAngle == SquareAngle.TopRight) &&
                 tileDown == null) {
             Collision down = new Collision(object, GeoMathTriangle.findIntersectionDown(this, start, end), Collision.Side.Down, ray, this);
-            if (down.point != null) collisionList.add(down);
+            if (down.point != null) {
+                collisionList.add(down);
+            }
         }
 
         if (collisionList.isEmpty()) {
@@ -241,10 +243,10 @@ public class SquareTriangleTile extends TileBase {
     @Override
     public Vector2 getPostCollisionPos(Collision collision) {
         CollisionDetectionRay ray = collision.ray;
-        MovingObject object = collision.object;
         Vector2 finalPos = ray.getOrigin(collision.point);
+        MovingObject object = collision.object;
 
-        if ((squareAngle == SquareAngle.BottomRight || squareAngle == SquareAngle.BottomLeft) && object.vel.x != 0) {
+        if (collision.side == Collision.Side.UpRamp && object.vel.x != 0) {
             int direction = object.movingDirection();
             TileBase nextTile = direction == MovingObject.LEFT ? leftTile : rightTile;
             if (direction == upDirection && ray.side == CollisionDetectionRay.Side.Front) {
