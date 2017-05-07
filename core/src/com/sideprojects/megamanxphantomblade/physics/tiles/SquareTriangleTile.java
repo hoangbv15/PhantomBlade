@@ -286,9 +286,6 @@ public class SquareTriangleTile extends TileBase {
                 // Invalid case
                 return -1;
         }
-//        Vector2 intersect = new Vector2();
-//        Intersector.intersectLines(xTopLower, yTopLower, xTopHigher, yTopHigher, x, 0, x, 1, intersect);
-//        return intersect.y;
     }
 
     public float getTanAngle() {
