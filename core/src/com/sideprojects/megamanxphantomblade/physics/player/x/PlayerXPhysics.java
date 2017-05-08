@@ -43,7 +43,7 @@ public class PlayerXPhysics extends PlayerPhysics {
     public void internalUpdate(MovingObject object, float delta, MapBase map) {
         // Logic for attacking
         attackStateTime += delta;
-        if (input.isCommandJustPressed(Command.ATTACK) && attackStateTime >= attackRecoveryTime) {
+        if (input.isCommandJustPressed(Command.ATTACK) && attackStateTime >= attackRecoveryTime && !player.isBeingDamaged()) {
             resetAttackStatus();
             lightAttack(map);
 //            heavyAttack(map);
@@ -77,7 +77,7 @@ public class PlayerXPhysics extends PlayerPhysics {
                 }
             } else {
                 playerXSound.stopPlayingCharge();
-                if (player.isCharging) {
+                if (player.isCharging && !player.isBeingDamaged()) {
                     if (attackStateTime < timeToFullyCharged) {
                         mediumAttack(map);
                     } else {
@@ -90,6 +90,7 @@ public class PlayerXPhysics extends PlayerPhysics {
             }
         }
         player.attackStateTime = attackStateTime;
+
         super.internalUpdate(object, delta, map);
     }
 

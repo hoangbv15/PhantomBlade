@@ -165,6 +165,10 @@ public abstract class PlayerBase extends MovingObject {
         return frameIndex;
     }
 
+    public boolean isBeingDamaged() {
+        return state == PlayerState.DamagedNormal;
+    }
+
     protected abstract void updateTakeDamageBounds();
 
     public abstract void createAnimations();
