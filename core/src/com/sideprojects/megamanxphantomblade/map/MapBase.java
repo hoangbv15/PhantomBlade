@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Queue;
 import com.rahul.libgdx.parallax.ParallaxBackground;
+import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.animation.Particles;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
@@ -202,10 +203,10 @@ public abstract class MapBase implements Disposable {
         if (player.isDead()) {
             player.spawn();
         }
-        // Check if player falls out of map
-        else if (player.mapCollisionBounds.y + player.mapCollisionBounds.getHeight() < 0) {
-            player.die();
-        }
+    }
+
+    public boolean isOutOfBounds(MovingObject object) {
+        return object.mapCollisionBounds.y + object.mapCollisionBounds.getHeight() < 0;
     }
 
     public void addPlayerAttack(PlayerAttack attack) {

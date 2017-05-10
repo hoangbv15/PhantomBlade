@@ -54,6 +54,11 @@ public abstract class PlayerPhysics extends Physics {
 
     @Override
     public void inputProcessing(MovingObject object, float delta, MapBase map) {
+        // If player is out of bounds, kill the player
+        if (map.isOutOfBounds(player)) {
+            player.die();
+        }
+
         player.stateTime += delta;
         holdDashState = holdDashState.nextState(input, player);
 
