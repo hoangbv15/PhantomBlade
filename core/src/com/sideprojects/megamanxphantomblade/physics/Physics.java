@@ -34,6 +34,8 @@ public abstract class Physics extends PhysicsBase {
         for (Collision collision: collisionList.toList) {
             Vector2 preCollide = collision.getPrecollidePos();
             switch (collision.side) {
+                case LeftSlippery:
+                case RightSlippery:
                 case Left:
                 case Right:
                     object.vel.x = 0;

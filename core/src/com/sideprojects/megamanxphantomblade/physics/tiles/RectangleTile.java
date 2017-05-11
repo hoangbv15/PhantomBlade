@@ -19,10 +19,16 @@ public class RectangleTile extends TileBase {
     private float[] vertices;
     private TileBase leftTile;
     private TileBase rightTile;
+    private boolean slippery;
+
+    public RectangleTile(float x, float y, float width, float height, boolean slippery) {
+        tile = new Rectangle(x, y, width, height);
+        this.slippery = slippery;
+        vertices = new float[] {x, y, x + width, y, x + width, y + height, x, y + height};
+    }
 
     public RectangleTile(float x, float y, float width, float height) {
-        tile = new Rectangle(x, y, width, height);
-        vertices = new float[] {x, y, x + width, y, x + width, y + height, x, y + height};
+        this(x, y, width, height, false);
     }
 
     @Override
@@ -96,11 +102,11 @@ public class RectangleTile extends TileBase {
 
         // Find intersection on each side of the tile
         if (shouldThereBeCollisionWithSideTile(this, tileLeft)) {
-            Collision left = new Collision(object, GeoMathRectangle.findIntersectionLeft(this, start, end), Collision.Side.Left, ray, this);
+            Collision left = new Collision(object, GeoMathRectangle.findIntersectionLeft(this, start, end), slippery ? Collision.Side.LeftSlippery : Collision.Side.Left, ray, this);
             if (left.point != null) collisionList.add(left);
         }
         if (shouldThereBeCollisionWithSideTile(this, tileRight)) {
-            Collision right = new Collision(object, GeoMathRectangle.findIntersectionRight(this, start, end), Collision.Side.Right, ray, this);
+            Collision right = new Collision(object, GeoMathRectangle.findIntersectionRight(this, start, end), slippery ? Collision.Side.RightSlippery : Collision.Side.Right, ray, this);
             if (right.point != null) collisionList.add(right);
         }
         if (tileUp == null) {

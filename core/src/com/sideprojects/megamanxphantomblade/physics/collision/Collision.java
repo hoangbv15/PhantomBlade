@@ -74,7 +74,10 @@ public class Collision {
     }
 
     public enum Side {
-        Up, Down, Left, Right, UpRamp, None
+        Up, Down, Left, Right,
+        LeftSlippery, RightSlippery, // Cannot do wallslide
+        UpRamp, // Behave exactly like Up, but at an angle
+        None
     }
 
     public static Collision getCollisionNearestToStart(List<Collision> list) {
