@@ -217,8 +217,16 @@ public abstract class MapBase implements Disposable {
     }
 
     public TileBase getCollidableBox(int x, int y) {
-        if (x < 0 || y < 0 || x >= bounds.length || y >= bounds[0].length) {
+        if (x < 0 || y < 0 || x >= bounds.length) {
             return new RectangleTile(x, y, 1, 1);
+        }
+        if (y >= bounds[0].length) {
+            if (x >= 0 && x < bounds.length ) {
+                if (bounds[x][bounds[0].length - 1] != null) {
+                    return new RectangleTile(x, y, 1, 1);
+                }
+            }
+            return null;
         }
         return bounds[x][y];
     }
