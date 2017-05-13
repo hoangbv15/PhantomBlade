@@ -57,7 +57,7 @@ public class PlayerRenderer implements Disposable {
     private float damageFlickerDuration = 0.05f;
     private float chargeFlickerDuration = 0.03f;
     private float flickerStateTime = 0;
-    private PlayerState previousState;
+    private boolean previousDashTraceState;
 
     public PlayerRenderer(PlayerBase player, float mapTileWidth, SpriteBatch batch, ShaderProgram damagedShader) {
         this.player = player;
@@ -192,7 +192,7 @@ public class PlayerRenderer implements Disposable {
 
     private void renderPostDashTrace(TextureRegion currentFrame, float posX, float posY, float delta) {
         if (!player.shouldProduceDashTrace()) {
-            if (previousState == PlayerState.Dash) {
+            if (previousDashTraceState) {
                 isPostDashing = true;
                 stopPostDashing = false;
             }
@@ -236,7 +236,7 @@ public class PlayerRenderer implements Disposable {
             }
         }
         batch.setShader(null);
-        previousState = player.state;
+        previousDashTraceState = player.shouldProduceDashTrace();
     }
 
     private void renderPlayerAuxiliaryAnimation(float posX, float posY) {
