@@ -207,6 +207,7 @@ public class PlayerRenderer implements Disposable {
             postDashFrameQueue.clear();
             postDashPositionQueue.clear();
             isPostDashing = false;
+            postDashStateTime = 0;
         }
 
         if (stopPostDashing) {
