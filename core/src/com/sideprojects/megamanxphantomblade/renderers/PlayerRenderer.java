@@ -40,10 +40,12 @@ public class PlayerRenderer implements Disposable {
     private int traceFrameSkipCount = 0;
     // State for toggling post dash trace rendering
     // In post dash trace rendering mode, we don't skip any frame
+    private Queue<TextureRegion> postDashFrameQueue;
+    private Queue<Vector2> postDashPositionQueue;
     public boolean isPostDashing;
     public boolean stopPostDashing;
     private float postDashStateTime;
-    private static float postDashTime = 0.08f;
+    private static float postDashTime = 0.17f;
 
     // Parameters for rendering dash rockets
     private float leftDashRocketPadding;
@@ -65,6 +67,8 @@ public class PlayerRenderer implements Disposable {
         traceShader = TraceShader.getShaderColor(player.getTraceColour());
         lastPlayerFrameQueue = new Queue<>(numOfTraces);
         lastPlayerPositionQueue = new Queue<>(numOfTraces);
+        postDashFrameQueue = new Queue<>(numOfTraces);
+        postDashPositionQueue = new Queue<>(numOfTraces);
         startRemovingTraces = false;
         // Calculate dash rocket padding
         leftDashRocketPadding = player.animations.get(PlayerAnimationBase.Type.Dash).getKeyFrame(0).getRegionWidth();
@@ -187,35 +191,51 @@ public class PlayerRenderer implements Disposable {
     }
 
     private void renderPostDashTrace(TextureRegion currentFrame, float posX, float posY, float delta) {
-        if (previousState == PlayerState.Dash && !player.shouldProduceDashTrace()) {
-            isPostDashing = true;
-            stopPostDashing = false;
-        }
+        if (!player.shouldProduceDashTrace()) {
+            if (previousState == PlayerState.Dash) {
+                isPostDashing = true;
+                stopPostDashing = false;
+            }
 
-        if (isPostDashing && postDashStateTime <= postDashTime) {
-            postDashStateTime += delta;
+            if (isPostDashing && postDashStateTime <= postDashTime) {
+                postDashStateTime += delta;
+            } else {
+                postDashStateTime = 0;
+                stopPostDashing = true;
+            }
         } else {
-            postDashStateTime = 0;
-            stopPostDashing = true;
+            postDashFrameQueue.clear();
+            postDashPositionQueue.clear();
+            isPostDashing = false;
         }
 
         if (stopPostDashing) {
-            if (lastPlayerFrameQueue.size != 0 && !player.shouldProduceDashTrace()) {
-                System.out.println("whutttt");
-                lastPlayerFrameQueue.removeFirst();
-                lastPlayerPositionQueue.removeFirst();
-            } else {
-                stopPostDashing = false;
-                isPostDashing = false;
+            for (int i = 0; i < 2; i++) {
+                if (postDashFrameQueue.size != 0) {
+                    postDashFrameQueue.removeFirst();
+                    postDashPositionQueue.removeFirst();
+                } else {
+                    stopPostDashing = false;
+                    isPostDashing = false;
+                }
             }
         }
 
         // If player is post dashing, draw a trace
         if (isPostDashing) {
-            lastPlayerFrameQueue.addLast(currentFrame);
-            lastPlayerPositionQueue.addLast(new Vector2(posX, posY));
+            postDashFrameQueue.addLast(currentFrame);
+            postDashPositionQueue.addLast(new Vector2(posX, posY));
         }
 
+        if (postDashFrameQueue.size != 0) {
+            for (int i = 0; i < postDashFrameQueue.size; i++) {
+                TextureRegion frame = postDashFrameQueue.get(i);
+                Vector2 position = postDashPositionQueue.get(i);
+                batch.setShader(traceShader);
+                batch.draw(frame, position.x, position.y);
+            }
+        }
+        batch.setShader(null);
         previousState = player.state;
     }
 
