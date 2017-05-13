@@ -169,6 +169,10 @@ public abstract class PlayerBase extends MovingObject {
         return state == PlayerState.DamagedNormal;
     }
 
+    public boolean shouldProduceDashTrace() {
+        return state == PlayerState.Dash || state == PlayerState.Updash || isJumpDashing;
+    }
+
     protected abstract void updateTakeDamageBounds();
 
     public abstract void createAnimations();
