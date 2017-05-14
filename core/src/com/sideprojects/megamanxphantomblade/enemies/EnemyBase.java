@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.MovingObject;
+import com.sideprojects.megamanxphantomblade.items.ItemBase;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 
 import java.util.ArrayList;
@@ -79,6 +80,8 @@ public abstract class EnemyBase<T> extends MovingObject {
         if (isDead()) {
             if (deathExplosionStateTime == 0) {
                 sounds.playDie(delta);
+                // Drop item if enemy is able to drop
+                dropItem();
             }
             if (deathExplosionStateTime < deathExplosionTime()) {
                 deathExplosionStateTime += delta;
@@ -130,6 +133,17 @@ public abstract class EnemyBase<T> extends MovingObject {
             return super.takeDamage(damage);
         }
         return false;
+    }
+
+    private void dropItem() {
+        ItemBase item = null;
+        int rand = MathUtils.random(100);
+        if (rand < 30) {
+            item = new ItemBase();
+        }
+        if (item != null) {
+            map.addItem(item);
+        }
     }
 
     protected abstract void updateTakeDamageBounds();

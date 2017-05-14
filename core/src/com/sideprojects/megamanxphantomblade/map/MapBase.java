@@ -13,6 +13,7 @@ import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.animation.Particles;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.enemies.types.mettool.Mettool;
+import com.sideprojects.megamanxphantomblade.items.ItemBase;
 import com.sideprojects.megamanxphantomblade.physics.TileBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
@@ -65,6 +66,7 @@ public abstract class MapBase implements Disposable {
 
     public List<EnemyBase> enemyList;
     public Queue<PlayerAttack> playerAttackList;
+    public List<ItemBase> itemList;
 
     public Particles particles;
 
@@ -77,6 +79,7 @@ public abstract class MapBase implements Disposable {
         this.soundPlayer = soundPlayer;
         particles = new Particles(20);
         enemyList = new ArrayList<>();
+        itemList = new ArrayList<>();
         playerAttackList = new Queue<>(MAX_PLAYERATTACK);
         loadMap(difficulty);
     }
@@ -199,6 +202,12 @@ public abstract class MapBase implements Disposable {
             }
         }
 
+        Iterator<ItemBase> j = itemList.iterator();
+        while (j.hasNext()) {
+            ItemBase item = j.next();
+            item.update(deltaTime);
+        }
+
         // If player dies, respawn for now
         if (player.isDead()) {
             player.spawn();
@@ -214,6 +223,10 @@ public abstract class MapBase implements Disposable {
         if (playerAttackList.size >= MAX_PLAYERATTACK) {
             playerAttackList.removeFirst();
         }
+    }
+
+    public void addItem(ItemBase item) {
+        itemList.add(item);
     }
 
     public TileBase getCollidableBox(int x, int y) {
