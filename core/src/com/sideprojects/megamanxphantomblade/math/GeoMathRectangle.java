@@ -21,7 +21,7 @@ public class GeoMathRectangle {
             return null;
         }
         // Ignore if the collision is on top, and the player is also on top
-        if (start.x > tile.x()) {
+        if (start.x > x) {
             return null;
         }
 
@@ -45,7 +45,7 @@ public class GeoMathRectangle {
             return null;
         }
         // Ignore if the collision is on top, and the player is also on top
-        if (start.x < tile.x() + tile.getWidth()) {
+        if (start.x < x) {
             return null;
         }
 
@@ -69,7 +69,7 @@ public class GeoMathRectangle {
             return null;
         }
         // Ignore if the collision is from outside of the tile's x range
-        if (start.y > tile.y()) {
+        if (start.y > y) {
             return null;
         }
 
@@ -93,7 +93,7 @@ public class GeoMathRectangle {
             return null;
         }
         // Ignore if the collision is from outside of the tile's y range
-        if (start.y < tile.y() + tile.getHeight()) {
+        if (start.y < y) {
             return null;
         }
 
