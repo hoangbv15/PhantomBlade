@@ -159,7 +159,6 @@ public class PlayerRenderer implements Disposable {
             traceFrameSkipCount = 0;
             // If player is dashing, draw a trace
             if (player.shouldProduceDashTrace()) {
-                System.out.println("This should be first");
                 lastPlayerFrameQueue.addLast(currentFrame);
                 lastPlayerPositionQueue.addLast(new Vector2(posX, posY));
             }

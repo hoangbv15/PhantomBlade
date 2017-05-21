@@ -22,7 +22,7 @@ public class NumberMath {
 
     public static boolean numberIsBetween(float x, float a, float b) {
         // Check if x is between a and b
-        float m = (a + b)/2;
+        float m = (a + b)/2f;
         return Math.abs(x - m) <= Math.abs(a - m);
     }
 }
