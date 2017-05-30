@@ -13,6 +13,7 @@ import com.sideprojects.megamanxphantomblade.player.x.PlayerXSound;
 import com.sideprojects.megamanxphantomblade.player.x.XBuster;
 
 /**
+ * Handles X's attacks
  * Created by buivuhoang on 26/03/17.
  */
 public class PlayerXPhysics extends PlayerPhysics {
@@ -46,7 +47,6 @@ public class PlayerXPhysics extends PlayerPhysics {
         if (input.isCommandJustPressed(Command.ATTACK) && attackStateTime >= attackRecoveryTime && !player.isBeingDamaged()) {
             resetAttackStatus();
             lightAttack(map);
-//            heavyAttack(map);
         } else {
             player.justBegunAttacking = false;
             if (player.isAttacking && attackStateTime < attackTime) {
@@ -65,7 +65,13 @@ public class PlayerXPhysics extends PlayerPhysics {
             }
 
             // if player keep holding, charge
-            if (input.isCommandPressed(Command.ATTACK) && attackStateTime >= waitBeforeCharging) {
+            // But only charge if player is not being damaged
+            if (!input.isCommandPressed(Command.ATTACK) && player.isBeingDamaged()) {
+                attackStateTime = 0;
+                player.isCharging = false;
+                player.fullyCharged = false;
+                player.almostFullyCharged = false;
+            } else if (input.isCommandPressed(Command.ATTACK) && attackStateTime >= waitBeforeCharging) {
                 player.isCharging = true;
                 playerXSound.startPlayingCharge(delta);
                 if (attackStateTime >= timeToAlmostFullyCharged) {
@@ -77,7 +83,7 @@ public class PlayerXPhysics extends PlayerPhysics {
                 }
             } else {
                 playerXSound.stopPlayingCharge();
-                if (player.isCharging && !player.isBeingDamaged()) {
+                if (player.isCharging) {
                     if (attackStateTime < timeToFullyCharged) {
                         mediumAttack(map);
                     } else {

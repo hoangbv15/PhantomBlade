@@ -14,6 +14,10 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerSound;
 
 /**
+ * This handles player's movements based in user input, forces applied to the player
+ * such as gravity, and sounds that the player creates.
+ * The concrete implementations of this should handle any specific actions that can generate force/movement/sounds
+ * For example: player attacks.
  * Created by buivuhoang on 21/02/17.
  */
 public abstract class PlayerPhysics extends Physics {
