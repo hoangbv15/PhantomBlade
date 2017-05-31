@@ -89,10 +89,14 @@ public abstract class PhysicsBase {
             yStart += 1;
         }
         if (direction == MovingObject.LEFT) {
+//        if (vel.x < 0) {
             xStart += 1;
         }
+
         int xEnd = (int)(endPosX.x + paddingX);
+
         if (direction == MovingObject.RIGHT) {
+//        if (vel.x > 0) {
             xEnd += 1;
         }
         int yEnd = (int)(endPosY.y + paddingY);
