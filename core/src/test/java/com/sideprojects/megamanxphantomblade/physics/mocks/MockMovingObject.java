@@ -10,7 +10,7 @@ import com.sideprojects.megamanxphantomblade.MovingObject;
 public class MockMovingObject extends MovingObject {
     public MockMovingObject(float x, float y, float velX, float velY) {
         pos = new Vector2(x, y);
-        mapCollisionBounds = new Rectangle(x, y, 0.51f, 0.71f);
+        mapCollisionBounds = new Rectangle(x, y, 0.3f, 0.7f);
         vel = new Vector2(velX, velY);
     }
 }

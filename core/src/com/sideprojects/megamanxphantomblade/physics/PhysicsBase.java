@@ -89,23 +89,28 @@ public abstract class PhysicsBase {
             yStart += 1;
         }
         if (direction == MovingObject.LEFT) {
-//        if (vel.x < 0) {
             xStart += 1;
         }
 
-        int xEnd = (int)(endPosX.x + paddingX);
-
-        if (direction == MovingObject.RIGHT) {
-//        if (vel.x > 0) {
-            xEnd += 1;
+//        // paddingX is 0 when vel X is 0
+//        int xEnd = (int)(endPosX.x + paddingX);
+//
+//        if (stepX == 0 && direction == MovingObject.RIGHT) {
+//            xEnd += 1;
+//        }
+        float xEndFloat = endPosX.x + bounds.width;
+        int xEnd = (int)xEndFloat;
+        if (xEnd == xEndFloat) {
+            xEnd--;
         }
+
         int yEnd = (int)(endPosY.y + paddingY);
 
         // Loop through the rectangular area that the speed vector occupies
         // Get a list of all collisions with map tiles in the area
         // Identify the collision nearest to the player
         // Player has at most 2 collisions with the map at the same time
-        List<Collision> collisionList = new ArrayList<Collision>(2);
+        List<Collision> collisionList = new ArrayList<>(2);
         for (int y = yStart; NumberMath.hasNotExceeded(y, yStart, yEnd); y = NumberMath.iteratorNext(y, yStart, yEnd)) {
             for (int x = xStart; NumberMath.hasNotExceeded(x, xStart, xEnd); x = NumberMath.iteratorNext(x, xStart, xEnd)) {
                 TileBase tile = map.getCollidableBox(x, y);
