@@ -92,16 +92,11 @@ public abstract class PhysicsBase {
             xStart += 1;
         }
 
-//        // paddingX is 0 when vel X is 0
-//        int xEnd = (int)(endPosX.x + paddingX);
-//
-//        if (stepX == 0 && direction == MovingObject.RIGHT) {
-//            xEnd += 1;
-//        }
-        float xEndFloat = endPosX.x + bounds.width;
-        int xEnd = (int)xEndFloat;
-        if (xEnd == xEndFloat) {
-            xEnd--;
+        // paddingX is 0 when vel X is 0
+        int xEnd = (int)(endPosX.x + paddingX);
+
+        if (stepX == 0 && direction == MovingObject.RIGHT) {
+            xEnd += 1;
         }
 
         int yEnd = (int)(endPosY.y + paddingY);
