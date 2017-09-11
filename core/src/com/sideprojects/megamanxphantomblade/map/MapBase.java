@@ -188,21 +188,21 @@ public abstract class MapBase implements Disposable {
             }
         }
 
-//        for (EnemyBase enemy : enemyList) {
-//            // If the enemy is outside of player's range, kill it
-//            if (!isPointInPlayerRange(enemy.mapCollisionBounds.x, enemy.mapCollisionBounds.y)) {
-//                if (isPointInPlayerRange(enemy.spawnPos.x, enemy.spawnPos.y)) {
-//                    enemy.despawn(false);
-//                } else {
-//                    enemy.despawn(true);
-//                }
-//            } else if (!enemy.spawned && enemy.canSpawn) {
-//                enemy.spawn();
-//            }
-//            if (enemy.spawned) {
-//                enemy.update(deltaTime);
-//            }
-//        }
+        for (EnemyBase enemy : enemyList) {
+            // If the enemy is outside of player's range, kill it
+            if (!isPointInPlayerRange(enemy.mapCollisionBounds.x, enemy.mapCollisionBounds.y)) {
+                if (isPointInPlayerRange(enemy.spawnPos.x, enemy.spawnPos.y)) {
+                    enemy.despawn(false);
+                } else {
+                    enemy.despawn(true);
+                }
+            } else if (!enemy.spawned && enemy.canSpawn) {
+                enemy.spawn();
+            }
+            if (enemy.spawned) {
+                enemy.update(deltaTime);
+            }
+        }
 
         // If player dies, respawn for now
         if (player.isDead()) {

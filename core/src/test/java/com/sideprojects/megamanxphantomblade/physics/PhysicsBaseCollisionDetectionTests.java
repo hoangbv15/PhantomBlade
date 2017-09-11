@@ -12,7 +12,7 @@ import org.junit.Test;
 /**
  * Created by buivuhoang on 31/05/17.
  */
-public class PhysicsBaseTests {
+public class PhysicsBaseCollisionDetectionTests {
     private MockMap map;
     private PhysicsBase physics;
 
