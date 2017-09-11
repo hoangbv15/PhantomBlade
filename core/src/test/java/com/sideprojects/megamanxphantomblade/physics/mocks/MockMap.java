@@ -21,7 +21,7 @@ public class MockMap extends MapBase {
 
     public void addRectTile(int x, int y, float width, float height) {
         if (x >= maxX || y >= maxY) {
-            throw new NotImplementedException();
+            throw new IllegalArgumentException(x + " and " + y + " are illegal dimensions");
         }
 
         if (bounds == null || bounds.length < 1) {
