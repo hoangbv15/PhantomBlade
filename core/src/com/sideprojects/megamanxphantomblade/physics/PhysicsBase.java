@@ -88,6 +88,14 @@ public abstract class PhysicsBase {
         if (vel.y <= 0) {
             yStart += 1;
         }
+
+        // This is needed for moving left on a slope to work
+        // The most correct here is the below, for all width
+        // xStart = (int)(bounds.x + bounds.width);
+        // But we know our width is < 1, so we can do
+        // xStart += 1;
+        // To speed this up
+        // TODO: Need unit test for slope
         if (direction == MovingObject.LEFT) {
             xStart += 1;
         }
@@ -95,8 +103,10 @@ public abstract class PhysicsBase {
         // paddingX is 0 when vel X is 0
         int xEnd = (int)(endPosX.x + paddingX);
 
-        if (stepX == 0 && direction == MovingObject.RIGHT) {
-            xEnd += 1;
+        if (direction == MovingObject.RIGHT) {
+            float newEndPosX = endPosX.x + bounds.width;
+            if (newEndPosX != (int)newEndPosX)
+                xEnd += 1;
         }
 
         int yEnd = (int)(endPosY.y + paddingY);
