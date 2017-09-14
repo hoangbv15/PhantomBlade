@@ -25,6 +25,18 @@ public class GeoMathUpInteresectionTests {
                 },
                 {
                         new RectangleTile(1, 1, 1, 1),
+                        new Vector2(1f, 3f),
+                        new Vector2(1f, 1.5f),
+                        new Vector2(1, 2)
+                },
+                {
+                        new RectangleTile(1, 1, 1, 1),
+                        new Vector2(2f, 3f),
+                        new Vector2(2f, 1.5f),
+                        new Vector2(2, 2)
+                },
+                {
+                        new RectangleTile(1, 1, 1, 1),
                         new Vector2(1, 3),
                         new Vector2(3, 2),
                         null

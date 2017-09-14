@@ -103,8 +103,13 @@ public abstract class MapBase implements Disposable {
 
     private void loadMap(int difficulty) {
         tiledMap = getMapResource();
+        if (tiledMap == null) {
+            return;
+        }
         mapLayer = (TiledMapTileLayer)tiledMap.getLayers().get(MapLayer);
-
+        if (mapLayer == null) {
+            return;
+        }
         bounds = new TileBase[mapLayer.getWidth()][mapLayer.getHeight()];
 
         // Spawn player and enemies
