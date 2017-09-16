@@ -22,6 +22,7 @@ before_script:
 
 script:
   - cd PhantomBlade
+  - ./gradlew core:test
   - ./gradlew desktop:zip
   - ./gradlew html:dist
 
