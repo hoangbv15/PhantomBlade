@@ -1,6 +1,7 @@
 package com.sideprojects.megamanxphantomblade.physics;
 
 import com.sideprojects.megamanxphantomblade.MovingObject;
+import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
 import com.sideprojects.megamanxphantomblade.physics.mocks.MockMap;
 import com.sideprojects.megamanxphantomblade.physics.mocks.MockMovingObject;
@@ -71,5 +72,20 @@ public class PhysicsBaseSlopeCollisionTests {
 
         Assert.assertTrue(collisions.isColliding());
         Assert.assertEquals(2, collisions.toList.size());
+    }
+
+    @Test
+    public void should_go_up_while_walking_up_on_tile() {
+        // Object is on the first tile, just next to 2nd tile
+        MovingObject object = new MockMovingObject(2, 0.5f, 0.5f, -0.5f);
+        object.mapCollisionBounds.x -= object.mapCollisionBounds.getWidth();
+        object.updatePos();
+        object.direction = MovingObject.RIGHT;
+
+        CollisionList collisions = physics.getMapCollision(object, 1, map);
+
+        Collision up = null;
+
+
     }
 }
