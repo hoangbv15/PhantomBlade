@@ -31,8 +31,7 @@ public class MockMap extends MapBase {
     public void addSlopeBottomRight(int x, int y) {
         argumentCheck(x, y);
         bounds[x][y] = new SquareTriangleTile(x, y, x + 1, y, x + 1, y + 0.5f, x, y, 0, 2);
-        x++; y += 0.5f;
-        bounds[x][y] = new SquareTriangleTile(x, y, x + 1, y, x + 1, y + 0.5f, x, y, 1, 2);
+        bounds[++x][y] = new SquareTriangleTile(x, y + 0.5f, x + 1, y + 0.5f, x + 1, y + 1, x, y + 0.5f, 1, 2);
     }
 
     private void argumentCheck(int x, int y) {

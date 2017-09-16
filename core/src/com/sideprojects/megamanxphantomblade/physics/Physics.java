@@ -32,7 +32,7 @@ public abstract class Physics extends PhysicsBase {
         // Apply collision-specific movement logic
         // Take current state into account if needed
         for (Collision collision: collisionList.toList) {
-            Vector2 preCollide = collision.getPrecollidePos();
+            Vector2 preCollide = collision.getPostCollidePos();
             switch (collision.side) {
                 case LeftSlippery:
                 case RightSlippery:

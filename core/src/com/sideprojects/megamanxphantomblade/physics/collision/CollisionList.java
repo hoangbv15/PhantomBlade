@@ -38,9 +38,9 @@ public class CollisionList {
         if (up != null && !isCollidingSide) {
             // We are only colliding with the up side
             // That means there's a chance we might be at the edge
-            if (up.tileLeft == null && Math.abs(up.tile.x() - up.getPrecollidePos().x) <= edgeThreshold) {
+            if (up.tileLeft == null && Math.abs(up.tile.x() - up.getPostCollidePos().x) <= edgeThreshold) {
                 isAtEdgeLeft = true;
-            } else if (up.tileRight == null && Math.abs(up.tile.x() + up.tile.getWidth() - up.getPrecollidePos().x) <= edgeThreshold) {
+            } else if (up.tileRight == null && Math.abs(up.tile.x() + up.tile.getWidth() - up.getPostCollidePos().x) <= edgeThreshold) {
                 isAtEdgeRight = true;
             }
         }

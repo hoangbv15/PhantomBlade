@@ -69,7 +69,7 @@ public class Collision {
         this(object, collidePoint, collideSide, ray, tile, null, null);
     }
 
-    public Vector2 getPrecollidePos() {
+    public Vector2 getPostCollidePos() {
         return tile.getPostCollisionPos(this);
     }
 
