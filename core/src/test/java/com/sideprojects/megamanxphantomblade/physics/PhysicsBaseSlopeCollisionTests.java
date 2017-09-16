@@ -91,16 +91,15 @@ public class PhysicsBaseSlopeCollisionTests {
     @Test
     public void should_go_down_while_walking_down_on_tile() {
         // Object is on the first tile, just next to 2nd tile
-        Optional<Collision> findCollision = walkOnSlope(2, 0.5f, -0.5f, -0.5f,
+        Optional<Collision> findCollision = walkOnSlope(2.5f, 0.75f, -1f, -0.5f,
                 MovingObject.LEFT, CollisionDetectionRay.Side.Back);
 
         Assert.assertTrue(findCollision.isPresent());
-        Assert.assertEquals(new Vector2(1.7f, 0.25f), findCollision.get().getPostCollidePos());
+        Assert.assertEquals(new Vector2(2.2f, 0.25f), findCollision.get().getPostCollidePos());
     }
 
     @Test
     public void should_go_up_while_entering_tile_from_bottom() {
-        // Object is on the first tile, just next to 2nd tile
         Optional<Collision> findCollision = walkOnSlope(1, 0, 0.5f, -0.5f,
                 MovingObject.RIGHT, CollisionDetectionRay.Side.Front);
 
@@ -110,12 +109,12 @@ public class PhysicsBaseSlopeCollisionTests {
 
     @Test
     public void should_go_down_while_entering_tile_from_top() {
-        // Object is on the first tile, just next to 2nd tile
-        Optional<Collision> findCollision = walkOnSlope(3, 1, -0.5f, -0.5f,
+        map.addRectTile(3, 0);
+        Optional<Collision> findCollision = walkOnSlope(3.2f, 1, -0.5f, -0.5f,
                 MovingObject.LEFT, CollisionDetectionRay.Side.Back);
 
         Assert.assertTrue(findCollision.isPresent());
-        Assert.assertEquals(new Vector2(2.7f, 0.75f), findCollision.get().getPostCollidePos());
+        Assert.assertEquals(new Vector2(2.9f, 0.85f), findCollision.get().getPostCollidePos());
     }
 
     private Optional<Collision> walkOnSlope(float x, float y, float velX, float velY, int direction, CollisionDetectionRay.Side collisionSide) {
