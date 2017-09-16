@@ -95,7 +95,6 @@ public abstract class PhysicsBase {
         // But we know our width is < 1, so we can do
         // xStart += 1;
         // To speed this up
-        // TODO: Need unit test for slope
         if (direction == MovingObject.LEFT) {
             xStart += 1;
         }

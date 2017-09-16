@@ -6,6 +6,7 @@ import com.sideprojects.megamanxphantomblade.Difficulty;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.physics.TileBase;
 import com.sideprojects.megamanxphantomblade.physics.tiles.RectangleTile;
+import com.sideprojects.megamanxphantomblade.physics.tiles.SquareTriangleTile;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -17,18 +18,28 @@ public class MockMap extends MapBase {
 
     public MockMap() {
         super(null, null, null, Difficulty.Normal);
-    }
-
-    public void addRectTile(int x, int y, float width, float height) {
-        if (x >= maxX || y >= maxY) {
-            throw new IllegalArgumentException(x + " and " + y + " are illegal dimensions");
-        }
-
         if (bounds == null || bounds.length < 1) {
             // Initialise to a 10x10 map
             bounds = new TileBase[maxX][maxY];
         }
-        bounds[x][y] = new RectangleTile(x, y, width, height);
+    }
+
+    public void addRectTile(int x, int y) {
+        argumentCheck(x, y);
+        bounds[x][y] = new RectangleTile(x, y, 1, 1);
+    }
+
+    public void addSlopeBottomRight(int x, int y) {
+        argumentCheck(x, y);
+        bounds[x][y] = new SquareTriangleTile(x, y, x + 1, y, x + 1, y + 0.5f, x, y, 0, 2);
+        x++; y += 0.5f;
+        bounds[x][y] = new SquareTriangleTile(x, y, x + 1, y, x + 1, y + 0.5f, x, y, 1, 2);
+    }
+
+    private void argumentCheck(int x, int y) {
+        if (x >= maxX || y >= maxY || x < 0 || y < 0) {
+            throw new IllegalArgumentException(x + " and " + y + " are illegal dimensions");
+        }
     }
 
     @Override
