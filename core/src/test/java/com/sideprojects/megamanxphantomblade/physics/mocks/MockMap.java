@@ -7,7 +7,6 @@ import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.physics.TileBase;
 import com.sideprojects.megamanxphantomblade.physics.tiles.RectangleTile;
 import com.sideprojects.megamanxphantomblade.physics.tiles.SquareTriangleTile;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created by buivuhoang on 31/05/17.
