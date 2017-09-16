@@ -8,6 +8,7 @@ pipelines:
   default:
     - step:
         script: # Modify the commands below to build your repository.
+          - ./gradlew core:test
           - ./gradlew desktop:zip
           - curl -X POST "https://${BB_AUTH_STRING}@api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"desktop/build/distributions/desktop-1.0.zip"
           - curl -X POST "https://${BB_AUTH_STRING}@api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"desktop/build/libs/desktop-1.0.jar"

@@ -1,0 +1,17 @@
+{
+  "platform": "windows64",
+  "jdk": "./zulu8.23.0.3-jdk8.0.144-win_x64.zip",
+  "executable": "PhantomBlade",
+  "classpath": [
+    "./build/libs/desktop-1.0.jar"
+  ],
+  "mainclass": "com.sideprojects.megamanxphantomblade.desktop.DesktopLauncher",
+  "vmargs": [
+    "Xmx1G"
+  ],
+  "resources": [
+    "../core/assets"
+  ],
+  "minimizejre": "hard",
+  "output": "./build/out-windows64"
+}
