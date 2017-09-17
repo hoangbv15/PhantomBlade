@@ -59,10 +59,12 @@ public abstract class Physics extends PhysicsBase {
     }
 
     public void applyGravity(MovingObject object, float gravity, float maxFallspeed, float delta) {
-        if (object.vel.y > maxFallspeed) {
-            object.vel.y -= gravity * delta;
-        } else {
-            object.vel.y = maxFallspeed;
+        if (object.isAffectedByGravity()) {
+            if (object.vel.y > maxFallspeed) {
+                object.vel.y -= gravity * delta;
+            } else {
+                object.vel.y = maxFallspeed;
+            }
         }
     }
 

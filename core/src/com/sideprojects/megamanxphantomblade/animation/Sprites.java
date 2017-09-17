@@ -46,6 +46,7 @@ public class Sprites {
     // Enemies
     public static String EnemyExplode = "sprites/enemies/enemy_explode.txt";
     public static String Mettool = "sprites/enemies/mettool.txt";
+    public static String NightmareVirus = "sprites/enemies/nightmare_virus.txt";
 
     // GUI elements
     public static String GuiElements = "sprites/ingame_gui.txt";

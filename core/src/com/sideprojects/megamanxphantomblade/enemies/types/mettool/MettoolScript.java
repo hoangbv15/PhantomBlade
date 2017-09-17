@@ -66,7 +66,7 @@ public class MettoolScript extends EnemyScript<Mettool.State> {
 
     private void annoyingAi() {
         setEnemyState(Mettool.State.Walk);
-        moveTowardsPlayer(velocity, 5);
+        walkTowardsPlayer(velocity, 5);
         setEnemyStateIfAtEdge(Mettool.State.Jump);
         jumpIfAtEdge(velocity, jumpVelocity, waitTimeBeforeJump);
         setCanTakeDamage(false);

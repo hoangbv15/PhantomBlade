@@ -67,6 +67,10 @@ public abstract class MovingObject {
         return healthPoints <= 0;
     }
 
+    public boolean isAffectedByGravity() {
+        return true;
+    }
+
     public void resetCollisionDetectionRays() {
         horizontalRay = null;
         diagonalRay = null;

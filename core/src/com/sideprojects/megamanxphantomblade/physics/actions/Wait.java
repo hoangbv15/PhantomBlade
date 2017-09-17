@@ -21,6 +21,9 @@ public class Wait extends ActionBase {
     @Override
     public void execute(CollisionList collisions, float delta) {
         object.vel.x = 0;
+        if (!object.isAffectedByGravity()) {
+            object.vel.y = 0;
+        }
         stateTime += delta;
     }
 

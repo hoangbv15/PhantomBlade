@@ -1,0 +1,117 @@
+nightmare_virus.png
+size: 861, 60
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+0
+  rotate: false
+  xy: 0, 0
+  size: 71, 60
+  orig: 71, 60
+  offset: 0, 0
+  index: -1
+1
+  rotate: false
+  xy: 71, 0
+  size: 71, 60
+  orig: 71, 60
+  offset: 0, 0
+  index: -1
+2
+  rotate: false
+  xy: 142, 0
+  size: 71, 60
+  orig: 71, 60
+  offset: 0, 0
+  index: -1
+3
+  rotate: false
+  xy: 213, 0
+  size: 71, 60
+  orig: 71, 60
+  offset: 0, 0
+  index: -1
+4
+  rotate: false
+  xy: 284, 0
+  size: 71, 60
+  orig: 71, 60
+  offset: 0, 0
+  index: -1
+5
+  rotate: false
+  xy: 355, 0
+  size: 71, 60
+  orig: 71, 60
+  offset: 0, 0
+  index: -1
+6
+  rotate: false
+  xy: 426, 0
+  size: 71, 60
+  orig: 71, 60
+  offset: 0, 0
+  index: -1
+7
+  rotate: false
+  xy: 497, 0
+  size: 71, 60
+  orig: 71, 60
+  offset: 0, 0
+  index: -1
+8
+  rotate: false
+  xy: 568, 0
+  size: 71, 60
+  orig: 71, 60
+  offset: 0, 0
+  index: -1
+9
+  rotate: false
+  xy: 639, 0
+  size: 71, 60
+  orig: 71, 60
+  offset: 0, 0
+  index: -1
+10
+  rotate: false
+  xy: 710, 0
+  size: 71, 60
+  orig: 71, 60
+  offset: 0, 0
+  index: -1
+11
+  rotate: false
+  xy: 781, 0
+  size: 16, 15
+  orig: 16, 15
+  offset: 0, 0
+  index: -1
+12
+  rotate: false
+  xy: 797, 0
+  size: 16, 15
+  orig: 16, 15
+  offset: 0, 0
+  index: -1
+13
+  rotate: false
+  xy: 813, 0
+  size: 16, 15
+  orig: 16, 15
+  offset: 0, 0
+  index: -1
+14
+  rotate: false
+  xy: 829, 0
+  size: 16, 15
+  orig: 16, 15
+  offset: 0, 0
+  index: -1
+15
+  rotate: false
+  xy: 845, 0
+  size: 16, 15
+  orig: 16, 15
+  offset: 0, 0
+  index: -1
