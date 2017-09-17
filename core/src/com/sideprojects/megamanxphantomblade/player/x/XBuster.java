@@ -83,8 +83,8 @@ public class XBuster extends PlayerAttack {
         playerStartDirection = player.direction;
         posPadding = getMuzzlePositionPadding(player, player.currentFrameIndex());
         muzzlePos = new Vector2();
-        muzzlePos.x = player.bounds.x + posPadding.x;
-        muzzlePos.y = player.bounds.y + posPadding.y;
+        muzzlePos.x = player.mapCollisionBounds.x + posPadding.x;
+        muzzlePos.y = player.mapCollisionBounds.y + posPadding.y;
         explode = false;
         stopUpdatingMuzzlePos = false;
         stateTime = 0;
@@ -97,7 +97,7 @@ public class XBuster extends PlayerAttack {
                 initialiseHealthPoints(100);
                 animation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletHeavy, direction, Sprites.XBulletHeavy, null, 0.05f);
                 muzzleAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletHeavyMuzzle, direction, Sprites.XShootHeavyMuzzle, null, 0.04f);
-                explodeAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletHeavyExplode, direction, Sprites.XBulletHeavyExplode, null, 0.05f);
+                explodeAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletHeavyExplode, direction, Sprites.XBulletHeavyExplode, null, 0.03f);
                 explodePosPaddingXLeft = -P(15);
                 explodePosPaddingXRight = P(4);
                 explodePosPaddingY = -P(30);
@@ -115,7 +115,7 @@ public class XBuster extends PlayerAttack {
                 initialiseHealthPoints(10);
                 animation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletMedium, direction, Sprites.XBulletMedium, null, 0.05f);
                 muzzleAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletMediumMuzzle, direction, Sprites.XShootMediumMuzzle, null, 0.03f);
-                explodeAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletSmallExplode, direction, Sprites.XBulletSmallExplode, null, 0.05f);
+                explodeAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletSmallExplode, direction, Sprites.XBulletSmallExplode, null, 0.03f);
                 explodePosPaddingXLeft = -P(15);
                 explodePosPaddingXRight = -P(6);
                 explodePosPaddingY = -P(25);
@@ -133,7 +133,7 @@ public class XBuster extends PlayerAttack {
                 initialiseHealthPoints(10);
                 animation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletSmall, direction, Sprites.XBulletSmall, null, 0.05f);
                 muzzleAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletSmallMuzzle, direction, Sprites.XShootMuzzle, null, 0.025f);
-                explodeAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletSmallExplode, direction, Sprites.XBulletSmallExplode, null, 0.05f);
+                explodeAnimation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletSmallExplode, direction, Sprites.XBulletSmallExplode, null, 0.03f);
                 explodePosPaddingXLeft = -P(15);
                 explodePosPaddingXRight = -P(17);
                 explodePosPaddingY = -P(30);
@@ -155,15 +155,20 @@ public class XBuster extends PlayerAttack {
     private void createBounds(Vector2 pos) {
         switch(damage.type) {
             case Heavy:
-                bounds = new Rectangle(pos.x, pos.y, P(55), P(30));
+                mapCollisionBounds = new Rectangle(pos.x, pos.y, P(55), P(30));
                 break;
             case Normal:
-                bounds = new Rectangle(pos.x, pos.y, P(27), P(18));
+                mapCollisionBounds = new Rectangle(pos.x, pos.y, P(27), P(18));
                 break;
             case Light:
-                bounds = new Rectangle(pos.x, pos.y, P(14), P(8));
+                mapCollisionBounds = new Rectangle(pos.x, pos.y, P(14), P(8));
                 break;
         }
+    }
+
+    @Override
+    public boolean canCollideWithWall() {
+        return true;
     }
 
     @Override
@@ -197,14 +202,14 @@ public class XBuster extends PlayerAttack {
         } else {
             if (stateTime <= muzzleToBulletTime) {
                 posPadding = getBulletPositionPadding(player, direction, player.currentFrameIndex());
-                pos.x = player.bounds.x + posPadding.x;
-                pos.y = player.bounds.y + posPadding.y;
-                bounds.x = pos.x;
-                bounds.y = pos.y;
+                pos.x = player.mapCollisionBounds.x + posPadding.x;
+                pos.y = player.mapCollisionBounds.y + posPadding.y;
+                mapCollisionBounds.x = pos.x;
+                mapCollisionBounds.y = pos.y;
             } else {
                 pos.x += vel.x * delta;
-                vel.x = 8 * direction;
-                bounds.x = pos.x;
+                vel.x = 10 * direction;
+                mapCollisionBounds.x = pos.x;
                 currentFrame = animation.getKeyFrame(stateTime, true);
             }
         }
@@ -215,8 +220,8 @@ public class XBuster extends PlayerAttack {
             }
             if (!stopUpdatingMuzzlePos) {
                 posPadding = getMuzzlePositionPadding(player, player.currentFrameIndex());
-                muzzlePos.x = player.bounds.x + posPadding.x;
-                muzzlePos.y = player.bounds.y + posPadding.y;
+                muzzlePos.x = player.mapCollisionBounds.x + posPadding.x;
+                muzzlePos.y = player.mapCollisionBounds.y + posPadding.y;
             }
         } else {
             muzzleFrame = null;
@@ -225,7 +230,7 @@ public class XBuster extends PlayerAttack {
 
     private Vector2 getBulletPositionPadding(PlayerBase player, int bulletDirection, int frameIndex) {
         float paddingY = P(27);
-        float paddingX = player.bounds.width;
+        float paddingX = player.mapCollisionBounds.width;
         if (bulletDirection == MovingObject.LEFT) {
             paddingX = -P(20);
         }

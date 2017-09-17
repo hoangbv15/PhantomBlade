@@ -1,0 +1,41 @@
+language: java
+
+jdk:
+  - oraclejdk8
+
+os:
+  - linux
+
+branches:
+  only:
+  - master
+  - develop
+
+cache:
+  directories:
+  - $HOME/.gradle
+
+before_script:
+  - mkdir PhantomBlade
+  - mv !(PhantomBlade) PhantomBlade
+  - git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/hoangbv15/hoangbv15.github.io.git
+
+script:
+  - cd PhantomBlade
+  - ./gradlew core:test
+  - ./gradlew desktop:zip
+  - ./gradlew html:dist
+
+after_script:
+  - cd PhantomBlade
+  - curl -X POST "https://${BB_AUTH_STRING}@api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"desktop/build/distributions/desktop-1.0.zip"
+  - curl -X POST "https://${BB_AUTH_STRING}@api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"desktop/build/libs/desktop-1.0.jar"
+  - cd ..
+  - rsync -r PhantomBlade/html/build/dist/ hoangbv15.github.io/
+  - cd hoangbv15.github.io
+  - git config user.email "buivuhoang15@gmail.com"
+  - git config user.name "Hoang Bui"
+  - git config push.default simple
+  - git add .
+  - git commit -m "Automated deploy script"
+  - git push

@@ -1,6 +1,5 @@
 package com.sideprojects.megamanxphantomblade.physics.player.x;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.input.Command;
@@ -14,6 +13,7 @@ import com.sideprojects.megamanxphantomblade.player.x.PlayerXSound;
 import com.sideprojects.megamanxphantomblade.player.x.XBuster;
 
 /**
+ * Handles X's attacks
  * Created by buivuhoang on 26/03/17.
  */
 public class PlayerXPhysics extends PlayerPhysics {
@@ -25,8 +25,8 @@ public class PlayerXPhysics extends PlayerPhysics {
 
     // Timing for charging
     private static float waitBeforeCharging = 0.2f;
-    private static float timeToFullyCharged = 1.9f;
-    private static float timeToAlmostFullyCharged = 1.5f;
+    private static float timeToFullyCharged = 1.7f;
+    private static float timeToAlmostFullyCharged = 1.3f;
 
     private float attackStateTime;
     private PlayerState prevState;
@@ -44,10 +44,9 @@ public class PlayerXPhysics extends PlayerPhysics {
     public void internalUpdate(MovingObject object, float delta, MapBase map) {
         // Logic for attacking
         attackStateTime += delta;
-        if (input.isCommandJustPressed(Command.ATTACK) && attackStateTime >= attackRecoveryTime) {
+        if (input.isCommandJustPressed(Command.ATTACK) && attackStateTime >= attackRecoveryTime && !player.isBeingDamaged()) {
             resetAttackStatus();
             lightAttack(map);
-//            heavyAttack(map);
         } else {
             player.justBegunAttacking = false;
             if (player.isAttacking && attackStateTime < attackTime) {
@@ -66,7 +65,13 @@ public class PlayerXPhysics extends PlayerPhysics {
             }
 
             // if player keep holding, charge
-            if (input.isCommandPressed(Command.ATTACK) && attackStateTime >= waitBeforeCharging) {
+            // But only charge if player is not being damaged
+            if (!input.isCommandPressed(Command.ATTACK) && player.isBeingDamaged()) {
+                attackStateTime = 0;
+                player.isCharging = false;
+                player.fullyCharged = false;
+                player.almostFullyCharged = false;
+            } else if (input.isCommandPressed(Command.ATTACK) && attackStateTime >= waitBeforeCharging) {
                 player.isCharging = true;
                 playerXSound.startPlayingCharge(delta);
                 if (attackStateTime >= timeToAlmostFullyCharged) {
@@ -91,6 +96,7 @@ public class PlayerXPhysics extends PlayerPhysics {
             }
         }
         player.attackStateTime = attackStateTime;
+
         super.internalUpdate(object, delta, map);
     }
 

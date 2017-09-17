@@ -2,6 +2,7 @@ package com.sideprojects.megamanxphantomblade;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay;
 
 /**
  * Created by buivuhoang on 13/02/17.
@@ -10,6 +11,10 @@ import com.badlogic.gdx.math.Vector2;
  * These objects can collide with the map and with each other.
  */
 public abstract class MovingObject {
+    // Property for collision detection
+    public CollisionDetectionRay horizontalRay;
+    public CollisionDetectionRay diagonalRay;
+
     // Directions
     public static final int LEFT = -1;
     public static final int RIGHT = 1;
@@ -20,7 +25,8 @@ public abstract class MovingObject {
 
     public Vector2 pos;
     public Vector2 vel;
-    public Rectangle bounds;
+    public Rectangle mapCollisionBounds = new Rectangle();
+    public Rectangle takeDamageBounds = new Rectangle();
 
     public float stateTime;
 
@@ -43,8 +49,14 @@ public abstract class MovingObject {
     }
 
     public void updatePos() {
-        pos.x = bounds.x;
-        pos.y = bounds.y;
+        pos.x = mapCollisionBounds.x;
+        pos.y = mapCollisionBounds.y;
+        takeDamageBounds.x = mapCollisionBounds.x;
+        takeDamageBounds.y = mapCollisionBounds.y;
+    }
+
+    public int movingDirection() {
+        return vel.x > 0 ? MovingObject.RIGHT : vel.x == 0 ? direction : MovingObject.LEFT;
     }
 
     public void die() {
@@ -53,5 +65,10 @@ public abstract class MovingObject {
 
     public boolean isDead() {
         return healthPoints <= 0;
+    }
+
+    public void resetCollisionDetectionRays() {
+        horizontalRay = null;
+        diagonalRay = null;
     }
 }

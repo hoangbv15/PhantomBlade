@@ -7,8 +7,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.maps.MapRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -22,8 +20,6 @@ import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.DamagedShader;
-
-import java.util.List;
 
 /**
  * Created by buivuhoang on 04/02/17.
@@ -60,7 +56,7 @@ public class WorldRenderer implements Disposable {
         guiCam = new OrthographicCamera(16, 9);
         guiCam.zoom = 0.4f;
         damagedShader = DamagedShader.getShader();
-        playerRenderer = new PlayerRenderer(map.player, map.getTileWidth(), gameCam, batch, damagedShader);
+        playerRenderer = new PlayerRenderer(map.player, map.getTileWidth(), batch, damagedShader);
         playerHealthRenderer = new PlayerHealthRenderer(batch);
         lerpTarget = new Vector3();
         playerYOffset = 1/5f * map.getTileHeight();
@@ -82,13 +78,13 @@ public class WorldRenderer implements Disposable {
 
         // Apply linear interpolation to the camera in order to smooth the camera movement
         gameCam.position.lerp(lerpTarget.set(pos.x, pos.y, 0), 0.5f);
-        // Keep the camera within bounds
+        // Keep the camera within mapCollisionBounds
         gameCam.position.x = MathUtils.clamp(gameCam.position.x, camViewportHalfX, mapWidthMinusCamViewportHalfX);
         gameCam.position.y = MathUtils.clamp(gameCam.position.y, camViewportHalfY, mapHeightMinusCamViewportHalfY);
         gameCam.update();
         Gdx.gl.glDisable(GL20.GL_BLEND);
         batch.begin();
-        background.draw(gameCam, batch);
+        background.draw(gameCam, batch, delta);
         batch.end();
         renderMap();
         batch.setProjectionMatrix(gameCam.combined);

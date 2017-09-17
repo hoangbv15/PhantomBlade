@@ -18,6 +18,10 @@ public class NumberMathTest {
                 {1, 2, 3, true},
                 {1, -2, 3, false},
                 {1, 3, 3, true},
+                {1.1156f, 1.1156f, 5.1245f, true},
+                {1.1156f, 1.1157f, 5.1245f, true},
+                {1.1156f, 1.1155f, 5.1245f, false},
+                {1.1156f, 5.12451f, 5.1245f, false},
                 {-1, -2, -2, true}
         });
     }

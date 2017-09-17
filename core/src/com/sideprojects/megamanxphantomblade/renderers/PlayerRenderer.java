@@ -1,6 +1,5 @@
 package com.sideprojects.megamanxphantomblade.renderers;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -20,7 +19,6 @@ import com.sideprojects.megamanxphantomblade.renderers.shaders.TraceShader;
 public class PlayerRenderer implements Disposable {
     private PlayerBase player;
 
-    private OrthographicCamera cam;
     private SpriteBatch batch;
     private ShaderProgram traceShader;
     private ShaderProgram damagedShader;
@@ -40,6 +38,14 @@ public class PlayerRenderer implements Disposable {
     private boolean startRemovingTraces;
     // private count towards number of frame skip
     private int traceFrameSkipCount = 0;
+    // State for toggling post dash trace rendering
+    // In post dash trace rendering mode, we don't skip any frame
+    private Queue<TextureRegion> postDashFrameQueue;
+    private Queue<Vector2> postDashPositionQueue;
+    public boolean isPostDashing;
+    public boolean stopPostDashing;
+    private float postDashStateTime;
+    private static float postDashTime = 0.17f;
 
     // Parameters for rendering dash rockets
     private float leftDashRocketPadding;
@@ -51,17 +57,18 @@ public class PlayerRenderer implements Disposable {
     private float damageFlickerDuration = 0.05f;
     private float chargeFlickerDuration = 0.03f;
     private float flickerStateTime = 0;
+    private boolean previousDashTraceState;
 
-
-    public PlayerRenderer(PlayerBase player, float mapTileWidth, OrthographicCamera cam, SpriteBatch batch, ShaderProgram damagedShader) {
+    public PlayerRenderer(PlayerBase player, float mapTileWidth, SpriteBatch batch, ShaderProgram damagedShader) {
         this.player = player;
-        this.cam = cam;
         this.mapTileWidth = mapTileWidth;
         this.batch = batch;
 
         traceShader = TraceShader.getShaderColor(player.getTraceColour());
-        lastPlayerFrameQueue = new Queue<TextureRegion>(numOfTraces);
-        lastPlayerPositionQueue = new Queue<Vector2>(numOfTraces);
+        lastPlayerFrameQueue = new Queue<>(numOfTraces);
+        lastPlayerPositionQueue = new Queue<>(numOfTraces);
+        postDashFrameQueue = new Queue<>(numOfTraces);
+        postDashPositionQueue = new Queue<>(numOfTraces);
         startRemovingTraces = false;
         // Calculate dash rocket padding
         leftDashRocketPadding = player.animations.get(PlayerAnimationBase.Type.Dash).getKeyFrame(0).getRegionWidth();
@@ -88,6 +95,7 @@ public class PlayerRenderer implements Disposable {
         posY += player.animationPadding.y;
 
         renderPlayerTrace(currentFrame, posX, posY);
+        renderPostDashTrace(currentFrame, posX, posY, delta);
         if (player.currentDashRocketFrame != null) {
             if (player.state == PlayerState.Dash) {
                 renderPlayerDashRocket(originPosX, posY);
@@ -144,13 +152,13 @@ public class PlayerRenderer implements Disposable {
         if (traceFrameSkipCount < traceFrameSkip) {
             traceFrameSkipCount++;
         } else {
-            if (startRemovingTraces) {
+            if (startRemovingTraces && lastPlayerFrameQueue.size != 0) {
                 lastPlayerFrameQueue.removeFirst();
                 lastPlayerPositionQueue.removeFirst();
             }
             traceFrameSkipCount = 0;
             // If player is dashing, draw a trace
-            if (player.state == PlayerState.Dash || player.state == PlayerState.Updash || player.isJumpDashing) {
+            if (player.shouldProduceDashTrace()) {
                 lastPlayerFrameQueue.addLast(currentFrame);
                 lastPlayerPositionQueue.addLast(new Vector2(posX, posY));
             }
@@ -159,7 +167,7 @@ public class PlayerRenderer implements Disposable {
             }
         }
 
-        if (player.state == PlayerState.Dash || player.state == PlayerState.Updash || player.isJumpDashing) {
+        if (player.shouldProduceDashTrace()) {
             if (lastPlayerFrameQueue.size != numOfTraces) {
                 startRemovingTraces = false;
             }
@@ -179,6 +187,56 @@ public class PlayerRenderer implements Disposable {
             startRemovingTraces = false;
         }
         batch.setShader(null);
+    }
+
+    private void renderPostDashTrace(TextureRegion currentFrame, float posX, float posY, float delta) {
+        if (!player.shouldProduceDashTrace()) {
+            if (previousDashTraceState) {
+                isPostDashing = true;
+                stopPostDashing = false;
+            }
+
+            if (isPostDashing && postDashStateTime <= postDashTime) {
+                postDashStateTime += delta;
+            } else {
+                postDashStateTime = 0;
+                stopPostDashing = true;
+            }
+        } else {
+            postDashFrameQueue.clear();
+            postDashPositionQueue.clear();
+            isPostDashing = false;
+            postDashStateTime = 0;
+        }
+
+        if (stopPostDashing) {
+            for (int i = 0; i < 2; i++) {
+                if (postDashFrameQueue.size != 0) {
+                    postDashFrameQueue.removeFirst();
+                    postDashPositionQueue.removeFirst();
+                } else {
+                    stopPostDashing = false;
+                    isPostDashing = false;
+                }
+            }
+        }
+
+        // If player is post dashing, draw a trace
+        if (isPostDashing) {
+            postDashFrameQueue.addLast(currentFrame);
+            postDashPositionQueue.addLast(new Vector2(posX, posY));
+        }
+
+        if (postDashFrameQueue.size != 0) {
+            for (int i = 0; i < postDashFrameQueue.size; i++) {
+                TextureRegion frame = postDashFrameQueue.get(i);
+                Vector2 position = postDashPositionQueue.get(i);
+                batch.setShader(traceShader);
+                batch.draw(frame, position.x, position.y);
+            }
+        }
+        batch.setShader(null);
+        previousDashTraceState = player.shouldProduceDashTrace();
     }
 
     private void renderPlayerAuxiliaryAnimation(float posX, float posY) {

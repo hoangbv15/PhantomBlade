@@ -26,10 +26,7 @@ public class Damaged extends PlayerDamageState {
                 player.takeDamage(damage);
                 player.isAttacking = false;
                 player.firstFramesOfAttacking = false;
-                if (player.isDead()) {
-                    physics.playerSound.callback(player.state, PlayerState.Dead);
-                    player.state = PlayerState.Dead;
-                } else {
+                if (!player.isDead()) {
                     physics.playerSound.callback(player.state, PlayerState.DamagedNormal);
                     player.state = PlayerState.DamagedNormal;
                     if (player.canIssueLowHealthWarning && player.isLowHealth()) {

@@ -54,17 +54,18 @@ public abstract class EnemyBase<T> extends MovingObject {
         isTakingDamage = false;
         canTakeDamage = true;
         canSpawn = true;
-        explodeFragments = new ArrayList<ExplodeFragment>();
+        explodeFragments = new ArrayList<>();
         takeDamageStateTime = 0;
         stateTime = 0;
     }
 
     public final void despawn(boolean canSpawn) {
         spawned = false;
-        bounds.x = spawnPos.x;
-        bounds.y = spawnPos.y;
-        pos.x = bounds.x;
-        pos.y = bounds.y;
+        mapCollisionBounds.x = spawnPos.x;
+        mapCollisionBounds.y = spawnPos.y;
+        pos.x = mapCollisionBounds.x;
+        pos.y = mapCollisionBounds.y;
+        explodeFragments.clear();
         this.canSpawn = canSpawn;
     }
 
@@ -88,7 +89,7 @@ public abstract class EnemyBase<T> extends MovingObject {
                 List<TextureRegion> fragmentFrames = Arrays.asList(explodeFragmentAnimation.getKeyFrames());
                 if (explodeFragments.isEmpty()) {
                     for (TextureRegion fragmentFrame : fragmentFrames) {
-                        explodeFragments.add(new ExplodeFragment(fragmentFrame, pos.x - bounds.getWidth()/3f, pos.y - bounds.getHeight()/3f, MathUtils.random(2f), 5f));
+                        explodeFragments.add(new ExplodeFragment(fragmentFrame, pos.x - mapCollisionBounds.getWidth()/3f, pos.y - mapCollisionBounds.getHeight()/3f, MathUtils.random(2f), 5f));
                     }
                 } else {
                     for (ExplodeFragment fragment : explodeFragments) {
@@ -98,7 +99,6 @@ public abstract class EnemyBase<T> extends MovingObject {
                 }
             } else {
                 despawn(false);
-                explodeFragments.clear();
             }
         } else {
             stateTime += delta;
@@ -114,7 +114,7 @@ public abstract class EnemyBase<T> extends MovingObject {
         }
 
         updateAnimation(delta);
-
+        updateTakeDamageBounds();
     }
 
     protected abstract float deathExplosionTime();
@@ -131,6 +131,8 @@ public abstract class EnemyBase<T> extends MovingObject {
         }
         return false;
     }
+
+    protected abstract void updateTakeDamageBounds();
 
     protected abstract void updateAnimation(float delta);
 

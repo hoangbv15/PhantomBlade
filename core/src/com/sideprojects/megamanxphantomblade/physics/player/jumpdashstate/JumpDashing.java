@@ -25,7 +25,7 @@ public class JumpDashing extends PlayerJumpDashStateBase {
 
     @Override
     public PlayerJumpDashStateBase nextState(InputProcessor input, PlayerBase player) {
-        if (player.grounded || player.state == PlayerState.Wallslide) {
+        if (player.grounded || player.state == PlayerState.Wallslide || player.isBeingDamaged()) {
             return new NotJumpDashing(player);
         }
         return this;

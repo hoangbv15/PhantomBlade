@@ -92,7 +92,7 @@ public class GameListener extends ApplicationAdapter {
 		Gdx.gl.glClearColor(clearColor.r,clearColor.g,clearColor.b, clearColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		parallaxBackground.draw(worldCamera, batch);
+//		parallaxBackground.draw(worldCamera, batch);
 		batch.end();
 	}
 	

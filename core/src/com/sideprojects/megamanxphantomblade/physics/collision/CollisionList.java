@@ -13,6 +13,7 @@ public class CollisionList {
     private Collision.Side collidingSide;
     private boolean isAtEdgeLeft;
     private boolean isAtEdgeRight;
+    private boolean isColliding;
 
     public CollisionList(List<Collision> collisionList) {
         this.toList = collisionList;
@@ -20,6 +21,7 @@ public class CollisionList {
         isAtEdgeLeft = false;
         isAtEdgeRight = false;
         Collision up = null;
+        isColliding = !collisionList.isEmpty();
         for (Collision collision: toList) {
             if (collision.side == Collision.Side.Left ||
                     collision.side == Collision.Side.Right ||
@@ -36,9 +38,9 @@ public class CollisionList {
         if (up != null && !isCollidingSide) {
             // We are only colliding with the up side
             // That means there's a chance we might be at the edge
-            if (up.tileLeft == null && Math.abs(up.tile.x - up.getPrecollidePos().x) <= edgeThreshold) {
+            if (up.tileLeft == null && Math.abs(up.tile.x() - up.getPostCollidePos().x) <= edgeThreshold) {
                 isAtEdgeLeft = true;
-            } else if (up.tileRight == null && Math.abs(up.tile.x + up.tile.getWidth() - up.getPrecollidePos().x) <= edgeThreshold) {
+            } else if (up.tileRight == null && Math.abs(up.tile.x() + up.tile.getWidth() - up.getPostCollidePos().x) <= edgeThreshold) {
                 isAtEdgeRight = true;
             }
         }
@@ -48,6 +50,10 @@ public class CollisionList {
         return isCollidingSide;
     }
 
+    public boolean isColliding() {
+        return isColliding;
+    }
+
     public float distanceToSideCollision() {
         return distanceToSideCollision;
     }
@@ -55,7 +61,7 @@ public class CollisionList {
     public Collision.Side collidingSide() { return collidingSide; }
 
     public boolean isAtEdge() {
-        return isAtEdgeLeft || isAtEdgeRight;
+        return isAtEdgeLeft() || isAtEdgeRight();
     }
 
     public boolean isAtEdgeLeft() {

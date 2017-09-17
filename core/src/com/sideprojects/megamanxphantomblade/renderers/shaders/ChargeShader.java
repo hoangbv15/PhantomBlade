@@ -1,7 +1,6 @@
 package com.sideprojects.megamanxphantomblade.renderers.shaders;
 
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.sideprojects.megamanxphantomblade.player.TraceColour;
 
 /**
  * Created by buivuhoang on 19/02/17.

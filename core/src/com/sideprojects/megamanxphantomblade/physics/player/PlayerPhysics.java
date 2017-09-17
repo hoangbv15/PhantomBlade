@@ -14,6 +14,10 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerSound;
 
 /**
+ * This handles player's movements based in user input, forces applied to the player
+ * such as gravity, and sounds that the player creates.
+ * The concrete implementations of this should handle any specific actions that can generate force/movement/sounds
+ * For example: player attacks.
  * Created by buivuhoang on 21/02/17.
  */
 public abstract class PlayerPhysics extends Physics {
@@ -29,7 +33,7 @@ public abstract class PlayerPhysics extends Physics {
     protected float getPushBackDuration() { return 0.08f; }
 
     @Override
-    protected float getPushBackSpeed() { return 3f; }
+    protected float getPushBackSpeed() { return 5f; }
 
     public PlayerMovementStateBase movementState;
     public PlayerDamageState damageState;
@@ -54,6 +58,11 @@ public abstract class PlayerPhysics extends Physics {
 
     @Override
     public void inputProcessing(MovingObject object, float delta, MapBase map) {
+        // If player is out of bounds, kill the player
+        if (map.isOutOfBounds(player)) {
+            player.die();
+        }
+
         player.stateTime += delta;
         holdDashState = holdDashState.nextState(input, player);
 
@@ -137,6 +146,12 @@ public abstract class PlayerPhysics extends Physics {
             movementState = movementState.nextState(input, player, collisions);
             // Do any optional update
             movementState.update(input, player);
+        }
+
+        // Check if player is dead
+        if (player.isDead() && player.state != PlayerState.Dead) {
+            playerSound.callback(player.state, PlayerState.Dead);
+            player.state = PlayerState.Dead;
         }
     }
 

@@ -55,6 +55,9 @@ public class Jump extends PlayerNonDashState {
         if (player.vel.y <= 0) {
             return new Fall(input, player, player.state, stateChangeHandler);
         }
+        if (player.vel.x == 0 && player.grounded) {
+            return new Idle(input, player, player.state, stateChangeHandler);
+        }
         return this;
     }
 }

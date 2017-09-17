@@ -5,12 +5,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.Damage;
-import com.sideprojects.megamanxphantomblade.input.InputProcessor;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
-import com.sideprojects.megamanxphantomblade.math.GeoMath;
 import com.sideprojects.megamanxphantomblade.math.NumberMath;
 import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay;
+import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay.Orientation;
+import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay.Side;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
 import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
 
@@ -37,9 +37,14 @@ public abstract class PhysicsBase {
     }
 
     public final CollisionList getMapCollision(MovingObject object, float deltaTime, MapBase map) {
-        int direction = object.direction;
+        return getMapCollision(object, deltaTime, map, false);
+    }
+
+    public final CollisionList getMapCollision(MovingObject object, float deltaTime, MapBase map, boolean overlapMode) {
         Vector2 vel = object.vel;
-        Rectangle bounds = object.bounds;
+        int direction = vel.x >= 0 ? MovingObject.RIGHT : MovingObject.LEFT;
+        direction = vel.x == 0 ? object.direction : direction;
+        Rectangle bounds = object.mapCollisionBounds;
 
         collisions.toList.clear();
         // From inside out, find the first tile that collides with the player
@@ -59,17 +64,22 @@ public abstract class PhysicsBase {
         Vector2 endPos = new Vector2(bounds.x + stepX, bounds.y + stepY);
 
         // Setup collision detection rays
-        List<CollisionDetectionRay> detectionRayList = new ArrayList<CollisionDetectionRay>(5);
-        if (vel.y != 0) {
-            detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, 0, paddingY));
-            detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, bounds.width, paddingY));
-        }
+        List<CollisionDetectionRay> detectionRayList = new ArrayList<>();
+        object.resetCollisionDetectionRays();
         if (vel.x != 0) {
-            detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, 0));
-            detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, bounds.height));
+            object.horizontalRay = new CollisionDetectionRay(bounds, endPosX, paddingX, 0, Side.Front, Orientation.Horizontal);
+            detectionRayList.add(object.horizontalRay);
+            detectionRayList.add(new CollisionDetectionRay(bounds, endPosX, paddingX, bounds.height, Side.Front, Orientation.Horizontal));
+        }
+        if (vel.y != 0) {
+            Side side1 = direction == MovingObject.LEFT ? Side.Front : Side.Back;
+            Side side2 = direction == MovingObject.RIGHT ? Side.Front : Side.Back;
+            detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, 0, paddingY, side1, Orientation.Vertical));
+            detectionRayList.add(new CollisionDetectionRay(bounds, endPosY, bounds.width, paddingY, side2, Orientation.Vertical));
         }
         if (vel.x != 0 && vel.y != 0) {
-            detectionRayList.add(new CollisionDetectionRay(bounds, endPos, paddingX, paddingY));
+            object.diagonalRay = new CollisionDetectionRay(bounds, endPos, paddingX, paddingY, Side.Front, Orientation.Diagonal);
+            detectionRayList.add(object.diagonalRay);
         }
 
         // Loop through map and use collision detection rays to detect...well..collisions.
@@ -78,35 +88,53 @@ public abstract class PhysicsBase {
         if (vel.y <= 0) {
             yStart += 1;
         }
+
+        // This is needed for moving left on a slope to work
+        // The most correct here is the below, for all width
+        // xStart = (int)(bounds.x + bounds.width);
+        // But we know our width is < 1, so we can do
+        // xStart += 1;
+        // To speed this up
         if (direction == MovingObject.LEFT) {
             xStart += 1;
         }
+
+        // paddingX is 0 when vel X is 0
         int xEnd = (int)(endPosX.x + paddingX);
+
         if (direction == MovingObject.RIGHT) {
-            xEnd += 1;
+            float newEndPosX = endPosX.x + bounds.width;
+            if (newEndPosX != (int)newEndPosX)
+                xEnd += 1;
         }
+
         int yEnd = (int)(endPosY.y + paddingY);
 
         // Loop through the rectangular area that the speed vector occupies
         // Get a list of all collisions with map tiles in the area
         // Identify the collision nearest to the player
         // Player has at most 2 collisions with the map at the same time
-        List<Collision> collisionList = new ArrayList<Collision>(2);
+        List<Collision> collisionList = new ArrayList<>(2);
         for (int y = yStart; NumberMath.hasNotExceeded(y, yStart, yEnd); y = NumberMath.iteratorNext(y, yStart, yEnd)) {
             for (int x = xStart; NumberMath.hasNotExceeded(x, xStart, xEnd); x = NumberMath.iteratorNext(x, xStart, xEnd)) {
-                Rectangle tile = map.getCollidableBox(x, y);
+                TileBase tile = map.getCollidableBox(x, y);
                 if (tile == null) {
                     continue;
                 }
                 // Get the tiles surrounding this one
-                Rectangle tileUp = map.getCollidableBox(x, y + 1);
-                Rectangle tileDown = map.getCollidableBox(x, y - 1);
-                Rectangle tileLeft = map.getCollidableBox(x - 1, y);
-                Rectangle tileRight = map.getCollidableBox(x + 1, y);
+                TileBase tileUp = map.getCollidableBox(x, y + 1);
+                TileBase tileDown = map.getCollidableBox(x, y - 1);
+                TileBase tileLeft = map.getCollidableBox(x - 1, y);
+                TileBase tileRight = map.getCollidableBox(x + 1, y);
+                TileBase tileTopLeft = map.getCollidableBox(x - 1, y + 1);
+                TileBase tileTopRight = map.getCollidableBox(x + 1, y + 1);
+                TileBase tileBottomLeft = map.getCollidableBox(x - 1, y - 1);
+                TileBase tileBottomRight = map.getCollidableBox(x + 1, y - 1);
 
                 for (CollisionDetectionRay ray: detectionRayList) {
-                    Collision collision = getSideOfCollisionWithTile(ray, tile,
-                            tileUp, tileDown, tileLeft, tileRight);
+                    Collision collision = tile.getCollisionWithTile(object, ray,
+                            tileUp, tileDown, tileLeft, tileRight, tileTopLeft, tileTopRight, tileBottomLeft, tileBottomRight,
+                            overlapMode);
                     if (collision != null) {
                         collisionList.add(collision);
                         collisions.toList.add(collision);
@@ -118,50 +146,13 @@ public abstract class PhysicsBase {
         return new CollisionList(collisionList);
     }
 
-    private Collision getSideOfCollisionWithTile(CollisionDetectionRay ray, Rectangle tile,
-                                                 Rectangle tileUp,
-                                                 Rectangle tileDown,
-                                                 Rectangle tileLeft,
-                                                 Rectangle tileRight) {
-        Vector2 start = ray.getStart();
-        Vector2 end = ray.getEnd();
-
-        // Put non-null ones in an array, then sort by distance to start
-        // A line can only have at most 2 intersections with a rectangle
-        List<Collision> collisionList = new ArrayList<Collision>(2);
-
-        // Find intersection on each side of the tile
-        if (tileLeft == null) {
-            Collision left = new Collision(GeoMath.findIntersectionLeft(tile, start, end), Collision.Side.Left, ray, tile);
-            if (left.point != null) collisionList.add(left);
-        }
-        if (tileRight == null) {
-            Collision right = new Collision(GeoMath.findIntersectionRight(tile, start, end), Collision.Side.Right, ray, tile);
-            if (right.point != null) collisionList.add(right);
-        }
-        if (tileUp == null) {
-            Collision up = new Collision(GeoMath.findIntersectionUp(tile, start, end), Collision.Side.Up, ray, tile, tileLeft, tileRight);
-            if (up.point != null) collisionList.add(up);
-        }
-        if (tileDown == null) {
-            Collision down = new Collision(GeoMath.findIntersectionDown(tile, start, end), Collision.Side.Down, ray, tile);
-            if (down.point != null) collisionList.add(down);
-        }
-
-        if (collisionList.isEmpty()) {
-            return null;
-        }
-
-        return Collision.getCollisionNearestToStart(collisionList, start);
-    }
-
     public final Damage getEnemyCollisionDamage(MovingObject object, MapBase map) {
-        EnemyBase enemy = getCollidingEnemy(object, map);
+        EnemyBase enemy = getCollidingEnemy(object, map, false);
         if (enemy == null) {
             return null;
         }
-        float playerX = object.bounds.x + object.bounds.width / 2;
-        float enemyX = enemy.bounds.x + enemy.bounds.width / 2;
+        float playerX = object.takeDamageBounds.x + object.takeDamageBounds.width / 2;
+        float enemyX = enemy.mapCollisionBounds.x + enemy.mapCollisionBounds.width / 2;
         Damage.Side side = Damage.Side.Left;
         if (playerX < enemyX) {
             side = Damage.Side.Right;
@@ -174,7 +165,7 @@ public abstract class PhysicsBase {
         if (attack.isDead()) {
             return;
         }
-        EnemyBase enemy = getCollidingEnemy(attack, map);
+        EnemyBase enemy = getCollidingEnemy(attack, map, true);
         if (enemy == null) {
             return;
         }
@@ -184,12 +175,24 @@ public abstract class PhysicsBase {
         }
     }
 
-    private EnemyBase getCollidingEnemy(MovingObject object, MapBase map) {
+    public final void stopAttackIfHitWall(PlayerAttack attack, float delta, MapBase map) {
+        CollisionList collisions = getMapCollision(attack, delta, map, true);
+        if (!collisions.toList.isEmpty()) {
+            attack.die(true);
+        }
+    }
+
+    private EnemyBase getCollidingEnemy(MovingObject object, MapBase map, boolean isEnemyTakingDamage) {
         for (EnemyBase enemy: map.enemyList) {
             if (enemy.isDead() || !enemy.spawned) {
                 continue;
             }
-            if (object.bounds.overlaps(enemy.bounds)) {
+            if (isEnemyTakingDamage) {
+                if (object.mapCollisionBounds.overlaps(enemy.takeDamageBounds)) {
+                    return enemy;
+                }
+            }
+            else if (object.takeDamageBounds.overlaps(enemy.mapCollisionBounds)) {
                 return enemy;
             }
         }
@@ -204,7 +207,7 @@ public abstract class PhysicsBase {
 
     private void doesPushBack(MovingObject object, float delta) {
         if (currentPushBackDurationToGo > 0) {
-            object.vel.x = getPushBackSpeed() * pushBackDirection;
+            object.vel.x = getPushBackSpeed() * pushBackDirection * currentPushBackDurationToGo / getPushBackDuration();
             currentPushBackDurationToGo -= delta;
         } else if (isBeingPushedBack) {
             isBeingPushedBack = false;
