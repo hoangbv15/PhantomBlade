@@ -56,6 +56,9 @@ public class Mettool extends EnemyBase<Mettool.State> {
                 case BuckledUp:
                     type = EnemyAnimationBase.Type.Idle;
                     break;
+                case Unbuckle:
+                    type = EnemyAnimationBase.Type.StopIdling;
+                    break;
                 case Walk:
                     type = EnemyAnimationBase.Type.Run;
                     break;
@@ -101,6 +104,7 @@ public class Mettool extends EnemyBase<Mettool.State> {
 
     protected enum State {
         BuckledUp,
+        Unbuckle,
         Walk,
         Jump,
         Shoot,

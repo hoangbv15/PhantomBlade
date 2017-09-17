@@ -13,7 +13,8 @@ public class MettoolScript extends EnemyScript<Mettool.State> {
     private static float velocity = 1;
     private static float jumpVelocity = 5;
     private static float walkTime = 2;
-    private static float waitTime = 1;
+    private static float waitTimeBuckledUp = 1;
+    private static float waitTimeUnbuckle = 0.4f;
     private static float waitTimeBeforeJump = 0.4f;
     private boolean isStupidAi;
 
@@ -46,7 +47,9 @@ public class MettoolScript extends EnemyScript<Mettool.State> {
         } else if (rand == 1) {
             setCanTakeDamage(false);
             setEnemyState(Mettool.State.BuckledUp);
-            wait(waitTime);
+            wait(waitTimeBuckledUp);
+            setEnemyState(Mettool.State.Unbuckle);
+            wait(waitTimeUnbuckle);
             setCanTakeDamage(true);
         }
         setEnemyState(Mettool.State.Walk);
@@ -55,7 +58,9 @@ public class MettoolScript extends EnemyScript<Mettool.State> {
         jumpIfAtEdge(velocity, jumpVelocity, waitTimeBeforeJump);
         setCanTakeDamage(false);
         setEnemyState(Mettool.State.BuckledUp);
-        wait(waitTime);
+        wait(waitTimeBuckledUp);
+        setEnemyState(Mettool.State.Unbuckle);
+        wait(waitTimeUnbuckle);
         setCanTakeDamage(true);
     }
 
@@ -66,7 +71,9 @@ public class MettoolScript extends EnemyScript<Mettool.State> {
         jumpIfAtEdge(velocity, jumpVelocity, waitTimeBeforeJump);
         setCanTakeDamage(false);
         setEnemyState(Mettool.State.BuckledUp);
-        wait(waitTime);
+        wait(waitTimeBuckledUp);
+        setEnemyState(Mettool.State.Unbuckle);
+        wait(waitTimeUnbuckle);
         setCanTakeDamage(true);
     }
 }

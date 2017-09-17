@@ -104,6 +104,7 @@ public abstract class EnemyAnimationBase {
     public enum Type {
         // Common
         Idle,
+        StopIdling,
         Run,
         Jump,
         Fall,

@@ -27,6 +27,8 @@ public class MettoolAnimation extends EnemyAnimationBase {
         switch (type) {
             case Idle:
                 return Arrays.asList(0, 1, 2, 3);
+            case StopIdling:
+                return Arrays.asList(3, 2, 1, 0);
             case Jump:
                 return Arrays.asList(13, 13, 13, 13, 14, 15, 16, 17, 18, 19);
             case Run:
