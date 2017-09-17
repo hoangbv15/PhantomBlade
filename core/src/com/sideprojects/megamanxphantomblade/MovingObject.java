@@ -72,6 +72,10 @@ public abstract class MovingObject {
         return true;
     }
 
+    public boolean isStoppedByWalls() {
+        return true;
+    }
+
     public void resetCollisionDetectionRays() {
         horizontalRay = null;
         diagonalRay = null;

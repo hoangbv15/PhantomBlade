@@ -1,11 +1,13 @@
 package com.sideprojects.megamanxphantomblade.physics.collision;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by buivuhoang on 25/02/17.
  */
 public class CollisionList {
+    public static final CollisionList Empty = new CollisionList(new ArrayList<>());
     private static float edgeThreshold = 0.2f;
     public List<Collision> toList;
     private boolean isCollidingSide;

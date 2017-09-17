@@ -104,6 +104,11 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
         return false;
     }
 
+    @Override
+    public boolean isStoppedByWalls() {
+        return false;
+    }
+
     protected enum State {
         Idle,
         Fly,
