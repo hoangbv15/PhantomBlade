@@ -48,9 +48,9 @@ public class MettoolScript extends EnemyScript<Mettool.State> {
             setCanTakeDamage(false);
             setEnemyState(Mettool.State.BuckledUp);
             wait(waitTimeBuckledUp);
+            setCanTakeDamage(true);
             setEnemyState(Mettool.State.Unbuckle);
             wait(waitTimeUnbuckle);
-            setCanTakeDamage(true);
         }
         setEnemyState(Mettool.State.Walk);
         moveTillEdge(MovingObject.RIGHT, velocity, walkTime);
@@ -59,9 +59,9 @@ public class MettoolScript extends EnemyScript<Mettool.State> {
         setCanTakeDamage(false);
         setEnemyState(Mettool.State.BuckledUp);
         wait(waitTimeBuckledUp);
+        setCanTakeDamage(true);
         setEnemyState(Mettool.State.Unbuckle);
         wait(waitTimeUnbuckle);
-        setCanTakeDamage(true);
     }
 
     private void annoyingAi() {
@@ -72,8 +72,8 @@ public class MettoolScript extends EnemyScript<Mettool.State> {
         setCanTakeDamage(false);
         setEnemyState(Mettool.State.BuckledUp);
         wait(waitTimeBuckledUp);
+        setCanTakeDamage(true);
         setEnemyState(Mettool.State.Unbuckle);
         wait(waitTimeUnbuckle);
-        setCanTakeDamage(true);
     }
 }
