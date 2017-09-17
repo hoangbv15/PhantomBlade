@@ -187,12 +187,14 @@ public abstract class PhysicsBase {
             if (enemy.isDead() || !enemy.spawned) {
                 continue;
             }
+            // Here we get the enemy that is receiving the player's attack
             if (isEnemyTakingDamage) {
                 if (object.mapCollisionBounds.overlaps(enemy.takeDamageBounds)) {
                     return enemy;
                 }
             }
-            else if (object.takeDamageBounds.overlaps(enemy.mapCollisionBounds)) {
+            // Here we get the enemy that is doing damage to the player
+            else if (object.takeDamageBounds.overlaps(enemy.takeDamageBounds)) {
                 return enemy;
             }
         }

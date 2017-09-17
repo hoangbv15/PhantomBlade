@@ -13,6 +13,7 @@ import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.animation.Particles;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.enemies.types.mettool.Mettool;
+import com.sideprojects.megamanxphantomblade.enemies.types.nightmarevirus.NightmareVirus;
 import com.sideprojects.megamanxphantomblade.physics.TileBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
@@ -48,6 +49,7 @@ public abstract class MapBase implements Disposable {
     public static String ObjectLayer = "Objects";
     public static String XSpawn = "XSpawn";
     public static String MettoolSpawn = "MettoolSpawn";
+    public static String NightmareVirusSpawn = "NightmareVirusSpawn";
 
     public float GRAVITY = 15f;
     public float MAX_FALLSPEED = -8f;
@@ -124,6 +126,8 @@ public abstract class MapBase implements Disposable {
             }
             if (MettoolSpawn.equals(object.getName())) {
                 enemyList.add(new Mettool(x, y, this, soundPlayer, difficulty));
+            } else if (NightmareVirusSpawn.equals(object.getName())) {
+                enemyList.add(new NightmareVirus(x, y, this, soundPlayer, difficulty));
             }
         }
 

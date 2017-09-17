@@ -1,4 +1,4 @@
-package com.sideprojects.megamanxphantomblade.enemies.types.mettool;
+package com.sideprojects.megamanxphantomblade.enemies.types.nightmarevirus;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,24 +11,28 @@ import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.math.VectorCache;
 import com.sideprojects.megamanxphantomblade.sound.SoundPlayer;
 
-import java.util.*;
+import java.util.HashMap;
 
 /**
- * Created by buivuhoang on 06/04/17.
+ * Created by buivuhoang on 17/09/17.
  */
-public class Mettool extends EnemyBase<Mettool.State> {
-    public Mettool(float x, float y, MapBase map, SoundPlayer soundPlayer, int difficulty) {
+public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
+
+    public NightmareVirus(float x, float y, MapBase map, SoundPlayer soundPlayer, int difficulty) {
         super(x, y, map);
         mapCollisionBounds.setPosition(x, y);
         mapCollisionBounds.setSize(0.4f, 0.4f);
+        takeDamageBoundsOffset.set(0.3f, 0.4f);
+        takeDamageBounds.setSize(0.4f, 0.5f);
         takeDamageBounds.setPosition(x, y);
         damage = new Damage(Damage.Type.Normal, Damage.Side.None, -difficulty);
-        script = new MettoolScript(this, map.player);
+        animations = new NightmareVirusAnimation();
         auxiliaryFrames = new HashMap<>(1);
-        animations = new MettoolAnimation();
+        script = new NightmareVirusScript(this, map.player);
         sounds = new EnemySound(soundPlayer);
-        state = State.Walk;
+        state = State.Idle;
     }
+
 
     @Override
     protected float deathExplosionTime() {
@@ -37,19 +41,12 @@ public class Mettool extends EnemyBase<Mettool.State> {
 
     @Override
     protected boolean hasExplodingFragments() {
-        return true;
+        return false;
     }
 
     @Override
     protected void updateTakeDamageBounds() {
-        switch (state) {
-            case BuckledUp:
-                takeDamageBounds.setSize(0.4f, 0.4f);
-                break;
-            default:
-                takeDamageBounds.setSize(0.4f, 0.55f);
-                break;
-        }
+
     }
 
     @Override
@@ -59,17 +56,11 @@ public class Mettool extends EnemyBase<Mettool.State> {
             type = EnemyAnimationBase.Type.Die;
         } else {
             switch (state) {
-                case BuckledUp:
+                case Idle:
                     type = EnemyAnimationBase.Type.Idle;
                     break;
-                case Unbuckle:
-                    type = EnemyAnimationBase.Type.StopIdling;
-                    break;
-                case Walk:
+                case Fly:
                     type = EnemyAnimationBase.Type.Run;
-                    break;
-                case Jump:
-                    type = EnemyAnimationBase.Type.Jump;
                     break;
                 case Shoot:
                     type = EnemyAnimationBase.Type.Attack;
@@ -96,23 +87,26 @@ public class Mettool extends EnemyBase<Mettool.State> {
     public Vector2 getAuxiliaryAnimationPadding(EnemyAnimationBase.Type type, float delta) {
         if (type == EnemyAnimationBase.Type.Die) {
             if (direction == LEFT) {
-                return VectorCache.get(-20, -15);
+                return VectorCache.get(-5, 10);
             }
-            return VectorCache.get(-13, -15);
+            return VectorCache.get(5, 10);
         }
         return VectorCache.get(0, 0);
     }
 
     @Override
     public int getMaxHealthPoints() {
-        return 20;
+        return 15;
+    }
+
+    @Override
+    public boolean isAffectedByGravity() {
+        return false;
     }
 
     protected enum State {
-        BuckledUp,
-        Unbuckle,
-        Walk,
-        Jump,
+        Idle,
+        Fly,
         Shoot,
         Die
     }

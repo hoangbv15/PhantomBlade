@@ -27,6 +27,7 @@ public abstract class MovingObject {
     public Vector2 vel;
     public Rectangle mapCollisionBounds = new Rectangle();
     public Rectangle takeDamageBounds = new Rectangle();
+    protected Vector2 takeDamageBoundsOffset = new Vector2(0, 0);
 
     public float stateTime;
 
@@ -51,8 +52,8 @@ public abstract class MovingObject {
     public void updatePos() {
         pos.x = mapCollisionBounds.x;
         pos.y = mapCollisionBounds.y;
-        takeDamageBounds.x = mapCollisionBounds.x;
-        takeDamageBounds.y = mapCollisionBounds.y;
+        takeDamageBounds.x = mapCollisionBounds.x + takeDamageBoundsOffset.x;
+        takeDamageBounds.y = mapCollisionBounds.y + takeDamageBoundsOffset.y;
     }
 
     public int movingDirection() {
@@ -65,6 +66,10 @@ public abstract class MovingObject {
 
     public boolean isDead() {
         return healthPoints <= 0;
+    }
+
+    public boolean isAffectedByGravity() {
+        return true;
     }
 
     public void resetCollisionDetectionRays() {
