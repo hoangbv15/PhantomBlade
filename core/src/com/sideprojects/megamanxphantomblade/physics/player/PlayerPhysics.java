@@ -67,7 +67,7 @@ public abstract class PlayerPhysics extends Physics {
         holdDashState = holdDashState.nextState(input, player);
 
         // Check for enemy damage
-        Damage damage = getEnemyCollisionDamage(player, map);
+        Damage damage = getDamageDoneToPlayer(player, map);
         damageState = damageState.nextState(player, damage, this, delta);
 
         if (damageState.canControl()) {

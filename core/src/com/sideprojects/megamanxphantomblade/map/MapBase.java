@@ -11,6 +11,7 @@ import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.animation.Particles;
+import com.sideprojects.megamanxphantomblade.enemies.EnemyAttack;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.enemies.types.mettool.Mettool;
 import com.sideprojects.megamanxphantomblade.enemies.types.nightmarevirus.NightmareVirus;
@@ -55,6 +56,7 @@ public abstract class MapBase implements Disposable {
     public float MAX_FALLSPEED = -8f;
     public float WALLSLIDE_FALLSPEED = -2f;
     private static int MAX_PLAYERATTACK = 20;
+    private static int MAX_ENEMYATTACK = 20;
 
     public TiledMap tiledMap;
     private TiledMapTileLayer mapLayer;
@@ -66,7 +68,8 @@ public abstract class MapBase implements Disposable {
     public TileBase[][] bounds;
 
     public List<EnemyBase> enemyList;
-    public Queue<PlayerAttack> playerAttackList;
+    public Queue<PlayerAttack> playerAttackQueue;
+    public Queue<EnemyAttack> enemyAttackQueue;
 
     public Particles particles;
 
@@ -79,7 +82,8 @@ public abstract class MapBase implements Disposable {
         this.soundPlayer = soundPlayer;
         particles = new Particles(20);
         enemyList = new ArrayList<>();
-        playerAttackList = new Queue<>(MAX_PLAYERATTACK);
+        playerAttackQueue = new Queue<>(MAX_PLAYERATTACK);
+        enemyAttackQueue = new Queue<>(MAX_ENEMYATTACK);
         loadMap(difficulty);
     }
 
@@ -175,22 +179,8 @@ public abstract class MapBase implements Disposable {
         playerPhysics.update(player, deltaTime, this);
         player.update(this, deltaTime);
         particles.update(deltaTime);
-        Iterator<PlayerAttack> i = playerAttackList.iterator();
-        while (i.hasNext()) {
-            PlayerAttack attack = i.next();
-            attack.update(player, deltaTime);
-            if (!isPointInPlayerRange(attack.mapCollisionBounds.x, attack.mapCollisionBounds.y)) {
-                attack.shouldBeRemoved = true;
-            }
-            if (attack.shouldBeRemoved) {
-                i.remove();
-            } else {
-                if (attack.canCollideWithWall()) {
-                    playerPhysics.stopAttackIfHitWall(attack, deltaTime, this);
-                }
-                playerPhysics.dealDamageIfPlayerAttackHitsEnemy(attack, this);
-            }
-        }
+        updatePlayerAttack(deltaTime);
+        updateEnemyAttack(deltaTime);
 
         for (EnemyBase enemy : enemyList) {
             // If the enemy is outside of player's range, kill it
@@ -214,14 +204,58 @@ public abstract class MapBase implements Disposable {
         }
     }
 
+    private void updatePlayerAttack(float deltaTime) {
+        Iterator<PlayerAttack> i = playerAttackQueue.iterator();
+        while (i.hasNext()) {
+            PlayerAttack attack = i.next();
+            attack.update(deltaTime);
+            if (!isPointInPlayerRange(attack.mapCollisionBounds.x, attack.mapCollisionBounds.y)) {
+                attack.shouldBeRemoved = true;
+            }
+            if (attack.shouldBeRemoved) {
+                i.remove();
+            } else {
+                if (attack.canCollideWithWall()) {
+                    playerPhysics.stopAttackIfHitWall(attack, deltaTime, this);
+                }
+                playerPhysics.dealDamageIfPlayerAttackHitsEnemy(attack, this);
+            }
+        }
+    }
+
+    private void updateEnemyAttack(float deltaTime) {
+        Iterator<EnemyAttack> i = enemyAttackQueue.iterator();
+        while (i.hasNext()) {
+            EnemyAttack attack = i.next();
+            attack.update(deltaTime);
+            if (!isPointInPlayerRange(attack.mapCollisionBounds.x, attack.mapCollisionBounds.y)) {
+                attack.shouldBeRemoved = true;
+            }
+            if (attack.shouldBeRemoved) {
+                i.remove();
+            } else {
+                if (attack.canCollideWithWall()) {
+                    playerPhysics.stopAttackIfHitWall(attack, deltaTime, this);
+                }
+            }
+        }
+    }
+
     public boolean isOutOfBounds(MovingObject object) {
         return object.mapCollisionBounds.y + object.mapCollisionBounds.getHeight() < 0;
     }
 
     public void addPlayerAttack(PlayerAttack attack) {
-        playerAttackList.addLast(attack);
-        if (playerAttackList.size >= MAX_PLAYERATTACK) {
-            playerAttackList.removeFirst();
+        playerAttackQueue.addLast(attack);
+        if (playerAttackQueue.size >= MAX_PLAYERATTACK) {
+            playerAttackQueue.removeFirst();
+        }
+    }
+
+    public void addEnemyAttack(EnemyAttack attack) {
+        enemyAttackQueue.addLast(attack);
+        if (enemyAttackQueue.size >= MAX_ENEMYATTACK) {
+            enemyAttackQueue.removeFirst();
         }
     }
 

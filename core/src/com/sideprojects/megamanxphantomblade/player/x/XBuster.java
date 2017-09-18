@@ -50,10 +50,7 @@ public class XBuster extends PlayerAttack {
     // Time it takes for muzzle to transform to bullet
     private float muzzleToBulletTime;
     private Vector2 posPadding;
-    private Animation<TextureRegion> animation;
     private Animation<TextureRegion> muzzleAnimation;
-    private Animation<TextureRegion> explodeAnimation;
-    private Animation<TextureRegion> explodeNoDamageAnimation;
     private boolean explode;
     private float explodePosPaddingY;
     private float noDamagePosPaddingY;
@@ -70,11 +67,14 @@ public class XBuster extends PlayerAttack {
     private int playerStartDirection;
     private boolean stopUpdatingMuzzlePos;
 
+    private PlayerBase player;
+
     private PlayerSound playerSound;
 
     public XBuster(PlayerBase player, Damage damage, int direction, PlayerAnimationBase animations, PlayerSound playerSound) {
         super(damage, direction);
         this.playerSound = playerSound;
+        this.player = player;
         // Calculate position for bullet
         createAnimation(animations);
         pos = new Vector2();
@@ -172,14 +172,14 @@ public class XBuster extends PlayerAttack {
     }
 
     @Override
-    public void update(PlayerBase player, float delta) {
+    public void update(float delta) {
         stateTime += delta;
         if (isDead()) {
             if (!explode) {
                 stateTime = 0;
                 explode = true;
                 float explodePosPaddingX, explodePosPaddingY;
-                if (enemyTookDamage) {
+                if (targetTookDamage) {
                     explodePosPaddingX = direction == LEFT ? explodePosPaddingXLeft : explodePosPaddingXRight;
                     explodePosPaddingY = this.explodePosPaddingY;
                     playerSound.playBulletHit();
@@ -191,7 +191,7 @@ public class XBuster extends PlayerAttack {
                 pos.x += explodePosPaddingX;
                 pos.y += explodePosPaddingY;
             }
-            if (enemyTookDamage) {
+            if (targetTookDamage) {
                 currentFrame = explodeAnimation.getKeyFrame(stateTime, false);
             } else {
                 currentFrame = explodeNoDamageAnimation.getKeyFrame(stateTime, false);

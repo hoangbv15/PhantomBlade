@@ -3,6 +3,7 @@ package com.sideprojects.megamanxphantomblade.physics;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
+import com.sideprojects.megamanxphantomblade.enemies.EnemyAttack;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
@@ -12,7 +13,7 @@ import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectio
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay.Orientation;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay.Side;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
-import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
+import com.sideprojects.megamanxphantomblade.Attack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,22 +147,32 @@ public abstract class PhysicsBase {
         return new CollisionList(collisionList);
     }
 
-    public final Damage getEnemyCollisionDamage(MovingObject object, MapBase map) {
+    public final Damage getDamageDoneToPlayer(MovingObject object, MapBase map) {
+        Damage damage;
+        float enemyX;
         EnemyBase enemy = getCollidingEnemy(object, map, false);
         if (enemy == null) {
-            return null;
+            EnemyAttack attack = getCollidingEnemyAttack(object, map);
+            if (attack == null) {
+                return null;
+            }
+            enemyX = attack.mapCollisionBounds.x + attack.mapCollisionBounds.width / 2;
+            damage = attack.damage;
+        } else {
+            enemyX = enemy.mapCollisionBounds.x + enemy.mapCollisionBounds.width / 2;
+            damage = enemy.damage;
         }
+
         float playerX = object.takeDamageBounds.x + object.takeDamageBounds.width / 2;
-        float enemyX = enemy.mapCollisionBounds.x + enemy.mapCollisionBounds.width / 2;
         Damage.Side side = Damage.Side.Left;
         if (playerX < enemyX) {
             side = Damage.Side.Right;
         }
-        enemy.damage.side = side;
-        return enemy.damage;
+        damage.side = side;
+        return damage;
     }
 
-    public final void dealDamageIfPlayerAttackHitsEnemy(PlayerAttack attack, MapBase map) {
+    public final void dealDamageIfPlayerAttackHitsEnemy(Attack attack, MapBase map) {
         if (attack.isDead()) {
             return;
         }
@@ -172,13 +183,6 @@ public abstract class PhysicsBase {
         boolean enemyTookDamage = enemy.takeDamage(attack.damage);
         if (!enemy.isDead() || attack.damage.type != Damage.Type.Heavy) {
             attack.die(enemyTookDamage);
-        }
-    }
-
-    public final void stopAttackIfHitWall(PlayerAttack attack, float delta, MapBase map) {
-        CollisionList collisions = getMapCollision(attack, delta, map, true);
-        if (!collisions.toList.isEmpty()) {
-            attack.die(true);
         }
     }
 
@@ -199,6 +203,23 @@ public abstract class PhysicsBase {
             }
         }
         return null;
+    }
+
+    private EnemyAttack getCollidingEnemyAttack(MovingObject object, MapBase map) {
+        for (EnemyAttack attack: map.enemyAttackQueue) {
+            if (!attack.isDead() && object.mapCollisionBounds.overlaps(attack.takeDamageBounds)) {
+                // Here we get the enemy attack that is doing damage to the player
+                return attack;
+            }
+        }
+        return null;
+    }
+
+    public final void stopAttackIfHitWall(Attack attack, float delta, MapBase map) {
+        CollisionList collisions = getMapCollision(attack, delta, map, true);
+        if (!collisions.toList.isEmpty()) {
+            attack.die(true);
+        }
     }
 
     public void pushBack(int direction) {

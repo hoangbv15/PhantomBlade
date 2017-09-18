@@ -108,7 +108,9 @@ public abstract class EnemyAnimationBase {
         Run,
         Jump,
         Fall,
+        PrepareAttack,
         Attack,
+        FinishAttack,
         Damaged,
         Die,
         ExplodeFragment

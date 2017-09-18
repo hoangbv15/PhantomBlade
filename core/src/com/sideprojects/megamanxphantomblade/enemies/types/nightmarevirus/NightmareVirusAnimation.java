@@ -6,6 +6,7 @@ import com.sideprojects.megamanxphantomblade.enemies.EnemyAnimationBase;
 import com.sideprojects.megamanxphantomblade.math.VectorCache;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,6 +31,11 @@ public class NightmareVirusAnimation extends EnemyAnimationBase {
                 return Arrays.asList(3, 4, 5, 6, 5, 4);
             case Run:
                 return Arrays.asList(0, 1, 2, 1);
+            case FinishAttack:
+            case PrepareAttack:
+                return Collections.singletonList(7);
+            case Attack:
+                return Arrays.asList(8, 9, 10, 9, 8);
             case Die:
                 return null;
             default:

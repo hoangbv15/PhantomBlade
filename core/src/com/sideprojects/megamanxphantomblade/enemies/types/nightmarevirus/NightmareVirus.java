@@ -28,7 +28,7 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
         damage = new Damage(Damage.Type.Normal, Damage.Side.None, -difficulty);
         animations = new NightmareVirusAnimation();
         auxiliaryFrames = new HashMap<>(1);
-        script = new NightmareVirusScript(this, map.player);
+        script = new NightmareVirusScript(this, map.player, map);
         sounds = new EnemySound(soundPlayer);
         state = State.Idle;
     }
@@ -62,8 +62,14 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
                 case Fly:
                     type = EnemyAnimationBase.Type.Run;
                     break;
+                case PrepareToShoot:
+                    type = EnemyAnimationBase.Type.PrepareAttack;
+                    break;
                 case Shoot:
                     type = EnemyAnimationBase.Type.Attack;
+                    break;
+                case FinishShooting:
+                    type = EnemyAnimationBase.Type.FinishAttack;
                     break;
                 case Die:
                     type = EnemyAnimationBase.Type.Die;
@@ -112,7 +118,9 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
     protected enum State {
         Idle,
         Fly,
+        PrepareToShoot,
         Shoot,
+        FinishShooting,
         Die
     }
 }

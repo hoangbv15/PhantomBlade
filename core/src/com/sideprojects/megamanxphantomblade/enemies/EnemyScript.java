@@ -1,6 +1,7 @@
 package com.sideprojects.megamanxphantomblade.enemies;
 
 import com.sideprojects.megamanxphantomblade.enemies.actions.*;
+import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.physics.ScriptBase;
 import com.sideprojects.megamanxphantomblade.physics.actions.FlyTowardsMovingObject;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
@@ -34,6 +35,14 @@ public abstract class EnemyScript<T> extends ScriptBase {
 
     protected void setEnemyState(T state) {
         addToQueue(new SetEnemyState<T>(enemy, state));
+    }
+
+    protected void resetAnimation() {
+        addToQueue(new ResetAnimation(enemy));
+    }
+
+    protected void spawnEnemyAttack(EnemyAttack attack, MapBase map) {
+        addToQueue(new SpawnEnemyAttackToMap(attack, map));
     }
 
     protected void setEnemyStateIfAtEdge(T state) {
