@@ -18,11 +18,6 @@ public class NightmareVirusBullet extends EnemyAttack {
         super(enemy, target, speed, damage, direction);
         createAnimations(animations);
         initialiseHealthPoints(1);
-        Vector2 posPadding = getAnimationPadding();
-        mapCollisionBounds.x += posPadding.x;
-        mapCollisionBounds.y += posPadding.y;
-        mapCollisionBounds.setSize(0.2f, 0.2f);
-        updatePos();
     }
 
     private void createAnimations(EnemyAnimationBase animations) {
@@ -34,12 +29,19 @@ public class NightmareVirusBullet extends EnemyAttack {
                 0.05f);
     }
 
-    private Vector2 getAnimationPadding() {
+    @Override
+    protected Vector2 getPosPadding() {
         if (direction == LEFT) {
             return VectorCache.get(0.25f, 0.5f);
         } else {
             return VectorCache.get(0.7f, 0.5f);
         }
+    }
+
+    @Override
+    public void onInitialise() {
+        super.onInitialise();
+        mapCollisionBounds.setSize(0.2f, 0.2f);
     }
 
     @Override

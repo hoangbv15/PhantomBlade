@@ -11,17 +11,27 @@ import com.sideprojects.megamanxphantomblade.Damage;
  * Created by buivuhoang on 17/09/17.
  */
 public abstract class EnemyAttack extends Attack {
+    private final Rectangle enemy;
+    private final Rectangle target;
+    private final float speed;
     protected Animation<TextureRegion> animation;
     protected Animation<TextureRegion> explodeAnimation;
     public TextureRegion currentFrame;
 
     public EnemyAttack(Rectangle enemy, Rectangle target, float speed, Damage damage, int direction) {
         super(damage, direction);
-        mapCollisionBounds.x = enemy.x;
-        mapCollisionBounds.y = enemy.y;
-        pos = new Vector2(enemy.x, enemy.y);
+        this.enemy = enemy;
+        this.target = target;
+        this.speed = speed;
+    }
+
+    public void onInitialise() {
+        Vector2 posPadding = getPosPadding();
+        mapCollisionBounds.x = enemy.x + posPadding.x;
+        mapCollisionBounds.y = enemy.y + posPadding.y;
+        pos = new Vector2();
+        updatePos();
         calculateVelocity(target.x, target.y, speed);
-        //TODO: position is being created at the object creation time. Need a way to delay this so that the script works properly
     }
 
     private void calculateVelocity(float targetX, float targetY, float speed) {
@@ -55,6 +65,8 @@ public abstract class EnemyAttack extends Attack {
             currentFrame = animation.getKeyFrame(stateTime, isAnimationLooping());
         }
     }
+
+    protected abstract Vector2 getPosPadding();
 
     protected abstract boolean isAnimationLooping();
 }

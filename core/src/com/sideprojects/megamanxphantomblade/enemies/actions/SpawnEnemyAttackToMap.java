@@ -21,6 +21,7 @@ public class SpawnEnemyAttackToMap extends ActionBase {
 
     @Override
     public void execute(CollisionList collisions, float delta) {
+        enemyAttack.onInitialise();
         map.addEnemyAttack(enemyAttack);
         executed = true;
     }
