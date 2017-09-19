@@ -6,6 +6,7 @@ import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.animation.Sprites;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyAnimationBase;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyAttack;
+import com.sideprojects.megamanxphantomblade.enemies.EnemySound;
 import com.sideprojects.megamanxphantomblade.math.VectorCache;
 
 import java.util.Arrays;
@@ -14,8 +15,12 @@ import java.util.Arrays;
  * Created by buivuhoang on 17/09/17.
  */
 public class NightmareVirusBullet extends EnemyAttack {
-    public NightmareVirusBullet(Rectangle enemy, Rectangle target, float speed, Damage damage, int direction, EnemyAnimationBase animations) {
+    private EnemySound sounds;
+
+    public NightmareVirusBullet(Rectangle enemy, Rectangle target, float speed, Damage damage, int direction,
+                                EnemyAnimationBase animations, EnemySound sounds) {
         super(enemy, target, speed, damage, direction);
+        this.sounds = sounds;
         createAnimations(animations);
         initialiseHealthPoints(1);
     }
@@ -41,6 +46,7 @@ public class NightmareVirusBullet extends EnemyAttack {
     @Override
     public void onInitialise() {
         super.onInitialise();
+        sounds.playAttack();
         mapCollisionBounds.setSize(0.2f, 0.2f);
     }
 

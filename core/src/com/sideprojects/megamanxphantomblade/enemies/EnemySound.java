@@ -16,4 +16,6 @@ public class EnemySound {
     public void playDie(float delta) {
         soundPlayer.playInParallel(Sounds.EnvironmentEnemyExplode);
     }
+
+    public void playAttack() {};
 }

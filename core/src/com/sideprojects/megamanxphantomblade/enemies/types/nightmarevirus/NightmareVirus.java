@@ -29,7 +29,7 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
         animations = new NightmareVirusAnimation();
         auxiliaryFrames = new HashMap<>(1);
         script = new NightmareVirusScript(this, map.player, map);
-        sounds = new EnemySound(soundPlayer);
+        sounds = new NightmareVirusSound(soundPlayer);
         state = State.Idle;
     }
 

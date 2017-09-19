@@ -36,4 +36,7 @@ public class Sounds {
     public static String EnvironmentEnemyExplode = "sounds/ST0E_U0_00001.wav";
 
     // BGM
+
+    // Enemies
+    public static String NightmareVirusShoot = "sounds/01054.wav";
 }
