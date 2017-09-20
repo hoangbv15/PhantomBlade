@@ -54,7 +54,7 @@ public class NightmareVirusScript extends EnemyScript<NightmareVirus.State> {
             setEnemyState(NightmareVirus.State.Shoot);
             wait(waitTimeShotDelay);
             spawnEnemyAttack(new NightmareVirusBullet(enemy.mapCollisionBounds, player.takeDamageBounds,
-                    10f, enemy.damage, enemy.direction, enemy.animations), map);
+                    10f, enemy.damage, enemy.direction, enemy.animations, enemy.sounds), map);
             wait(waitTimeShoot);
         });
         setEnemyState(NightmareVirus.State.FinishShooting);

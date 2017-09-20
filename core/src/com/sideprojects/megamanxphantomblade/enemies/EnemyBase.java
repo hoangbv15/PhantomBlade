@@ -31,7 +31,7 @@ public abstract class EnemyBase<T> extends MovingObject {
     public TextureRegion currentFrame;
     public Vector2 animationPadding;
 
-    protected EnemySound sounds;
+    public EnemySound sounds;
 
     public T state;
     public Damage damage;

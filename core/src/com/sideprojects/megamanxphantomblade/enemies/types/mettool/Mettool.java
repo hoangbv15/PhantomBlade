@@ -26,7 +26,7 @@ public class Mettool extends EnemyBase<Mettool.State> {
         script = new MettoolScript(this, map.player);
         auxiliaryFrames = new HashMap<>(1);
         animations = new MettoolAnimation();
-        sounds = new EnemySound(soundPlayer);
+        sounds = new MettoolSound(soundPlayer);
         state = State.Walk;
     }
 
