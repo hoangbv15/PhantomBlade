@@ -15,15 +15,10 @@ public class SoundPlayer implements SoundPlayerBase {
     private long nonOverlappingSoundBeingPlayed;
 
     public SoundPlayer() {
-        soundCache = new LRUCache<String, Sound>(10);
-        musicCache = new LRUCache<String, Music>(2);
+        soundCache = new LRUCache<>(10);
+        musicCache = new LRUCache<>(2);
         // Dispose of sounds that are removed from the cache automatically
-        soundCache.setEntryRemovedListener(new LRUCache.CacheEntryRemovedListener<String, Sound>() {
-            @Override
-            public void notifyEntryRemoved(String key, Sound value) {
-                value.dispose();
-            }
-        });
+        soundCache.setEntryRemovedListener((key, value) -> value.dispose());
     }
 
     /***
