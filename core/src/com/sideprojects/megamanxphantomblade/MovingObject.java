@@ -2,6 +2,7 @@ package com.sideprojects.megamanxphantomblade;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.sideprojects.megamanxphantomblade.math.VectorCache;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay;
 
 /**
@@ -27,7 +28,6 @@ public abstract class MovingObject {
     public Vector2 vel;
     public Rectangle mapCollisionBounds = new Rectangle();
     public Rectangle takeDamageBounds = new Rectangle();
-    protected Vector2 takeDamageBoundsOffset = new Vector2(0, 0);
 
     public float stateTime;
 
@@ -52,6 +52,7 @@ public abstract class MovingObject {
     public void updatePos() {
         pos.x = mapCollisionBounds.x;
         pos.y = mapCollisionBounds.y;
+        Vector2 takeDamageBoundsOffset = getTakeDamageBoundsOffset();
         takeDamageBounds.x = mapCollisionBounds.x + takeDamageBoundsOffset.x;
         takeDamageBounds.y = mapCollisionBounds.y + takeDamageBoundsOffset.y;
     }
@@ -75,6 +76,8 @@ public abstract class MovingObject {
     public boolean isStoppedByWalls() {
         return true;
     }
+
+    protected Vector2 getTakeDamageBoundsOffset() { return VectorCache.get(0f, 0f); }
 
     public void resetCollisionDetectionRays() {
         horizontalRay = null;
