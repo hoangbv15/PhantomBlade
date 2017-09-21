@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyAnimationBase;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
-import com.sideprojects.megamanxphantomblade.enemies.EnemySound;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.math.VectorCache;
 import com.sideprojects.megamanxphantomblade.sound.SoundPlayer;
@@ -22,7 +21,6 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
         super(x, y, map);
         mapCollisionBounds.setPosition(x, y);
         mapCollisionBounds.setSize(0.4f, 0.4f);
-        takeDamageBoundsOffset.set(0.3f, 0.4f);
         takeDamageBounds.setSize(0.4f, 0.5f);
         takeDamageBounds.setPosition(x, y);
         damage = new Damage(Damage.Type.Normal, Damage.Side.None, -difficulty);
@@ -31,6 +29,11 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
         script = new NightmareVirusScript(this, map.player, map);
         sounds = new NightmareVirusSound(soundPlayer);
         state = State.Idle;
+    }
+
+    @Override
+    protected Vector2 getTakeDamageBoundsOffset() {
+        return VectorCache.get(0.3f, 0.4f);
     }
 
 
@@ -46,7 +49,7 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
 
     @Override
     protected void updateTakeDamageBounds() {
-
+        // No need to update anything here
     }
 
     @Override

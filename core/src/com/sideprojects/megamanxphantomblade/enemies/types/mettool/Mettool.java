@@ -31,6 +31,11 @@ public class Mettool extends EnemyBase<Mettool.State> {
     }
 
     @Override
+    protected Vector2 getTakeDamageBoundsOffset() {
+        return VectorCache.get(0.1f, 0f);
+    }
+
+    @Override
     protected float deathExplosionTime() {
         return 2f;
     }
@@ -44,10 +49,10 @@ public class Mettool extends EnemyBase<Mettool.State> {
     protected void updateTakeDamageBounds() {
         switch (state) {
             case BuckledUp:
-                takeDamageBounds.setSize(0.4f, 0.4f);
+                takeDamageBounds.setSize(0.3f, 0.4f);
                 break;
             default:
-                takeDamageBounds.setSize(0.4f, 0.55f);
+                takeDamageBounds.setSize(0.3f, 0.55f);
                 break;
         }
     }
