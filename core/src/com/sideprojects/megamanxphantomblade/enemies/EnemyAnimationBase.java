@@ -53,7 +53,7 @@ public abstract class EnemyAnimationBase {
     private AnimationCache<AnimationKey> animationCache;
 
     public EnemyAnimationBase() {
-        animationCache = new AnimationCache<AnimationKey>();
+        animationCache = new AnimationCache<>();
     }
 
     public Animation<TextureRegion> get(Type type, int direction) {
@@ -85,8 +85,8 @@ public abstract class EnemyAnimationBase {
 
     protected String getTextureAtlas(Type type) {
         switch (type) {
-            case Die:
-                return Sprites.EnemyExplode;
+            case DIE:
+                return Sprites.enemyExplode;
             default:
                 return null;
         }
@@ -94,7 +94,7 @@ public abstract class EnemyAnimationBase {
 
     protected float getFrameDuration(Type type) {
         switch (type) {
-            case Die:
+            case DIE:
                 return 0.04f;
             default:
                 return 0.1f;
@@ -103,16 +103,16 @@ public abstract class EnemyAnimationBase {
 
     public enum Type {
         // Common
-        Idle,
-        StopIdling,
-        Run,
-        Jump,
-        Fall,
-        PrepareAttack,
-        Attack,
-        FinishAttack,
-        Damaged,
-        Die,
-        ExplodeFragment
+        IDLE,
+        STOP_IDLING,
+        RUN,
+        JUMP,
+        FALL,
+        PREPARE_ATTACK,
+        ATTACK,
+        FINISH_ATTACK,
+        DAMAGED,
+        DIE,
+        EXPLODE_FRAGMENT
     }
 }

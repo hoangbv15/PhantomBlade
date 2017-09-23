@@ -10,7 +10,7 @@ import com.sideprojects.megamanxphantomblade.player.PlayerBase;
  */
 public class WalkTowardsPlayer extends WalkTillEdge {
     private final PlayerBase player;
-    private static final float threshold = 0.5f;
+    private static final float THRESHOLD = 0.5f;
 
     public WalkTowardsPlayer(MovingObject object, PlayerBase player, float speed, float time) {
         super(object, MovingObject.NONEDIRECTION, speed, time);
@@ -28,7 +28,7 @@ public class WalkTowardsPlayer extends WalkTillEdge {
 
     @Override
     public boolean finish(CollisionList collisions) {
-        boolean finish = Math.abs(object.mapCollisionBounds.x - player.mapCollisionBounds.x) < threshold;
+        boolean finish = Math.abs(object.mapCollisionBounds.x - player.mapCollisionBounds.x) < THRESHOLD;
         return finish || super.finish(collisions);
     }
 }

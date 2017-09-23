@@ -46,7 +46,7 @@ public class ParallaxBackground {
 	}
 	
     private void initialize() {
-    	layers = new Array<ParallaxLayer>();
+    	layers = new Array<>();
 		cachedPos = new Vector3();
 		cachedProjectionView = new Matrix4();
 	}

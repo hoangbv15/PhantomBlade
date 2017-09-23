@@ -8,10 +8,7 @@ import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Representing the enemy. Contains the enemy animation and damage management
@@ -25,7 +22,7 @@ public abstract class EnemyBase<T> extends MovingObject {
     public boolean canSpawn;
 
     public EnemyAnimationBase animations;
-    public Map<EnemyAnimationBase.Type, TextureRegion> auxiliaryFrames;
+    public EnumMap<EnemyAnimationBase.Type, TextureRegion> auxiliaryFrames;
     public List<ExplodeFragment> explodeFragments;
 
     public TextureRegion currentFrame;
@@ -87,7 +84,7 @@ public abstract class EnemyBase<T> extends MovingObject {
 
                 if (hasExplodingFragments()) {
                     // Add explosion fragments
-                    Animation<TextureRegion> explodeFragmentAnimation = animations.get(EnemyAnimationBase.Type.ExplodeFragment, direction);
+                    Animation<TextureRegion> explodeFragmentAnimation = animations.get(EnemyAnimationBase.Type.EXPLODE_FRAGMENT, direction);
                     List<TextureRegion> fragmentFrames = Arrays.asList(explodeFragmentAnimation.getKeyFrames());
                     if (explodeFragments.isEmpty()) {
                         for (TextureRegion fragmentFrame : fragmentFrames) {

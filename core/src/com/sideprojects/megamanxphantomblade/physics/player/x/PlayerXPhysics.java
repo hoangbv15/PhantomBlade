@@ -108,7 +108,7 @@ public class PlayerXPhysics extends PlayerPhysics {
 
     private void lightAttack(MapBase map) {
         // Does light damage attack
-        player.attackType = Damage.Type.Light;
+        player.attackType = Damage.Type.LIGHT;
         playerSound.playAttackLight();
         initialiseAttackTimings();
         executeAttack(map);
@@ -116,7 +116,7 @@ public class PlayerXPhysics extends PlayerPhysics {
 
     private void mediumAttack(MapBase map) {
         // Does medium damage attack
-        player.attackType = Damage.Type.Normal;
+        player.attackType = Damage.Type.NORMAL;
         playerSound.playAttackMedium();
         initialiseAttackTimings();
         executeAttack(map);
@@ -124,7 +124,7 @@ public class PlayerXPhysics extends PlayerPhysics {
 
     private void heavyAttack(MapBase map) {
         // Does medium damage attack
-        player.attackType = Damage.Type.Heavy;
+        player.attackType = Damage.Type.HEAVY;
         playerSound.playAttackHeavy();
         initialiseAttackTimings();
         executeAttack(map);
@@ -147,7 +147,7 @@ public class PlayerXPhysics extends PlayerPhysics {
         if (player.state == PlayerState.Wallslide) {
             bulletDirection = player.direction * -1;
         }
-        Damage.Side side = bulletDirection == MovingObject.LEFT ? Damage.Side.Right : Damage.Side.Left;
+        Damage.Side side = bulletDirection == MovingObject.LEFT ? Damage.Side.RIGHT : Damage.Side.LEFT;
         Damage damage = new Damage(player.attackType, side, player.difficulty);
         map.addPlayerAttack(new XBuster(player, damage, bulletDirection, player.animations, playerSound));
     }

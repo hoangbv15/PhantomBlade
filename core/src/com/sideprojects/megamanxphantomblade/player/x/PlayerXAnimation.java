@@ -26,23 +26,23 @@ public class PlayerXAnimation extends PlayerAnimation {
     private String getAttackTextureAtlas(Type type, Damage.Type attackType, boolean withLight, boolean changeStateDuringAttack) {
         switch(type) {
             case Idle:
-                if (attackType == Damage.Type.Heavy && !changeStateDuringAttack) {
-                    return Sprites.XIdleShootCharged;
+                if (attackType == Damage.Type.HEAVY && !changeStateDuringAttack) {
+                    return Sprites.xIdleShootCharged;
                 }
-                return Sprites.XIdleShoot;
+                return Sprites.xIdleShoot;
             case Run:
-                return withLight? Sprites.XRunShootLight : Sprites.XRunShootNoLight;
+                return withLight? Sprites.xRunShootLight : Sprites.xRunShootNoLight;
             case Jump:
             case Fall:
             case Touchdown:
             case Updash:
-                return withLight? Sprites.XJumpShootLight : Sprites.XJumpShootNoLight;
+                return withLight? Sprites.xJumpShootLight : Sprites.xJumpShootNoLight;
             case Dash:
             case Dashbreak:
-                return withLight? Sprites.XDashShootLight : Sprites.XDashShootNoLight;
+                return withLight? Sprites.xDashShootLight : Sprites.xDashShootNoLight;
             case Wallslide:
             case Walljump:
-                return withLight? Sprites.XWallslideShootLight: Sprites.XWallslideShootNoLight;
+                return withLight? Sprites.xWallslideShootLight : Sprites.xWallslideShootNoLight;
             default:
                 return null;
 
@@ -55,7 +55,7 @@ public class PlayerXAnimation extends PlayerAnimation {
                 if (changeStateDuringAttack) {
                     return Arrays.asList(5, 5, 5, 5, 5, 5, 6, 7);
                 }
-                if (attackType == Damage.Type.Heavy) {
+                if (attackType == Damage.Type.HEAVY) {
                     return Arrays.asList(0, 1, 2, 3, 4, 5, 6, 6, 7, 7, 8, 8);
                 }
                 return Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7);
@@ -118,28 +118,28 @@ public class PlayerXAnimation extends PlayerAnimation {
     protected String getTextureAtlas(Type type, boolean lowHealth) {
         switch (type) {
             case Idle:
-                return lowHealth ? Sprites.XIdleLowHealth : Sprites.XIdle;
+                return lowHealth ? Sprites.xIdleLowHealth : Sprites.xIdle;
             case Walljump:
-                return Sprites.XWallSlide;
+                return Sprites.xWallSlide;
             case Run:
-                return Sprites.XRun;
+                return Sprites.xRun;
             case Jump:
             case Fall:
             case Touchdown:
-                return Sprites.XJump;
+                return Sprites.xJump;
             case Wallslide:
-                return Sprites.XWallSlide;
+                return Sprites.xWallSlide;
             case Dashrocket:
-                return Sprites.XDashRocket;
+                return Sprites.xDashRocket;
             case Dash:
             case Dashbreak:
-                return Sprites.XDash;
+                return Sprites.xDash;
             case Updash:
-                return Sprites.XUpDash;
+                return Sprites.xUpDash;
             case Updashrocket:
-                return Sprites.XUpDashRocket;
+                return Sprites.xUpDashRocket;
             case DamagedNormal:
-                return Sprites.XDamagedNormal;
+                return Sprites.xDamagedNormal;
             default:
                 return super.getTextureAtlas(type, lowHealth);
         }
@@ -162,7 +162,7 @@ public class PlayerXAnimation extends PlayerAnimation {
         if (isAttacking) {
             switch (type) {
                 case Idle:
-                    if (attackType == Damage.Type.Heavy && !changeStateDuringAttack) {
+                    if (attackType == Damage.Type.HEAVY && !changeStateDuringAttack) {
                         return VectorCache.get(-18, -7);
                     }
                     return VectorCache.get(-15, 0);

@@ -6,12 +6,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyAnimationBase;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
-import com.sideprojects.megamanxphantomblade.enemies.EnemySound;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.math.VectorCache;
 import com.sideprojects.megamanxphantomblade.sound.SoundPlayer;
 
-import java.util.*;
+import java.util.EnumMap;
 
 /**
  * Created by buivuhoang on 06/04/17.
@@ -22,12 +21,12 @@ public class Mettool extends EnemyBase<Mettool.State> {
         mapCollisionBounds.setPosition(x, y);
         mapCollisionBounds.setSize(0.4f, 0.4f);
         takeDamageBounds.setPosition(x, y);
-        damage = new Damage(Damage.Type.Normal, Damage.Side.None, -difficulty);
+        damage = new Damage(Damage.Type.NORMAL, Damage.Side.NONE, -difficulty);
         script = new MettoolScript(this, map.player);
-        auxiliaryFrames = new HashMap<>(1);
+        auxiliaryFrames = new EnumMap<>(EnemyAnimationBase.Type.class);
         animations = new MettoolAnimation();
         sounds = new MettoolSound(soundPlayer);
-        state = State.Walk;
+        state = State.WALK;
     }
 
     @Override
@@ -48,7 +47,7 @@ public class Mettool extends EnemyBase<Mettool.State> {
     @Override
     protected void updateTakeDamageBounds() {
         switch (state) {
-            case BuckledUp:
+            case BUCKLED_UP:
                 takeDamageBounds.setSize(0.3f, 0.4f);
                 break;
             default:
@@ -61,26 +60,26 @@ public class Mettool extends EnemyBase<Mettool.State> {
     protected void updateAnimation(float delta) {
         EnemyAnimationBase.Type type = null;
         if (isDead()) {
-            type = EnemyAnimationBase.Type.Die;
+            type = EnemyAnimationBase.Type.DIE;
         } else {
             switch (state) {
-                case BuckledUp:
-                    type = EnemyAnimationBase.Type.Idle;
+                case BUCKLED_UP:
+                    type = EnemyAnimationBase.Type.IDLE;
                     break;
-                case Unbuckle:
-                    type = EnemyAnimationBase.Type.StopIdling;
+                case UNBUCKLE:
+                    type = EnemyAnimationBase.Type.STOP_IDLING;
                     break;
-                case Walk:
-                    type = EnemyAnimationBase.Type.Run;
+                case WALK:
+                    type = EnemyAnimationBase.Type.RUN;
                     break;
-                case Jump:
-                    type = EnemyAnimationBase.Type.Jump;
+                case JUMP:
+                    type = EnemyAnimationBase.Type.JUMP;
                     break;
-                case Shoot:
-                    type = EnemyAnimationBase.Type.Attack;
+                case SHOOT:
+                    type = EnemyAnimationBase.Type.ATTACK;
                     break;
-                case Die:
-                    type = EnemyAnimationBase.Type.Die;
+                case DIE:
+                    type = EnemyAnimationBase.Type.DIE;
                     break;
             }
         }
@@ -88,7 +87,7 @@ public class Mettool extends EnemyBase<Mettool.State> {
             Animation<TextureRegion> animation = animations.get(type, direction);
             TextureRegion frame = animation.getKeyFrame(stateTime, animations.isLooping(type));
             if (isDead()) {
-                auxiliaryFrames.put(EnemyAnimationBase.Type.Die, frame);
+                auxiliaryFrames.put(EnemyAnimationBase.Type.DIE, frame);
                 currentFrame = null;
             } else {
                 currentFrame = animation.getKeyFrame(stateTime, animations.isLooping(type));
@@ -99,7 +98,7 @@ public class Mettool extends EnemyBase<Mettool.State> {
 
     @Override
     public Vector2 getAuxiliaryAnimationPadding(EnemyAnimationBase.Type type, float delta) {
-        if (type == EnemyAnimationBase.Type.Die) {
+        if (type == EnemyAnimationBase.Type.DIE) {
             if (direction == LEFT) {
                 return VectorCache.get(-20, -15);
             }
@@ -114,11 +113,11 @@ public class Mettool extends EnemyBase<Mettool.State> {
     }
 
     protected enum State {
-        BuckledUp,
-        Unbuckle,
-        Walk,
-        Jump,
-        Shoot,
-        Die
+        BUCKLED_UP,
+        UNBUCKLE,
+        WALK,
+        JUMP,
+        SHOOT,
+        DIE
     }
 }

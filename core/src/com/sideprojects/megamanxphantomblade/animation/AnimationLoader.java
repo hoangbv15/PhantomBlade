@@ -11,10 +11,12 @@ import java.util.List;
  * Created by buivuhoang on 05/02/17.
  */
 public class AnimationLoader {
+    private AnimationLoader() {}
+
     public static Animation<TextureRegion> load(String atlasFile, List<Integer> animationIndex, boolean flipped, float frameDuration) {
         Array<TextureAtlas.AtlasRegion> regions = load(atlasFile, flipped, false);
 
-        Array<TextureAtlas.AtlasRegion> indexedRegions = new Array<TextureAtlas.AtlasRegion>();
+        Array<TextureAtlas.AtlasRegion> indexedRegions = new Array<>();
 
         if (animationIndex == null) {
             indexedRegions = regions;
@@ -24,7 +26,7 @@ public class AnimationLoader {
             }
         }
 
-        return new Animation<TextureRegion>(frameDuration, indexedRegions);
+        return new Animation<>(frameDuration, indexedRegions);
     }
 
     private static Array<TextureAtlas.AtlasRegion> load(String atlasFile, boolean xFlipped, boolean yFlipped) {

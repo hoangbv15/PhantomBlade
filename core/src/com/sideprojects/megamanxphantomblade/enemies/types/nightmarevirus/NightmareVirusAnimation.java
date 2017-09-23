@@ -16,10 +16,10 @@ public class NightmareVirusAnimation extends EnemyAnimationBase {
     @Override
     protected String getTextureAtlas(Type type) {
         switch (type) {
-            case Die:
+            case DIE:
                 return super.getTextureAtlas(type);
             default:
-                return Sprites.NightmareVirus;
+                return Sprites.nightmareVirus;
         }
     }
 
@@ -27,16 +27,16 @@ public class NightmareVirusAnimation extends EnemyAnimationBase {
     @Override
     protected List<Integer> getAnimationIndex(Type type) {
         switch (type) {
-            case Idle:
+            case IDLE:
                 return Arrays.asList(3, 4, 5, 6, 5, 4);
-            case Run:
+            case RUN:
                 return Arrays.asList(0, 1, 2, 1);
-            case FinishAttack:
-            case PrepareAttack:
+            case FINISH_ATTACK:
+            case PREPARE_ATTACK:
                 return Collections.singletonList(7);
-            case Attack:
+            case ATTACK:
                 return Arrays.asList(8, 9, 10, 9, 8);
-            case Die:
+            case DIE:
                 return null;
             default:
                 return null;
@@ -46,8 +46,8 @@ public class NightmareVirusAnimation extends EnemyAnimationBase {
     @Override
     protected float getFrameDuration(Type type) {
         switch (type) {
-            case Run:
-            case Idle:
+            case RUN:
+            case IDLE:
                 return 0.2f;
             default:
                 return super.getFrameDuration(type);
@@ -57,8 +57,8 @@ public class NightmareVirusAnimation extends EnemyAnimationBase {
     @Override
     public boolean isLooping(Type type) {
         switch (type) {
-            case Idle:
-            case Run:
+            case IDLE:
+            case RUN:
                 return true;
             default:
                 return false;

@@ -11,18 +11,18 @@ import java.util.Map;
  * Created by buivuhoang on 07/04/17.
  */
 public class AnimationCache<T> {
-    private Map<T, Animation<TextureRegion>> animationCache;
+    private Map<T, Animation<TextureRegion>> cache;
 
     public AnimationCache() {
-        animationCache = new HashMap<T, Animation<TextureRegion>>();
+        cache = new HashMap<>();
     }
 
     public Animation<TextureRegion> retrieveFromCache(T key, boolean flipped, String texture, List<Integer> animationIndex, float frameDuration) {
-        if (!animationCache.containsKey(key)) {
-            animationCache.put(key,
+        if (!cache.containsKey(key)) {
+            cache.put(key,
                     AnimationLoader.load(texture, animationIndex, flipped, frameDuration));
         }
 
-        return animationCache.get(key);
+        return cache.get(key);
     }
 }

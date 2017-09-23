@@ -34,7 +34,7 @@ public abstract class EnemyScript<T> extends ScriptBase {
     }
 
     protected void setEnemyState(T state) {
-        addToQueue(new SetEnemyState<T>(enemy, state));
+        addToQueue(new SetEnemyState<>(enemy, state));
     }
 
     protected void resetAnimation() {

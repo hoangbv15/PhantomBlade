@@ -30,15 +30,15 @@ public class NightmareVirusScript extends EnemyScript<NightmareVirus.State> {
 
     @Override
     public void describe() {
-        setEnemyState(NightmareVirus.State.Idle);
+        setEnemyState(NightmareVirus.State.IDLE);
         doWait();
         int rand = 1;//MathUtils.random(2);
         if (rand == 1) {
             doShootAttack();
-            setEnemyState(NightmareVirus.State.Idle);
+            setEnemyState(NightmareVirus.State.IDLE);
             doWait();
         }
-        setEnemyState(NightmareVirus.State.Fly);
+        setEnemyState(NightmareVirus.State.FLY);
         flyTowardsPlayer(velocity, MathUtils.random(flyTowardsPlayerTime - randomThreshold, flyTowardsPlayerTime + randomThreshold));
     }
 
@@ -47,17 +47,17 @@ public class NightmareVirusScript extends EnemyScript<NightmareVirus.State> {
     }
 
     private void doShootAttack() {
-        setEnemyState(NightmareVirus.State.PrepareToShoot);
+        setEnemyState(NightmareVirus.State.PREPARE_TO_SHOOT);
         wait(waitTimePrepareToShoot);
         IntStream.range(0, 3).forEach(i -> {
             resetAnimation();
-            setEnemyState(NightmareVirus.State.Shoot);
+            setEnemyState(NightmareVirus.State.SHOOT);
             wait(waitTimeShotDelay);
             spawnEnemyAttack(new NightmareVirusBullet(enemy.mapCollisionBounds, player.takeDamageBounds,
                     10f, enemy.damage, enemy.direction, enemy.animations, enemy.sounds), map);
             wait(waitTimeShoot);
         });
-        setEnemyState(NightmareVirus.State.FinishShooting);
+        setEnemyState(NightmareVirus.State.FINISH_SHOOTING);
         wait(waitTimeFinishShooting);
     }
 }
