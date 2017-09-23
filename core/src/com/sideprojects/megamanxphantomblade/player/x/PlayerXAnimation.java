@@ -27,22 +27,22 @@ public class PlayerXAnimation extends PlayerAnimation {
         switch(type) {
             case Idle:
                 if (attackType == Damage.Type.HEAVY && !changeStateDuringAttack) {
-                    return Sprites.xIdleShootCharged;
+                    return Sprites.X_IDLE_SHOOT_CHARGED;
                 }
-                return Sprites.xIdleShoot;
+                return Sprites.X_IDLE_SHOOT;
             case Run:
-                return withLight? Sprites.xRunShootLight : Sprites.xRunShootNoLight;
+                return withLight? Sprites.X_RUN_SHOOT_LIGHT : Sprites.X_RUN_SHOOT_NO_LIGHT;
             case Jump:
             case Fall:
             case Touchdown:
             case Updash:
-                return withLight? Sprites.xJumpShootLight : Sprites.xJumpShootNoLight;
+                return withLight? Sprites.X_JUMP_SHOOT_LIGHT : Sprites.X_JUMP_SHOOT_NO_LIGHT;
             case Dash:
             case Dashbreak:
-                return withLight? Sprites.xDashShootLight : Sprites.xDashShootNoLight;
+                return withLight? Sprites.X_DASH_SHOOT_LIGHT : Sprites.X_DASH_SHOOT_NO_LIGHT;
             case Wallslide:
             case Walljump:
-                return withLight? Sprites.xWallslideShootLight : Sprites.xWallslideShootNoLight;
+                return withLight? Sprites.X_WALLSLIDE_SHOOT_LIGHT : Sprites.X_WALLSLIDE_SHOOT_NO_LIGHT;
             default:
                 return null;
 
@@ -118,28 +118,28 @@ public class PlayerXAnimation extends PlayerAnimation {
     protected String getTextureAtlas(Type type, boolean lowHealth) {
         switch (type) {
             case Idle:
-                return lowHealth ? Sprites.xIdleLowHealth : Sprites.xIdle;
+                return lowHealth ? Sprites.X_IDLE_LOW_HEALTH : Sprites.X_IDLE;
             case Walljump:
-                return Sprites.xWallSlide;
+                return Sprites.X_WALL_SLIDE;
             case Run:
-                return Sprites.xRun;
+                return Sprites.X_RUN;
             case Jump:
             case Fall:
             case Touchdown:
-                return Sprites.xJump;
+                return Sprites.X_JUMP;
             case Wallslide:
-                return Sprites.xWallSlide;
+                return Sprites.X_WALL_SLIDE;
             case Dashrocket:
-                return Sprites.xDashRocket;
+                return Sprites.X_DASH_ROCKET;
             case Dash:
             case Dashbreak:
-                return Sprites.xDash;
+                return Sprites.X_DASH;
             case Updash:
-                return Sprites.xUpDash;
+                return Sprites.X_UP_DASH;
             case Updashrocket:
-                return Sprites.xUpDashRocket;
+                return Sprites.X_UP_DASH_ROCKET;
             case DamagedNormal:
-                return Sprites.xDamagedNormal;
+                return Sprites.X_DAMAGED_NORMAL;
             default:
                 return super.getTextureAtlas(type, lowHealth);
         }

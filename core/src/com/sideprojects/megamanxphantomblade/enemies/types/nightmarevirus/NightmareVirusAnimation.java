@@ -19,7 +19,7 @@ public class NightmareVirusAnimation extends EnemyAnimationBase {
             case DIE:
                 return super.getTextureAtlas(type);
             default:
-                return Sprites.nightmareVirus;
+                return Sprites.NIGHTMARE_VIRUS;
         }
     }
 

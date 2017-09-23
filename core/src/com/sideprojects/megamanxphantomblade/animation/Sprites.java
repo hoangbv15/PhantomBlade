@@ -5,51 +5,51 @@ package com.sideprojects.megamanxphantomblade.animation;
  */
 public class Sprites {
     // X
-    public static final String xIdle = "sprites/x/idle.txt";
-    public static final String xRun = "sprites/x/run.txt";
-    public static final String xJump = "sprites/x/jump.txt";
-    public static final String xDash = "sprites/x/dash.txt";
-    public static final String xWallSlide = "sprites/x/wallslide.txt";
-    public static final String xDashRocket = "sprites/x/dash_rocket.txt";
-    public static final String xUpDash = "sprites/x/updash.txt";
-    public static final String xUpDashRocket = "sprites/x/updash_rocket.txt";
-    public static final String xDamagedNormal = "sprites/x/damaged_normal.txt";
-    public static final String xIdleLowHealth = "sprites/x/idle_lowhealth.txt";
-    public static final String xIdleShoot = "sprites/x/idle_shoot.txt";
-    public static final String xIdleShootCharged = "sprites/x/idle_shoot_charged.txt";
-    public static final String xRunShootLight = "sprites/x/run_shoot_light.txt";
-    public static final String xRunShootNoLight = "sprites/x/run_shoot_nolight.txt";
-    public static final String xJumpShootLight = "sprites/x/jump_shoot_light.txt";
-    public static final String xJumpShootNoLight = "sprites/x/jump_shoot_nolight.txt";
-    public static final String xDashShootLight = "sprites/x/dash_shoot_light.txt";
-    public static final String xDashShootNoLight = "sprites/x/dash_shoot_nolight.txt";
-    public static final String xWallslideShootLight = "sprites/x/wallslide_shoot_light.txt";
-    public static final String xWallslideShootNoLight = "sprites/x/wallslide_shoot_nolight.txt";
-    public static final String xShootMuzzle = "sprites/x/shoot_muzzle.txt";
-    public static final String xShootMediumMuzzle = "sprites/x/shoot_medium_muzzle.txt";
-    public static final String xShootHeavyMuzzle = "sprites/x/shoot_heavy_muzzle.txt";
-    public static final String xBulletSmall = "sprites/x/bullet_small.txt";
-    public static final String xBulletHeavy = "sprites/x/bullet_heavy.txt";
-    public static final String xBulletMedium = "sprites/x/bullet_medium.txt";
-    public static final String xBulletSmallExplode = "sprites/x/bullet_small_explode.txt";
-    public static final String xBulletHeavyExplode = "sprites/x/bullet_heavy_explode.txt";
-    public static final String xChargeParticles = "sprites/x/charge_particles.txt";
+    public static final String X_IDLE = "sprites/x/idle.txt";
+    public static final String X_RUN = "sprites/x/run.txt";
+    public static final String X_JUMP = "sprites/x/jump.txt";
+    public static final String X_DASH = "sprites/x/dash.txt";
+    public static final String X_WALL_SLIDE = "sprites/x/wallslide.txt";
+    public static final String X_DASH_ROCKET = "sprites/x/dash_rocket.txt";
+    public static final String X_UP_DASH = "sprites/x/updash.txt";
+    public static final String X_UP_DASH_ROCKET = "sprites/x/updash_rocket.txt";
+    public static final String X_DAMAGED_NORMAL = "sprites/x/damaged_normal.txt";
+    public static final String X_IDLE_LOW_HEALTH = "sprites/x/idle_lowhealth.txt";
+    public static final String X_IDLE_SHOOT = "sprites/x/idle_shoot.txt";
+    public static final String X_IDLE_SHOOT_CHARGED = "sprites/x/idle_shoot_charged.txt";
+    public static final String X_RUN_SHOOT_LIGHT = "sprites/x/run_shoot_light.txt";
+    public static final String X_RUN_SHOOT_NO_LIGHT = "sprites/x/run_shoot_nolight.txt";
+    public static final String X_JUMP_SHOOT_LIGHT = "sprites/x/jump_shoot_light.txt";
+    public static final String X_JUMP_SHOOT_NO_LIGHT = "sprites/x/jump_shoot_nolight.txt";
+    public static final String X_DASH_SHOOT_LIGHT = "sprites/x/dash_shoot_light.txt";
+    public static final String X_DASH_SHOOT_NO_LIGHT = "sprites/x/dash_shoot_nolight.txt";
+    public static final String X_WALLSLIDE_SHOOT_LIGHT = "sprites/x/wallslide_shoot_light.txt";
+    public static final String X_WALLSLIDE_SHOOT_NO_LIGHT = "sprites/x/wallslide_shoot_nolight.txt";
+    public static final String X_SHOOT_MUZZLE = "sprites/x/shoot_muzzle.txt";
+    public static final String X_SHOOT_MEDIUM_MUZZLE = "sprites/x/shoot_medium_muzzle.txt";
+    public static final String X_SHOOT_HEAVY_MUZZLE = "sprites/x/shoot_heavy_muzzle.txt";
+    public static final String X_BULLET_SMALL = "sprites/x/bullet_small.txt";
+    public static final String X_BULLET_HEAVY = "sprites/x/bullet_heavy.txt";
+    public static final String X_BULLET_MEDIUM = "sprites/x/bullet_medium.txt";
+    public static final String X_BULLET_SMALL_EXPLODE = "sprites/x/bullet_small_explode.txt";
+    public static final String X_BULLET_HEAVY_EXPLODE = "sprites/x/bullet_heavy_explode.txt";
+    public static final String X_CHARGE_PARTICLES = "sprites/x/charge_particles.txt";
 
     // All players
-    public static final String bulletNoDamageExplode = "sprites/bullet_nodamage_explode.txt";
+    public static final String BULLET_NO_DAMAGE_EXPLODE = "sprites/bullet_nodamage_explode.txt";
 
     // Particle effects
-    public static final String Wallslide = "sprites/wallslide_dust.txt";
-    public static final String wallKick = "sprites/wallslide_kick.txt";
-    public static final String dashDust = "sprites/dash_dust.txt";
+    public static final String WALLSLIDE = "sprites/wallslide_dust.txt";
+    public static final String WALL_KICK = "sprites/wallslide_kick.txt";
+    public static final String DASH_DUST = "sprites/dash_dust.txt";
 
     // Enemies
-    public static final String enemyExplode = "sprites/enemies/enemy_explode.txt";
-    public static final String mettool = "sprites/enemies/mettool.txt";
-    public static final String nightmareVirus = "sprites/enemies/nightmare_virus.txt";
+    public static final String ENEMY_EXPLODE = "sprites/enemies/enemy_explode.txt";
+    public static final String METTOOL = "sprites/enemies/mettool.txt";
+    public static final String NIGHTMARE_VIRUS = "sprites/enemies/nightmare_virus.txt";
 
     // GUI elements
-    public static final String guiElements = "sprites/ingame_gui.txt";
+    public static final String GUI_ELEMENTS = "sprites/ingame_gui.txt";
 
 
     private Sprites() {}

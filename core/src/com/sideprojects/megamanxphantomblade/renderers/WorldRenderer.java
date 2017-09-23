@@ -142,9 +142,9 @@ public class WorldRenderer implements Disposable {
                 }
             }
 
-            if (enemy.auxiliaryFrames != null) {
-                for (Object key : enemy.auxiliaryFrames.keySet()) {
-                    TextureRegion frame = (TextureRegion)enemy.auxiliaryFrames.get(key);
+            if (enemy.getAuxiliaryFrames() != null) {
+                for (Object key : enemy.getAuxiliaryFrames().keySet()) {
+                    TextureRegion frame = (TextureRegion)enemy.getAuxiliaryFrames().get(key);
                     Vector2 padding = enemy.getAuxiliaryAnimationPadding((EnemyAnimationBase.Type) key, delta);
                     float x = pos.x + padding.x;
                     float y = pos.y + padding.y;

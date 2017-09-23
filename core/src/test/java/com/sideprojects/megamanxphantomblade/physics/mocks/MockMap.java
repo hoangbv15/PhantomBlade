@@ -16,7 +16,7 @@ public class MockMap extends MapBase {
     private int maxY = 10;
 
     public MockMap() {
-        super(null, null, null, Difficulty.normal);
+        super(null, null, null, Difficulty.NORMAL);
         if (bounds == null || bounds.length < 1) {
             // Initialise to a 10x10 map
             bounds = new TileBase[maxX][maxY];

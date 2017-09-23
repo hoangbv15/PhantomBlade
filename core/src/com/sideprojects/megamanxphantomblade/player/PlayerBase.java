@@ -151,9 +151,9 @@ public abstract class PlayerBase extends MovingObject {
         }
         previousState = state;
 
-//        state = PlayerState.Wallslide;
+//        state = PlayerState.WALLSLIDE;
 //        direction = RIGHT;
-//        currentAnimation = animations.get(PlayerAnimationBase.Type.Wallslide, direction, isLowHealth(), isAttacking, attackType, firstFramesOfAttacking, changeStateDuringAttack);
+//        currentAnimation = animations.get(PlayerAnimationBase.Type.WALLSLIDE, direction, isLowHealth(), isAttacking, attackType, firstFramesOfAttacking, changeStateDuringAttack);
 //        currentFrame = currentAnimation.getKeyFrame(stateTime, looping);
     }
 

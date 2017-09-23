@@ -50,7 +50,7 @@ public class PlayerHealthRenderer implements Disposable {
         this.batch = batch;
         healthRenderer = new ShapeRenderer();
         healthRenderer.setAutoShapeType(true);
-        guiElements = AnimationLoader.loadGui(Sprites.guiElements);
+        guiElements = AnimationLoader.loadGui(Sprites.GUI_ELEMENTS);
         stateTime = 0;
         startDescending = false;
     }

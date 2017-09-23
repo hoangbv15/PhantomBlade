@@ -29,7 +29,7 @@ public class NightmareVirusBullet extends EnemyAttack {
         animation = animations.retrieveFromCache(
                 EnemyAnimationBase.Type.ATTACK,
                 direction,
-                Sprites.nightmareVirus,
+                Sprites.NIGHTMARE_VIRUS,
                 Arrays.asList(11, 12, 13, 14, 15),
                 0.05f);
     }

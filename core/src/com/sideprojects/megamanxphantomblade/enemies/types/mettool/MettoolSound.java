@@ -13,6 +13,6 @@ public class MettoolSound extends EnemySound {
 
     @Override
     public void playAttack() {
-        // TODO: Implement mettool's attack
+        // TODO: Implement METTOOL's attack
     }
 }

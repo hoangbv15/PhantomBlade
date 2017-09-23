@@ -86,7 +86,7 @@ public abstract class EnemyAnimationBase {
     protected String getTextureAtlas(Type type) {
         switch (type) {
             case DIE:
-                return Sprites.enemyExplode;
+                return Sprites.ENEMY_EXPLODE;
             default:
                 return null;
         }

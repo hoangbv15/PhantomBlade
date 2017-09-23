@@ -18,7 +18,7 @@ public class MettoolAnimation extends EnemyAnimationBase {
             case DIE:
                 return super.getTextureAtlas(type);
             default:
-                return Sprites.mettool;
+                return Sprites.METTOOL;
         }
     }
 

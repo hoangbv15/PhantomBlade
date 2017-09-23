@@ -22,7 +22,7 @@ public abstract class EnemyBase<T> extends MovingObject {
     public boolean canSpawn;
 
     public EnemyAnimationBase animations;
-    public Map<EnemyAnimationBase.Type, TextureRegion> auxiliaryFrames;
+    protected Map<EnemyAnimationBase.Type, TextureRegion> auxiliaryFrames;
     public List<ExplodeFragment> explodeFragments;
 
     public TextureRegion currentFrame;
@@ -132,6 +132,10 @@ public abstract class EnemyBase<T> extends MovingObject {
             return super.takeDamage(damage);
         }
         return false;
+    }
+
+    public Map<EnemyAnimationBase.Type, TextureRegion> getAuxiliaryFrames() {
+        return auxiliaryFrames;
     }
 
     protected abstract void updateTakeDamageBounds();

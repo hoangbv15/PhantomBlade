@@ -55,13 +55,13 @@ public class Particles {
         Animation<TextureRegion> animation = null;
         switch (key.type) {
             case DASH:
-                animation = AnimationLoader.load(Sprites.dashDust, null, flipped, 0.05f);
+                animation = AnimationLoader.load(Sprites.DASH_DUST, null, flipped, 0.05f);
                 break;
             case WALLKICK:
-                animation = AnimationLoader.load(Sprites.wallKick, null, flipped, 0.05f);
+                animation = AnimationLoader.load(Sprites.WALL_KICK, null, flipped, 0.05f);
                 break;
             case WALLSLIDE:
-                animation = AnimationLoader.load(Sprites.Wallslide, null, flipped, 0.05f);
+                animation = AnimationLoader.load(Sprites.WALLSLIDE, null, flipped, 0.05f);
                 break;
         }
         if (animation != null) {
