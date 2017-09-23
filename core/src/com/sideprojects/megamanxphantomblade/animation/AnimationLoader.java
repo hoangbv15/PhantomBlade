@@ -11,9 +11,7 @@ import java.util.List;
  * Created by buivuhoang on 05/02/17.
  */
 public class AnimationLoader {
-    private AnimationLoader() {
-        throw new IllegalStateException("AnimationLoader");
-    }
+    private AnimationLoader() {}
 
     public static Animation<TextureRegion> load(String atlasFile, List<Integer> animationIndex, boolean flipped, float frameDuration) {
         Array<TextureAtlas.AtlasRegion> regions = load(atlasFile, flipped, false);

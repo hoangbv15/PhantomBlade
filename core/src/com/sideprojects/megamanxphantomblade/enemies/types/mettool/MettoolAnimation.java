@@ -15,29 +15,29 @@ public class MettoolAnimation extends EnemyAnimationBase {
     @Override
     protected String getTextureAtlas(Type type) {
         switch (type) {
-            case Die:
+            case DIE:
                 return super.getTextureAtlas(type);
             default:
-                return Sprites.Mettool;
+                return Sprites.mettool;
         }
     }
 
     @Override
     protected List<Integer> getAnimationIndex(Type type) {
         switch (type) {
-            case Idle:
+            case IDLE:
                 return Arrays.asList(0, 1, 2, 3);
-            case StopIdling:
+            case STOP_IDLING:
                 return Arrays.asList(3, 2, 1, 0);
-            case Jump:
+            case JUMP:
                 return Arrays.asList(13, 13, 13, 13, 14, 15, 16, 17, 18, 19);
-            case Run:
+            case RUN:
                 return Arrays.asList(25, 26, 27, 28, 29, 30, 31, 32, 33, 34);
-            case Attack:
+            case ATTACK:
                 return Arrays.asList(20, 21, 22, 23, 24);
-            case ExplodeFragment:
+            case EXPLODE_FRAGMENT:
                 return Arrays.asList(8, 9, 10, 11);
-            case Die:
+            case DIE:
                 return null;
             default:
                 return null;
@@ -47,7 +47,7 @@ public class MettoolAnimation extends EnemyAnimationBase {
     @Override
     public boolean isLooping(Type type) {
         switch (type) {
-            case Run:
+            case RUN:
                 return true;
             default:
                 return false;

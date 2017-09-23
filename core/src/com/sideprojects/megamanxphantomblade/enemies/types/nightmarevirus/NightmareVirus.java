@@ -10,7 +10,7 @@ import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.math.VectorCache;
 import com.sideprojects.megamanxphantomblade.sound.SoundPlayer;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 
 /**
  * Created by buivuhoang on 17/09/17.
@@ -25,10 +25,10 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
         takeDamageBounds.setPosition(x, y);
         damage = new Damage(Damage.Type.NORMAL, Damage.Side.NONE, -difficulty);
         animations = new NightmareVirusAnimation();
-        auxiliaryFrames = new HashMap<>(1);
+        auxiliaryFrames = new EnumMap<>(EnemyAnimationBase.Type.class);
         script = new NightmareVirusScript(this, map.player, map);
         sounds = new NightmareVirusSound(soundPlayer);
-        state = State.Idle;
+        state = State.IDLE;
     }
 
     @Override
@@ -56,26 +56,26 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
     protected void updateAnimation(float delta) {
         EnemyAnimationBase.Type type = null;
         if (isDead()) {
-            type = EnemyAnimationBase.Type.Die;
+            type = EnemyAnimationBase.Type.DIE;
         } else {
             switch (state) {
-                case Idle:
-                    type = EnemyAnimationBase.Type.Idle;
+                case IDLE:
+                    type = EnemyAnimationBase.Type.IDLE;
                     break;
-                case Fly:
-                    type = EnemyAnimationBase.Type.Run;
+                case FLY:
+                    type = EnemyAnimationBase.Type.RUN;
                     break;
-                case PrepareToShoot:
-                    type = EnemyAnimationBase.Type.PrepareAttack;
+                case PREPARE_TO_SHOOT:
+                    type = EnemyAnimationBase.Type.PREPARE_ATTACK;
                     break;
-                case Shoot:
-                    type = EnemyAnimationBase.Type.Attack;
+                case SHOOT:
+                    type = EnemyAnimationBase.Type.ATTACK;
                     break;
-                case FinishShooting:
-                    type = EnemyAnimationBase.Type.FinishAttack;
+                case FINISH_SHOOTING:
+                    type = EnemyAnimationBase.Type.FINISH_ATTACK;
                     break;
-                case Die:
-                    type = EnemyAnimationBase.Type.Die;
+                case DIE:
+                    type = EnemyAnimationBase.Type.DIE;
                     break;
             }
         }
@@ -83,7 +83,7 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
             Animation<TextureRegion> animation = animations.get(type, direction);
             TextureRegion frame = animation.getKeyFrame(stateTime, animations.isLooping(type));
             if (isDead()) {
-                auxiliaryFrames.put(EnemyAnimationBase.Type.Die, frame);
+                auxiliaryFrames.put(EnemyAnimationBase.Type.DIE, frame);
                 currentFrame = null;
             } else {
                 currentFrame = animation.getKeyFrame(stateTime, animations.isLooping(type));
@@ -94,7 +94,7 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
 
     @Override
     public Vector2 getAuxiliaryAnimationPadding(EnemyAnimationBase.Type type, float delta) {
-        if (type == EnemyAnimationBase.Type.Die) {
+        if (type == EnemyAnimationBase.Type.DIE) {
             if (direction == LEFT) {
                 return VectorCache.get(-5, 10);
             }
@@ -119,11 +119,11 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
     }
 
     protected enum State {
-        Idle,
-        Fly,
-        PrepareToShoot,
-        Shoot,
-        FinishShooting,
-        Die
+        IDLE,
+        FLY,
+        PREPARE_TO_SHOOT,
+        SHOOT,
+        FINISH_SHOOTING,
+        DIE
     }
 }

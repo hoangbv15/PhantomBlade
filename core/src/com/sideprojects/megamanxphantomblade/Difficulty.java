@@ -10,7 +10,5 @@ public class Difficulty {
     public static int normal = 0;
     public static int hard = -10;
 
-    private Difficulty() {
-        throw new IllegalStateException("Difficulty");
-    }
+    private Difficulty() {}
 }

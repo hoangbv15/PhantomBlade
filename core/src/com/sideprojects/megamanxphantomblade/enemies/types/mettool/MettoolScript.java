@@ -38,42 +38,42 @@ public class MettoolScript extends EnemyScript<Mettool.State> {
     }
 
     private void stupidAi() {
-        setEnemyState(Mettool.State.Walk);
+        setEnemyState(Mettool.State.WALK);
         moveTillEdge(MovingObject.LEFT, velocity, walkTime);
         int rand = MathUtils.random(2);
         if (rand == 0) {
-            setEnemyStateIfAtEdge(Mettool.State.Jump);
+            setEnemyStateIfAtEdge(Mettool.State.JUMP);
             jumpIfAtEdge(velocity, jumpVelocity, waitTimeBeforeJump);
         } else if (rand == 1) {
             setCanTakeDamage(false);
-            setEnemyState(Mettool.State.BuckledUp);
+            setEnemyState(Mettool.State.BUCKLED_UP);
             wait(waitTimeBuckledUp);
             setCanTakeDamage(true);
-            setEnemyState(Mettool.State.Unbuckle);
+            setEnemyState(Mettool.State.UNBUCKLE);
             wait(waitTimeUnbuckle);
         }
-        setEnemyState(Mettool.State.Walk);
+        setEnemyState(Mettool.State.WALK);
         moveTillEdge(MovingObject.RIGHT, velocity, walkTime);
-        setEnemyStateIfAtEdge(Mettool.State.Jump);
+        setEnemyStateIfAtEdge(Mettool.State.JUMP);
         jumpIfAtEdge(velocity, jumpVelocity, waitTimeBeforeJump);
         setCanTakeDamage(false);
-        setEnemyState(Mettool.State.BuckledUp);
+        setEnemyState(Mettool.State.BUCKLED_UP);
         wait(waitTimeBuckledUp);
         setCanTakeDamage(true);
-        setEnemyState(Mettool.State.Unbuckle);
+        setEnemyState(Mettool.State.UNBUCKLE);
         wait(waitTimeUnbuckle);
     }
 
     private void annoyingAi() {
-        setEnemyState(Mettool.State.Walk);
+        setEnemyState(Mettool.State.WALK);
         walkTowardsPlayer(velocity, 5);
-        setEnemyStateIfAtEdge(Mettool.State.Jump);
+        setEnemyStateIfAtEdge(Mettool.State.JUMP);
         jumpIfAtEdge(velocity, jumpVelocity, waitTimeBeforeJump);
         setCanTakeDamage(false);
-        setEnemyState(Mettool.State.BuckledUp);
+        setEnemyState(Mettool.State.BUCKLED_UP);
         wait(waitTimeBuckledUp);
         setCanTakeDamage(true);
-        setEnemyState(Mettool.State.Unbuckle);
+        setEnemyState(Mettool.State.UNBUCKLE);
         wait(waitTimeUnbuckle);
     }
 }

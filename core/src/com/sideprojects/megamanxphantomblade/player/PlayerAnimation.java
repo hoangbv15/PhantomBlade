@@ -10,7 +10,7 @@ public abstract class PlayerAnimation extends PlayerAnimationBase {
     protected String getTextureAtlas(Type type, boolean lowHealth) {
         switch (type) {
             case BulletNoDamageExplode:
-                return Sprites.BulletNoDamageExplode;
+                return Sprites.bulletNoDamageExplode;
             default:
                 return null;
         }
