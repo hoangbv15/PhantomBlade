@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyAnimationBase;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
-import com.sideprojects.megamanxphantomblade.enemies.EnemySound;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.math.VectorCache;
 import com.sideprojects.megamanxphantomblade.sound.SoundPlayer;
@@ -22,7 +21,7 @@ public class Mettool extends EnemyBase<Mettool.State> {
         mapCollisionBounds.setPosition(x, y);
         mapCollisionBounds.setSize(0.4f, 0.4f);
         takeDamageBounds.setPosition(x, y);
-        damage = new Damage(Damage.Type.Normal, Damage.Side.None, -difficulty);
+        damage = new Damage(Damage.Type.NORMAL, Damage.Side.NONE, -difficulty);
         script = new MettoolScript(this, map.player);
         auxiliaryFrames = new HashMap<>(1);
         animations = new MettoolAnimation();

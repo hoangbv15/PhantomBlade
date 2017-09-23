@@ -14,8 +14,8 @@ public class Particles {
     protected Queue<Particle> particleQueue;
 
     public Particles(int initialSize) {
-        particleQueue = new Queue<Particle>(initialSize);
-        animationCache = new LRUCache<ParticleKey, Animation<TextureRegion>>(initialSize);
+        particleQueue = new Queue<>(initialSize);
+        animationCache = new LRUCache<>(initialSize);
     }
 
     /**

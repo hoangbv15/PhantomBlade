@@ -53,7 +53,7 @@ public abstract class EnemyAnimationBase {
     private AnimationCache<AnimationKey> animationCache;
 
     public EnemyAnimationBase() {
-        animationCache = new AnimationCache<AnimationKey>();
+        animationCache = new AnimationCache<>();
     }
 
     public Animation<TextureRegion> get(Type type, int direction) {

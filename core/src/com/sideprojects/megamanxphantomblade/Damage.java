@@ -6,10 +6,10 @@ package com.sideprojects.megamanxphantomblade;
  */
 public class Damage {
     public enum Type {
-        InstantDeath(99999999),
-        Heavy(20),
-        Normal(10),
-        Light(5);
+        INSTANT_DEATH(99999999),
+        HEAVY(20),
+        NORMAL(10),
+        LIGHT(5);
 
         private int damage;
         Type(int damage) {
@@ -22,7 +22,7 @@ public class Damage {
     }
 
     public enum Side {
-        Left, Right, None
+        LEFT, RIGHT, NONE
     }
 
     public Type type;

@@ -23,7 +23,7 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
         mapCollisionBounds.setSize(0.4f, 0.4f);
         takeDamageBounds.setSize(0.4f, 0.5f);
         takeDamageBounds.setPosition(x, y);
-        damage = new Damage(Damage.Type.Normal, Damage.Side.None, -difficulty);
+        damage = new Damage(Damage.Type.NORMAL, Damage.Side.NONE, -difficulty);
         animations = new NightmareVirusAnimation();
         auxiliaryFrames = new HashMap<>(1);
         script = new NightmareVirusScript(this, map.player, map);

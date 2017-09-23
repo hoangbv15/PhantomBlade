@@ -21,7 +21,7 @@ public abstract class ScriptBase extends Physics {
     public ScriptBase(MovingObject object) {
         super();
         this.object = object;
-        actionQueue = new Queue<ActionBase>();
+        actionQueue = new Queue<>();
     }
 
     /**

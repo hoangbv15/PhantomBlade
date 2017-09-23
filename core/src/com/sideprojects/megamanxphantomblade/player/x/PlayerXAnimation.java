@@ -26,7 +26,7 @@ public class PlayerXAnimation extends PlayerAnimation {
     private String getAttackTextureAtlas(Type type, Damage.Type attackType, boolean withLight, boolean changeStateDuringAttack) {
         switch(type) {
             case Idle:
-                if (attackType == Damage.Type.Heavy && !changeStateDuringAttack) {
+                if (attackType == Damage.Type.HEAVY && !changeStateDuringAttack) {
                     return Sprites.XIdleShootCharged;
                 }
                 return Sprites.XIdleShoot;
@@ -55,7 +55,7 @@ public class PlayerXAnimation extends PlayerAnimation {
                 if (changeStateDuringAttack) {
                     return Arrays.asList(5, 5, 5, 5, 5, 5, 6, 7);
                 }
-                if (attackType == Damage.Type.Heavy) {
+                if (attackType == Damage.Type.HEAVY) {
                     return Arrays.asList(0, 1, 2, 3, 4, 5, 6, 6, 7, 7, 8, 8);
                 }
                 return Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7);
@@ -162,7 +162,7 @@ public class PlayerXAnimation extends PlayerAnimation {
         if (isAttacking) {
             switch (type) {
                 case Idle:
-                    if (attackType == Damage.Type.Heavy && !changeStateDuringAttack) {
+                    if (attackType == Damage.Type.HEAVY && !changeStateDuringAttack) {
                         return VectorCache.get(-18, -7);
                     }
                     return VectorCache.get(-15, 0);

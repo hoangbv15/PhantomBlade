@@ -33,7 +33,7 @@ public abstract class PhysicsBase {
     private boolean isBeingPushedBack;
 
     public PhysicsBase() {
-        collisions = new CollisionList(new ArrayList<Collision>());
+        collisions = new CollisionList(new ArrayList<>());
         isBeingPushedBack = false;
     }
 
@@ -164,9 +164,9 @@ public abstract class PhysicsBase {
         }
 
         float playerX = object.takeDamageBounds.x + object.takeDamageBounds.width / 2;
-        Damage.Side side = Damage.Side.Left;
+        Damage.Side side = Damage.Side.LEFT;
         if (playerX < enemyX) {
-            side = Damage.Side.Right;
+            side = Damage.Side.RIGHT;
         }
         damage.side = side;
         return damage;
@@ -181,7 +181,7 @@ public abstract class PhysicsBase {
             return;
         }
         boolean enemyTookDamage = enemy.takeDamage(attack.damage);
-        if (!enemy.isDead() || attack.damage.type != Damage.Type.Heavy) {
+        if (!enemy.isDead() || attack.damage.type != Damage.Type.HEAVY) {
             attack.die(enemyTookDamage);
         }
     }

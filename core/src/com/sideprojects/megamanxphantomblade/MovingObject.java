@@ -58,7 +58,12 @@ public abstract class MovingObject {
     }
 
     public int movingDirection() {
-        return vel.x > 0 ? MovingObject.RIGHT : vel.x == 0 ? direction : MovingObject.LEFT;
+        if (vel.x > 0) {
+            return MovingObject.RIGHT;
+        } else if (vel.x == 0) {
+            return direction;
+        }
+        return MovingObject.LEFT;
     }
 
     public void die() {
