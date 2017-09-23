@@ -4,9 +4,17 @@ package com.sideprojects.megamanxphantomblade;
  * Created by buivuhoang on 27/03/17.
  */
 public abstract class Attack extends MovingObject {
-    public Damage damage;
-    public boolean shouldBeRemoved;
-    public boolean targetTookDamage;
+    public final Damage damage;
+    protected boolean shouldBeRemoved;
+    protected boolean targetTookDamage;
+
+    public boolean isShouldBeRemoved() {
+        return shouldBeRemoved;
+    }
+
+    public void setShouldBeRemoved(boolean shouldBeRemoved) {
+        this.shouldBeRemoved = shouldBeRemoved;
+    }
 
     public Attack(Damage damage, int direction) {
         this.damage = damage;

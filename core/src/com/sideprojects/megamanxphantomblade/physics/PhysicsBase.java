@@ -168,7 +168,7 @@ public abstract class PhysicsBase {
         if (playerX < enemyX) {
             side = Damage.Side.RIGHT;
         }
-        damage.side = side;
+        damage.setSide(side);
         return damage;
     }
 
@@ -181,7 +181,7 @@ public abstract class PhysicsBase {
             return;
         }
         boolean enemyTookDamage = enemy.takeDamage(attack.damage);
-        if (!enemy.isDead() || attack.damage.type != Damage.Type.HEAVY) {
+        if (!enemy.isDead() || attack.damage.getType() != Damage.Type.HEAVY) {
             attack.die(enemyTookDamage);
         }
     }

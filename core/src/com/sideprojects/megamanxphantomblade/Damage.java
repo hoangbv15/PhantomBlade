@@ -25,9 +25,21 @@ public class Damage {
         LEFT, RIGHT, NONE
     }
 
-    public Type type;
-    public Side side;
-    public int difficulty;
+    private Type type;
+    private Side side;
+    private int difficulty;
+
+    public Type getType() {
+        return type;
+    }
+
+    public Side getSide() {
+        return side;
+    }
+
+    public void setSide(Side side) {
+        this.side = side;
+    }
 
     public Damage(Type type, Side side, int difficulty) {
         this.type = type;

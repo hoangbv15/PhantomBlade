@@ -210,9 +210,9 @@ public abstract class MapBase implements Disposable {
             PlayerAttack attack = i.next();
             attack.update(deltaTime);
             if (!isPointInPlayerRange(attack.mapCollisionBounds.x, attack.mapCollisionBounds.y)) {
-                attack.shouldBeRemoved = true;
+                attack.setShouldBeRemoved(true);
             }
-            if (attack.shouldBeRemoved) {
+            if (attack.isShouldBeRemoved()) {
                 i.remove();
             } else {
                 if (attack.canCollideWithWall()) {
@@ -229,9 +229,9 @@ public abstract class MapBase implements Disposable {
             EnemyAttack attack = i.next();
             attack.update(deltaTime);
             if (!isPointInPlayerRange(attack.mapCollisionBounds.x, attack.mapCollisionBounds.y)) {
-                attack.shouldBeRemoved = true;
+                attack.setShouldBeRemoved(true);
             }
-            if (attack.shouldBeRemoved) {
+            if (attack.isShouldBeRemoved()) {
                 i.remove();
             } else {
                 if (attack.canCollideWithWall()) {

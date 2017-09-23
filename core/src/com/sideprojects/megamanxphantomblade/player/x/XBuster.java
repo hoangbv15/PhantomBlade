@@ -92,7 +92,7 @@ public class XBuster extends PlayerAttack {
 
     private void createAnimation(PlayerAnimationBase animations) {
         explodeNoDamageAnimation = animations.get(PlayerAnimationBase.Type.BulletNoDamageExplode, direction);
-        switch(damage.type) {
+        switch(damage.getType()) {
             case HEAVY:
                 initialiseHealthPoints(100);
                 animation = animations.retrieveFromCache(PlayerAnimationBase.Type.BulletHeavy, direction, Sprites.xBulletHeavy, null, 0.05f);
@@ -153,7 +153,7 @@ public class XBuster extends PlayerAttack {
     }
 
     private void createBounds(Vector2 pos) {
-        switch(damage.type) {
+        switch(damage.getType()) {
             case HEAVY:
                 mapCollisionBounds = new Rectangle(pos.x, pos.y, P(55), P(30));
                 break;
