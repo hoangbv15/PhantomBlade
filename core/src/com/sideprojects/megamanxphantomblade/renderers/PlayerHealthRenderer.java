@@ -98,7 +98,7 @@ public class PlayerHealthRenderer implements Disposable {
 
         // Render red descending background
         // Set timing to render red descending background
-        float backgroundHeight = (backgroundDescendingHealth - currentHealth) * healthBarUnitLength / healthPointsPerUnit;
+        float backgroundHeight = (backgroundDescendingHealth - currentHealth) * healthBarUnitLength / (float)healthPointsPerUnit;
         if (backgroundHeight <= 0) {
             stateTime = 0;
             startDescending = false;
@@ -123,7 +123,7 @@ public class PlayerHealthRenderer implements Disposable {
     }
 
     private int convertToSections(int health) {
-        return (int)Math.ceil(health / healthPointsPerUnit);
+        return (int)Math.ceil(health / (double)healthPointsPerUnit);
     }
 
     @Override

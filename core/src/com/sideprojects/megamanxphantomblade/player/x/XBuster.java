@@ -208,7 +208,7 @@ public class XBuster extends PlayerAttack {
                 mapCollisionBounds.y = pos.y;
             } else {
                 pos.x += vel.x * delta;
-                vel.x = 10 * direction;
+                vel.x = 10f * direction;
                 mapCollisionBounds.x = pos.x;
                 currentFrame = animation.getKeyFrame(stateTime, true);
             }
