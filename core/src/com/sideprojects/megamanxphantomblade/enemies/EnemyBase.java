@@ -22,7 +22,7 @@ public abstract class EnemyBase<T> extends MovingObject {
     public boolean canSpawn;
 
     public EnemyAnimationBase animations;
-    public EnumMap<EnemyAnimationBase.Type, TextureRegion> auxiliaryFrames;
+    public Map<EnemyAnimationBase.Type, TextureRegion> auxiliaryFrames;
     public List<ExplodeFragment> explodeFragments;
 
     public TextureRegion currentFrame;

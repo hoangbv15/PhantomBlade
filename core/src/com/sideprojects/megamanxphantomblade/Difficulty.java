@@ -6,9 +6,9 @@ package com.sideprojects.megamanxphantomblade;
  * Created by buivuhoang on 09/04/17.
  */
 public class Difficulty {
-    public static int easy = 10;
-    public static int normal = 0;
-    public static int hard = -10;
+    public static final int easy = 10;
+    public static final int normal = 0;
+    public static final int hard = -10;
 
     private Difficulty() {}
 }
