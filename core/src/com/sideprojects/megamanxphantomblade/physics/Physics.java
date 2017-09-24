@@ -55,9 +55,9 @@ public abstract class Physics extends PhysicsBase {
             }
         }
 
-        object.mapCollisionBounds.x += object.vel.x * delta;
-        object.mapCollisionBounds.y += object.vel.y * delta;
-        object.updatePos();
+        object.updatePos(
+                object.mapCollisionBounds.x + object.vel.x * delta,
+                object.mapCollisionBounds.y + object.vel.y * delta);
 
         return collisionList;
     }

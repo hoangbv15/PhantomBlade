@@ -27,10 +27,8 @@ public abstract class EnemyAttack extends Attack {
 
     public void onInitialise() {
         Vector2 posPadding = getPosPadding();
-        mapCollisionBounds.x = enemy.x + posPadding.x;
-        mapCollisionBounds.y = enemy.y + posPadding.y;
         pos = new Vector2();
-        updatePos();
+        updatePos(enemy.x + posPadding.x, enemy.y + posPadding.y);
         calculateVelocity(target.x, target.y, speed);
     }
 
@@ -49,9 +47,9 @@ public abstract class EnemyAttack extends Attack {
             return;
         }
         stateTime += delta;
-        mapCollisionBounds.x += vel.x * delta;
-        mapCollisionBounds.y += vel.y * delta;
-        updatePos();
+        updatePos(
+                mapCollisionBounds.x + vel.x * delta,
+                mapCollisionBounds.y + vel.y * delta);
         if (isDead()) {
             if (explodeAnimation == null) {
                 shouldBeRemoved = true;

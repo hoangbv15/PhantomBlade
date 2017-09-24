@@ -23,6 +23,7 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
         mapCollisionBounds.setSize(0.4f, 0.4f);
         takeDamageBounds.setSize(0.4f, 0.5f);
         takeDamageBounds.setPosition(x, y);
+        setDealDamageBoundsSize(0.4f, 0.5f);
         damage = new Damage(Damage.Type.NORMAL, Damage.Side.NONE, -difficulty);
         animations = new NightmareVirusAnimation();
         auxiliaryFrames = new EnumMap<>(EnemyAnimationBase.Type.class);
@@ -32,7 +33,7 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
     }
 
     @Override
-    protected Vector2 getTakeDamageBoundsOffset() {
+    protected Vector2 getCollisionBoundsOffset() {
         return VectorCache.get(0.3f, 0.4f);
     }
 

@@ -61,9 +61,7 @@ public abstract class PlayerBase extends MovingObject {
     }
 
     public void spawn() {
-        mapCollisionBounds.x = spawnPos.x;
-        mapCollisionBounds.y = spawnPos.y;
-        updatePos();
+        updatePos(spawnPos.x, spawnPos.y);
         vel = new Vector2(0, 0);
         initialiseHealthPoints(100);
         canIssueLowHealthWarning = true;

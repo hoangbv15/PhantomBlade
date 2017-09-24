@@ -28,6 +28,7 @@ public abstract class MovingObject {
     public Vector2 vel;
     public Rectangle mapCollisionBounds = new Rectangle();
     public Rectangle takeDamageBounds = new Rectangle();
+    private Rectangle dealDamageBounds = new Rectangle();
 
     public float stateTime;
 
@@ -49,12 +50,16 @@ public abstract class MovingObject {
         return true;
     }
 
-    public void updatePos() {
+    public void updatePos(float x, float y) {
+        mapCollisionBounds.x = x;
+        mapCollisionBounds.y = y;
         pos.x = mapCollisionBounds.x;
         pos.y = mapCollisionBounds.y;
-        Vector2 takeDamageBoundsOffset = getTakeDamageBoundsOffset();
-        takeDamageBounds.x = mapCollisionBounds.x + takeDamageBoundsOffset.x;
-        takeDamageBounds.y = mapCollisionBounds.y + takeDamageBoundsOffset.y;
+        Vector2 collisionBoundsOffset = getCollisionBoundsOffset();
+        takeDamageBounds.x = mapCollisionBounds.x + collisionBoundsOffset.x;
+        takeDamageBounds.y = mapCollisionBounds.y + collisionBoundsOffset.y;
+        dealDamageBounds.x = mapCollisionBounds.x + collisionBoundsOffset.x;
+        dealDamageBounds.y = mapCollisionBounds.y + collisionBoundsOffset.y;
     }
 
     public int movingDirection() {
@@ -82,7 +87,15 @@ public abstract class MovingObject {
         return true;
     }
 
-    protected Vector2 getTakeDamageBoundsOffset() { return VectorCache.get(0f, 0f); }
+    protected Vector2 getCollisionBoundsOffset() { return VectorCache.get(0f, 0f); }
+
+    public Rectangle getDealDamageBounds() {
+        return dealDamageBounds;
+    }
+
+    protected void setDealDamageBoundsSize(float width, float height) {
+        dealDamageBounds.setSize(width, height);
+    }
 
     public void resetCollisionDetectionRays() {
         horizontalRay = null;
