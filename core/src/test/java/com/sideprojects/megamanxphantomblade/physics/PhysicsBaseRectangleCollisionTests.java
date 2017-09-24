@@ -29,8 +29,10 @@ public class PhysicsBaseRectangleCollisionTests {
     public void should_not_collide_at_leftest_edge() {
         // Create a moving object and place it next to the tile on the left
         MovingObject object = new MockMovingObject(1, 1.1f, 0, -1);
-        object.mapCollisionBounds.x -= object.mapCollisionBounds.getWidth();
-        object.updatePos();
+        object.updatePos(
+                object.mapCollisionBounds.x - object.mapCollisionBounds.getWidth(),
+                object.mapCollisionBounds.y
+        );
         object.direction = MovingObject.RIGHT;
 
         CollisionList collisions = physics.getMapCollision(object, 1, map);
@@ -79,8 +81,10 @@ public class PhysicsBaseRectangleCollisionTests {
         map.addRectTile(2, 0);
         // Object is on the first tile, just next to 2nd tile
         MovingObject object = new MockMovingObject(2, 1, 0.5f, -0.5f);
-        object.mapCollisionBounds.x -= object.mapCollisionBounds.getWidth();
-        object.updatePos();
+        object.updatePos(
+                object.mapCollisionBounds.x - object.mapCollisionBounds.getWidth(),
+                object.mapCollisionBounds.y
+        );
         object.direction = MovingObject.RIGHT;
 
         CollisionList collisions = physics.getMapCollision(object, 1, map);

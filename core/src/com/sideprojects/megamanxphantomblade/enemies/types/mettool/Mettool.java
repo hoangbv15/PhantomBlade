@@ -21,6 +21,7 @@ public class Mettool extends EnemyBase<Mettool.State> {
         mapCollisionBounds.setPosition(x, y);
         mapCollisionBounds.setSize(0.4f, 0.4f);
         takeDamageBounds.setPosition(x, y);
+        setDealDamageBoundsSize(0.3f, 0.4f);
         damage = new Damage(Damage.Type.NORMAL, Damage.Side.NONE, -difficulty);
         script = new MettoolScript(this, map.player);
         auxiliaryFrames = new EnumMap<>(EnemyAnimationBase.Type.class);
@@ -30,7 +31,7 @@ public class Mettool extends EnemyBase<Mettool.State> {
     }
 
     @Override
-    protected Vector2 getTakeDamageBoundsOffset() {
+    protected Vector2 getCollisionBoundsOffset() {
         return VectorCache.get(0.1f, 0f);
     }
 

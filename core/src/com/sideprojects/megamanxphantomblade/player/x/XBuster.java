@@ -155,13 +155,16 @@ public class XBuster extends PlayerAttack {
     private void createBounds(Vector2 pos) {
         switch(damage.getType()) {
             case HEAVY:
-                mapCollisionBounds = new Rectangle(pos.x, pos.y, P(55), P(30));
+                mapCollisionBounds.set(pos.x, pos.y, P(55), P(30));
+                setDealDamageBoundsSize(P(55), P(30));
                 break;
             case NORMAL:
-                mapCollisionBounds = new Rectangle(pos.x, pos.y, P(27), P(18));
+                mapCollisionBounds.set(pos.x, pos.y, P(27), P(18));
+                setDealDamageBoundsSize(P(27), P(18));
                 break;
             case LIGHT:
-                mapCollisionBounds = new Rectangle(pos.x, pos.y, P(14), P(8));
+                mapCollisionBounds.set(pos.x, pos.y, P(14), P(8));
+                setDealDamageBoundsSize(P(14), P(8));
                 break;
         }
     }
@@ -188,8 +191,7 @@ public class XBuster extends PlayerAttack {
                     explodePosPaddingY = noDamagePosPaddingY;
                     playerSound.playAttackNoDamage();
                 }
-                pos.x += explodePosPaddingX;
-                pos.y += explodePosPaddingY;
+                updatePos(pos.x + explodePosPaddingX, pos.y + explodePosPaddingY);
             }
             if (targetTookDamage) {
                 currentFrame = explodeAnimation.getKeyFrame(stateTime, false);
@@ -202,14 +204,12 @@ public class XBuster extends PlayerAttack {
         } else {
             if (stateTime <= muzzleToBulletTime) {
                 posPadding = getBulletPositionPadding(player, direction, player.currentFrameIndex());
-                pos.x = player.mapCollisionBounds.x + posPadding.x;
-                pos.y = player.mapCollisionBounds.y + posPadding.y;
-                mapCollisionBounds.x = pos.x;
-                mapCollisionBounds.y = pos.y;
+                updatePos(
+                        player.mapCollisionBounds.x + posPadding.x,
+                        player.mapCollisionBounds.y + posPadding.y);
             } else {
-                pos.x += vel.x * delta;
+                updatePos(pos.x + vel.x * delta, pos.y);
                 vel.x = 10f * direction;
-                mapCollisionBounds.x = pos.x;
                 currentFrame = animation.getKeyFrame(stateTime, true);
             }
         }

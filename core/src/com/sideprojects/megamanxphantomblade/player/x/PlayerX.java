@@ -98,8 +98,8 @@ public class PlayerX extends PlayerBase {
     }
 
     @Override
-    public void updatePos() {
-        super.updatePos();
+    public void updatePos(float x, float y) {
+        super.updatePos(x, y);
         pos.x -= 0.05f;
     }
 }

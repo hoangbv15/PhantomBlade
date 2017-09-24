@@ -159,7 +159,7 @@ public abstract class PhysicsBase {
             enemyX = attack.mapCollisionBounds.x + attack.mapCollisionBounds.width / 2;
             damage = attack.damage;
         } else {
-            enemyX = enemy.mapCollisionBounds.x + enemy.mapCollisionBounds.width / 2;
+            enemyX = enemy.getDealDamageBounds().x + enemy.getDealDamageBounds().width / 2;
             damage = enemy.damage;
         }
 
@@ -193,12 +193,12 @@ public abstract class PhysicsBase {
             }
             // Here we get the enemy that is receiving the player's attack
             if (isEnemyTakingDamage) {
-                if (object.mapCollisionBounds.overlaps(enemy.takeDamageBounds)) {
+                if (object.getDealDamageBounds().overlaps(enemy.takeDamageBounds)) {
                     return enemy;
                 }
             }
             // Here we get the enemy that is doing damage to the player
-            else if (object.takeDamageBounds.overlaps(enemy.takeDamageBounds)) {
+            else if (object.takeDamageBounds.overlaps(enemy.getDealDamageBounds())) {
                 return enemy;
             }
         }
