@@ -156,7 +156,7 @@ public abstract class PhysicsBase {
             if (attack == null) {
                 return null;
             }
-            enemyX = attack.mapCollisionBounds.x + attack.mapCollisionBounds.width / 2;
+            enemyX = attack.getDealDamageBounds().x + attack.getDealDamageBounds().width / 2;
             damage = attack.damage;
         } else {
             enemyX = enemy.getDealDamageBounds().x + enemy.getDealDamageBounds().width / 2;
@@ -207,7 +207,7 @@ public abstract class PhysicsBase {
 
     private EnemyAttack getCollidingEnemyAttack(MovingObject object, MapBase map) {
         for (EnemyAttack attack: map.enemyAttackQueue) {
-            if (!attack.isDead() && object.mapCollisionBounds.overlaps(attack.takeDamageBounds)) {
+            if (!attack.isDead() && object.takeDamageBounds.overlaps(attack.getDealDamageBounds())) {
                 // Here we get the enemy attack that is doing damage to the player
                 return attack;
             }

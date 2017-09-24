@@ -47,7 +47,7 @@ public class NightmareVirusBullet extends EnemyAttack {
     public void onInitialise() {
         super.onInitialise();
         sounds.playAttack();
-        mapCollisionBounds.setSize(0.2f, 0.2f);
+        setDealDamageBoundsSize(0.2f, 0.2f);
     }
 
     @Override
