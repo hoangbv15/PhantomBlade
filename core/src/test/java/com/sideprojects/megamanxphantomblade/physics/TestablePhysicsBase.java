@@ -1,4 +1,4 @@
-package com.sideprojects.megamanxphantomblade.physics.mocks;
+package com.sideprojects.megamanxphantomblade.physics;
 
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
