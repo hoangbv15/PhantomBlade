@@ -12,4 +12,5 @@ eclipse.project {
 
 dependencies {
     compile 'junit:junit:4.12'
+    compile "org.mockito:mockito-core:2.+"
 }

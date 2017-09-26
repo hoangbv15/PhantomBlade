@@ -14,8 +14,8 @@ public class Particles {
     protected Queue<Particle> particleQueue;
 
     public Particles(int initialSize) {
-        particleQueue = new Queue<Particle>(initialSize);
-        animationCache = new LRUCache<ParticleKey, Animation<TextureRegion>>(initialSize);
+        particleQueue = new Queue<>(initialSize);
+        animationCache = new LRUCache<>(initialSize);
     }
 
     /**
@@ -40,10 +40,8 @@ public class Particles {
                 p.pos.y = y;
 
                 // TODO: Hack to loop the middle frames of wall sliding animation
-                if (type == Particle.ParticleType.WALLSLIDE) {
-                    if (p.currentFrameIndex() == 4) {
-                        p.setToFrameIndex(1);
-                    }
+                if (type == Particle.ParticleType.WALLSLIDE && p.currentFrameIndex() == 4) {
+                    p.setToFrameIndex(1);
                 }
             } else {
                 Particle p = new Particle(type, x, y, direction, animation);
@@ -57,13 +55,13 @@ public class Particles {
         Animation<TextureRegion> animation = null;
         switch (key.type) {
             case DASH:
-                animation = AnimationLoader.load(Sprites.DashDust, null, flipped, 0.05f);
+                animation = AnimationLoader.load(Sprites.DASH_DUST, null, flipped, 0.05f);
                 break;
             case WALLKICK:
-                animation = AnimationLoader.load(Sprites.WallKick, null, flipped, 0.05f);
+                animation = AnimationLoader.load(Sprites.WALL_KICK, null, flipped, 0.05f);
                 break;
             case WALLSLIDE:
-                animation = AnimationLoader.load(Sprites.Wallslide, null, flipped, 0.05f);
+                animation = AnimationLoader.load(Sprites.WALLSLIDE, null, flipped, 0.05f);
                 break;
         }
         if (animation != null) {

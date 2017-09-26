@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyAnimationBase;
+import com.sideprojects.megamanxphantomblade.enemies.EnemyAttack;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.enemies.ExplodeFragment;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
@@ -91,6 +92,7 @@ public class WorldRenderer implements Disposable {
         batch.begin();
         renderEnemies(delta);
         playerRenderer.render(pos.x, pos.y, delta);
+        renderEnemyAttack();
         renderPlayerAttack();
         renderParticles();
         renderGui(delta);
@@ -140,9 +142,9 @@ public class WorldRenderer implements Disposable {
                 }
             }
 
-            if (enemy.auxiliaryFrames != null) {
-                for (Object key : enemy.auxiliaryFrames.keySet()) {
-                    TextureRegion frame = (TextureRegion)enemy.auxiliaryFrames.get(key);
+            if (enemy.getAuxiliaryFrames() != null) {
+                for (Object key : enemy.getAuxiliaryFrames().keySet()) {
+                    TextureRegion frame = (TextureRegion)enemy.getAuxiliaryFrames().get(key);
                     Vector2 padding = enemy.getAuxiliaryAnimationPadding((EnemyAnimationBase.Type) key, delta);
                     float x = pos.x + padding.x;
                     float y = pos.y + padding.y;
@@ -154,14 +156,22 @@ public class WorldRenderer implements Disposable {
         }
     }
 
-
     private void renderPlayerAttack() {
-        for (PlayerAttack attack: map.playerAttackList) {
+        for (PlayerAttack attack: map.playerAttackQueue) {
             Vector2 pos = applyCameraLerp(attack.pos);
             if (attack.muzzleFrame != null) {
                 Vector2 muzzlePos = applyCameraLerp(attack.muzzlePos);
                 batch.draw(attack.muzzleFrame, muzzlePos.x, muzzlePos.y);
             }
+            if (attack.currentFrame != null) {
+                batch.draw(attack.currentFrame, pos.x, pos.y);
+            }
+        }
+    }
+
+    private void renderEnemyAttack() {
+        for (EnemyAttack attack: map.enemyAttackQueue) {
+            Vector2 pos = applyCameraLerp(attack.pos);
             if (attack.currentFrame != null) {
                 batch.draw(attack.currentFrame, pos.x, pos.y);
             }

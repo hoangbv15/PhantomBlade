@@ -1,3 +1,6 @@
+Copyright 2016 Hoang Vu Bui
+This program is distributed under the terms of the GNU General Public License
+
 # Megaman X Phantom Blade #
 
 The aim of this project is to create the best 32 bit style Megaman X fan game possible.

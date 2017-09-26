@@ -17,6 +17,7 @@ public abstract class Physics extends PhysicsBase {
 
     @Override
     public void internalUpdate(MovingObject object, float delta, MapBase map) {
+        // Process the player input here
         inputProcessing(object, delta, map);
 
         // Check for collisions
@@ -26,43 +27,48 @@ public abstract class Physics extends PhysicsBase {
     }
 
     private CollisionList calculateReaction(MovingObject object, float delta, MapBase map) {
-        // Process the player input here
-        CollisionList collisionList = getMapCollision(object, delta, map);
-        collisions = collisionList;
-        // Apply collision-specific movement logic
-        // Take current state into account if needed
-        for (Collision collision: collisionList.toList) {
-            Vector2 preCollide = collision.getPostCollidePos();
-            switch (collision.side) {
-                case LeftSlippery:
-                case RightSlippery:
-                case Left:
-                case Right:
-                    object.vel.x = 0;
-                    object.mapCollisionBounds.x = preCollide.x;
-                    break;
-                case UpRamp:
-                case Up:
-                    object.grounded = true;
-                case Down:
-                    object.vel.y = 0;
-                    object.mapCollisionBounds.y = preCollide.y;
-                    break;
+        CollisionList collisionList = CollisionList.Empty;
+
+        if (object.isStoppedByWalls()) {
+            collisionList = getMapCollision(object, delta, map);
+            collisions = collisionList;
+            // Apply collision-specific movement logic
+            // Take current state into account if needed
+            for (Collision collision : collisionList.toList) {
+                Vector2 preCollide = collision.getPostCollidePos();
+                switch (collision.side) {
+                    case LeftSlippery:
+                    case RightSlippery:
+                    case Left:
+                    case Right:
+                        object.vel.x = 0;
+                        object.mapCollisionBounds.x = preCollide.x;
+                        break;
+                    case UpRamp:
+                    case Up:
+                        object.grounded = true;
+                    case Down:
+                        object.vel.y = 0;
+                        object.mapCollisionBounds.y = preCollide.y;
+                        break;
+                }
             }
         }
 
-        object.mapCollisionBounds.x += object.vel.x * delta;
-        object.mapCollisionBounds.y += object.vel.y * delta;
-        object.updatePos();
+        object.updatePos(
+                object.mapCollisionBounds.x + object.vel.x * delta,
+                object.mapCollisionBounds.y + object.vel.y * delta);
 
         return collisionList;
     }
 
     public void applyGravity(MovingObject object, float gravity, float maxFallspeed, float delta) {
-        if (object.vel.y > maxFallspeed) {
-            object.vel.y -= gravity * delta;
-        } else {
-            object.vel.y = maxFallspeed;
+        if (object.isAffectedByGravity()) {
+            if (object.vel.y > maxFallspeed) {
+                object.vel.y -= gravity * delta;
+            } else {
+                object.vel.y = maxFallspeed;
+            }
         }
     }
 

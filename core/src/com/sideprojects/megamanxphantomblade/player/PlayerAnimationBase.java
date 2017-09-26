@@ -53,7 +53,7 @@ public abstract class PlayerAnimationBase {
     private AnimationCache<AnimationKey> animationCache;
 
     public PlayerAnimationBase() {
-        animationCache = new AnimationCache<AnimationKey>();
+        animationCache = new AnimationCache<>();
     }
 
     public Animation<TextureRegion> get(Type type, int direction, boolean lowHealth, boolean isAttacking, Damage.Type attackType, boolean isFirstAttackFrame, boolean changeStateDuringAttack) {
@@ -75,7 +75,7 @@ public abstract class PlayerAnimationBase {
     }
 
     public Animation<TextureRegion> get(Type type, int direction) {
-        return get(type, direction, false, false, Damage.Type.Light, false, false);
+        return get(type, direction, false, false, Damage.Type.LIGHT, false, false);
     }
 
     public Animation<TextureRegion> retrieveFromCache(Type type, int direction, String texture, List<Integer> animationIndex, float frameDuration) {

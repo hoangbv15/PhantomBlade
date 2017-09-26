@@ -2,10 +2,9 @@ package com.sideprojects.megamanxphantomblade.enemies.types.mettool;
 
 import com.sideprojects.megamanxphantomblade.enemies.EnemySound;
 import com.sideprojects.megamanxphantomblade.sound.SoundPlayerBase;
-import com.sideprojects.megamanxphantomblade.sound.Sounds;
 
 /**
- * Created by buivuhoang on 08/04/17.
+ * Created by buivuhoang on 20/09/17.
  */
 public class MettoolSound extends EnemySound {
     public MettoolSound(SoundPlayerBase soundPlayer) {
@@ -13,7 +12,7 @@ public class MettoolSound extends EnemySound {
     }
 
     @Override
-    public void playDie(float delta) {
-        soundPlayer.playInParallel(Sounds.EnvironmentEnemyExplode);
+    public void playAttack() {
+        // TODO: Implement METTOOL's attack
     }
 }

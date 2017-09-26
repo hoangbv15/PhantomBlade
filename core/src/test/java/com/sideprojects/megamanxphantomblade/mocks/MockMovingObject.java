@@ -1,4 +1,4 @@
-package com.sideprojects.megamanxphantomblade.physics.mocks;
+package com.sideprojects.megamanxphantomblade.mocks;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;

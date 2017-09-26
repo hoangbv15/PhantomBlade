@@ -2,6 +2,7 @@ package com.sideprojects.megamanxphantomblade;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.sideprojects.megamanxphantomblade.math.VectorCache;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay;
 
 /**
@@ -27,6 +28,7 @@ public abstract class MovingObject {
     public Vector2 vel;
     public Rectangle mapCollisionBounds = new Rectangle();
     public Rectangle takeDamageBounds = new Rectangle();
+    private Rectangle dealDamageBounds = new Rectangle();
 
     public float stateTime;
 
@@ -48,15 +50,25 @@ public abstract class MovingObject {
         return true;
     }
 
-    public void updatePos() {
+    public void updatePos(float x, float y) {
+        mapCollisionBounds.x = x;
+        mapCollisionBounds.y = y;
         pos.x = mapCollisionBounds.x;
         pos.y = mapCollisionBounds.y;
-        takeDamageBounds.x = mapCollisionBounds.x;
-        takeDamageBounds.y = mapCollisionBounds.y;
+        Vector2 collisionBoundsOffset = getCollisionBoundsOffset();
+        takeDamageBounds.x = mapCollisionBounds.x + collisionBoundsOffset.x;
+        takeDamageBounds.y = mapCollisionBounds.y + collisionBoundsOffset.y;
+        dealDamageBounds.x = mapCollisionBounds.x + collisionBoundsOffset.x;
+        dealDamageBounds.y = mapCollisionBounds.y + collisionBoundsOffset.y;
     }
 
     public int movingDirection() {
-        return vel.x > 0 ? MovingObject.RIGHT : vel.x == 0 ? direction : MovingObject.LEFT;
+        if (vel.x > 0) {
+            return MovingObject.RIGHT;
+        } else if (vel.x == 0) {
+            return direction;
+        }
+        return MovingObject.LEFT;
     }
 
     public void die() {
@@ -65,6 +77,24 @@ public abstract class MovingObject {
 
     public boolean isDead() {
         return healthPoints <= 0;
+    }
+
+    public boolean isAffectedByGravity() {
+        return true;
+    }
+
+    public boolean isStoppedByWalls() {
+        return true;
+    }
+
+    protected Vector2 getCollisionBoundsOffset() { return VectorCache.get(0f, 0f); }
+
+    public Rectangle getDealDamageBounds() {
+        return dealDamageBounds;
+    }
+
+    protected void setDealDamageBoundsSize(float width, float height) {
+        dealDamageBounds.setSize(width, height);
     }
 
     public void resetCollisionDetectionRays() {

@@ -98,7 +98,7 @@ public class RectangleTile extends TileBase {
 
         // Put non-null ones in an array, then sort by distance to start
         // A line can only have at most 2 intersections with a rectangle
-        List<Collision> collisionList = new ArrayList<Collision>(2);
+        List<Collision> collisionList = new ArrayList<>(2);
 
         // Find intersection on each side of the tile
         if (shouldThereBeCollisionWithSideTile(this, tileLeft)) {

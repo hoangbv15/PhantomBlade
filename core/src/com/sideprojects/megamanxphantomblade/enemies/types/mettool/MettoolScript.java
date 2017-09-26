@@ -13,7 +13,8 @@ public class MettoolScript extends EnemyScript<Mettool.State> {
     private static float velocity = 1;
     private static float jumpVelocity = 5;
     private static float walkTime = 2;
-    private static float waitTime = 1;
+    private static float waitTimeBuckledUp = 1;
+    private static float waitTimeUnbuckle = 0.4f;
     private static float waitTimeBeforeJump = 0.4f;
     private boolean isStupidAi;
 
@@ -37,36 +38,42 @@ public class MettoolScript extends EnemyScript<Mettool.State> {
     }
 
     private void stupidAi() {
-        setEnemyState(Mettool.State.Walk);
+        setEnemyState(Mettool.State.WALK);
         moveTillEdge(MovingObject.LEFT, velocity, walkTime);
         int rand = MathUtils.random(2);
         if (rand == 0) {
-            setEnemyStateIfAtEdge(Mettool.State.Jump);
+            setEnemyStateIfAtEdge(Mettool.State.JUMP);
             jumpIfAtEdge(velocity, jumpVelocity, waitTimeBeforeJump);
         } else if (rand == 1) {
             setCanTakeDamage(false);
-            setEnemyState(Mettool.State.BuckledUp);
-            wait(waitTime);
+            setEnemyState(Mettool.State.BUCKLED_UP);
+            wait(waitTimeBuckledUp);
             setCanTakeDamage(true);
+            setEnemyState(Mettool.State.UNBUCKLE);
+            wait(waitTimeUnbuckle);
         }
-        setEnemyState(Mettool.State.Walk);
+        setEnemyState(Mettool.State.WALK);
         moveTillEdge(MovingObject.RIGHT, velocity, walkTime);
-        setEnemyStateIfAtEdge(Mettool.State.Jump);
+        setEnemyStateIfAtEdge(Mettool.State.JUMP);
         jumpIfAtEdge(velocity, jumpVelocity, waitTimeBeforeJump);
         setCanTakeDamage(false);
-        setEnemyState(Mettool.State.BuckledUp);
-        wait(waitTime);
+        setEnemyState(Mettool.State.BUCKLED_UP);
+        wait(waitTimeBuckledUp);
         setCanTakeDamage(true);
+        setEnemyState(Mettool.State.UNBUCKLE);
+        wait(waitTimeUnbuckle);
     }
 
     private void annoyingAi() {
-        setEnemyState(Mettool.State.Walk);
-        moveTowardsPlayer(velocity, 5);
-        setEnemyStateIfAtEdge(Mettool.State.Jump);
+        setEnemyState(Mettool.State.WALK);
+        walkTowardsPlayer(velocity, 5);
+        setEnemyStateIfAtEdge(Mettool.State.JUMP);
         jumpIfAtEdge(velocity, jumpVelocity, waitTimeBeforeJump);
         setCanTakeDamage(false);
-        setEnemyState(Mettool.State.BuckledUp);
-        wait(waitTime);
+        setEnemyState(Mettool.State.BUCKLED_UP);
+        wait(waitTimeBuckledUp);
         setCanTakeDamage(true);
+        setEnemyState(Mettool.State.UNBUCKLE);
+        wait(waitTimeUnbuckle);
     }
 }

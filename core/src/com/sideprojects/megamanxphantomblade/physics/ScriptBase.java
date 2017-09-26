@@ -3,8 +3,8 @@ package com.sideprojects.megamanxphantomblade.physics;
 import com.badlogic.gdx.utils.Queue;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.physics.actions.JumpIfAtEdge;
-import com.sideprojects.megamanxphantomblade.physics.actions.Move;
-import com.sideprojects.megamanxphantomblade.physics.actions.MoveTillEdge;
+import com.sideprojects.megamanxphantomblade.physics.actions.Walk;
+import com.sideprojects.megamanxphantomblade.physics.actions.WalkTillEdge;
 import com.sideprojects.megamanxphantomblade.physics.actions.Wait;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
@@ -21,7 +21,7 @@ public abstract class ScriptBase extends Physics {
     public ScriptBase(MovingObject object) {
         super();
         this.object = object;
-        actionQueue = new Queue<ActionBase>();
+        actionQueue = new Queue<>();
     }
 
     /**
@@ -34,11 +34,11 @@ public abstract class ScriptBase extends Physics {
     }
 
     protected final void move(int direction, float speed, float time) {
-        addToQueue(new Move(object, direction, speed, time));
+        addToQueue(new Walk(object, direction, speed, time));
     }
 
     protected final void moveTillEdge(int direction, float speed, float time) {
-        addToQueue(new MoveTillEdge(object, direction, speed, time));
+        addToQueue(new WalkTillEdge(object, direction, speed, time));
     }
 
     protected final void jumpIfAtEdge(float velX, float velY, float waitTimeBeforeJump) {

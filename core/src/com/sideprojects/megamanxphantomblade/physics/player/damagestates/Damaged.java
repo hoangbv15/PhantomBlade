@@ -18,11 +18,11 @@ public class Damaged extends PlayerDamageState {
         super(player);
         stunTime = player.animations.get(PlayerAnimationBase.Type.DamagedNormal).getAnimationDuration();
         // Reduce player's health here
-        switch (damage.type) {
-            case Heavy:
-            case Normal:
-            case Light:
-            case InstantDeath:
+        switch (damage.getType()) {
+            case HEAVY:
+            case NORMAL:
+            case LIGHT:
+            case INSTANT_DEATH:
                 player.takeDamage(damage);
                 player.isAttacking = false;
                 player.firstFramesOfAttacking = false;
@@ -32,7 +32,7 @@ public class Damaged extends PlayerDamageState {
                     if (player.canIssueLowHealthWarning && player.isLowHealth()) {
                         physics.playerSound.lowHealthWarning();
                     }
-                    if (damage.side == Damage.Side.Left) {
+                    if (damage.getSide() == Damage.Side.LEFT) {
                         player.direction = MovingObject.LEFT;
                         physics.pushBack(MovingObject.RIGHT);
                     } else {

@@ -6,13 +6,13 @@ import com.badlogic.gdx.Input;
  * Created by buivuhoang on 19/02/17.
  */
 public class KeyMap {
-    public int left;
-    public int right;
-    public int up;
-    public int jump;
-    public int dash;
-    public int attack;
-    public int reset;
+    public final int left;
+    public final int right;
+    public final int up;
+    public final int jump;
+    public final int dash;
+    public final int attack;
+    public final int reset;
 
     public KeyMap() {
         left = Input.Keys.LEFT;

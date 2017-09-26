@@ -39,3 +39,7 @@ after_script:
   - git add .
   - git commit -m "Automated deploy script"
   - git push
+
+after_success:
+ - cd PhantomBlade
+ - ./gradlew sonarqube -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=hoangbv15-bitbucket -Dsonar.login=${SONAR_TOKEN}

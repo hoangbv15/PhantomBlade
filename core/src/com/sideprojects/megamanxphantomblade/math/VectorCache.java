@@ -16,11 +16,11 @@ import java.util.Map;
  */
 public class VectorCache {
 
-    private static Map<Float, Map<Float, Vector2>> vectorCache = new HashMap<Float, Map<Float, Vector2>>();
+    private static Map<Float, Map<Float, Vector2>> vectorCache = new HashMap<>();
 
     public static Vector2 get(float x, float y) {
         if (!vectorCache.containsKey(x)) {
-            vectorCache.put(x, new HashMap<Float, Vector2>());
+            vectorCache.put(x, new HashMap<>());
         }
         Map<Float, Vector2> innerCache = vectorCache.get(x);
         if (!innerCache.containsKey(y)) {
