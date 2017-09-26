@@ -1,4 +1,5 @@
 Copyright 2016 Hoang Vu Bui
+
 This program is distributed under the terms of the GNU General Public License
 
 # Megaman X Phantom Blade #
