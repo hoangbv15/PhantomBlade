@@ -154,15 +154,15 @@ public class XBuster extends PlayerAttack {
     private void createBounds(Vector2 pos) {
         switch(damage.getType()) {
             case HEAVY:
-                mapCollisionBounds.set(pos.x, pos.y, P(55), P(30));
+                mapCollisionBounds.set(pos.x, pos.y, P(55), P(1));
                 setDealDamageBoundsSize(P(55), P(30));
                 break;
             case NORMAL:
-                mapCollisionBounds.set(pos.x, pos.y, P(27), P(18));
+                mapCollisionBounds.set(pos.x, pos.y, P(27), P(1));
                 setDealDamageBoundsSize(P(27), P(18));
                 break;
             case LIGHT:
-                mapCollisionBounds.set(pos.x, pos.y, P(14), P(8));
+                mapCollisionBounds.set(pos.x, pos.y, P(14), P(1));
                 setDealDamageBoundsSize(P(14), P(8));
                 break;
         }
