@@ -1,4 +1,4 @@
-package com.sideprojects.megamanxphantomblade.physics.mocks;
+package com.sideprojects.megamanxphantomblade.mocks;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.rahul.libgdx.parallax.ParallaxBackground;
@@ -38,6 +38,14 @@ public class MockMap extends MapBase {
         if (x >= maxX || y >= maxY || x < 0 || y < 0) {
             throw new IllegalArgumentException(x + " and " + y + " are illegal dimensions");
         }
+    }
+
+    public void addEnemy(float x, float y) {
+        enemyList.add(new MockEnemy(x, y, this));
+    }
+
+    public void setEnemyCanTakeDamage(boolean canTakeDamage) {
+        enemyList.stream().forEach(enemyBase -> enemyBase.canTakeDamage = canTakeDamage);
     }
 
     @Override

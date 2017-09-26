@@ -2,9 +2,8 @@ package com.sideprojects.megamanxphantomblade.physics;
 
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionList;
-import com.sideprojects.megamanxphantomblade.physics.mocks.MockMap;
-import com.sideprojects.megamanxphantomblade.physics.mocks.MockMovingObject;
-import com.sideprojects.megamanxphantomblade.physics.mocks.TestablePhysicsBase;
+import com.sideprojects.megamanxphantomblade.mocks.MockMap;
+import com.sideprojects.megamanxphantomblade.mocks.MockMovingObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

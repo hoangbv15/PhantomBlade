@@ -2,7 +2,6 @@ package com.sideprojects.megamanxphantomblade.player.x;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.Damage;
 import com.sideprojects.megamanxphantomblade.MovingObject;
@@ -191,8 +190,12 @@ public class XBuster extends PlayerAttack {
                     explodePosPaddingY = noDamagePosPaddingY;
                     playerSound.playAttackNoDamage();
                 }
-                updatePos(pos.x + explodePosPaddingX, pos.y + explodePosPaddingY);
+                // Must not update anything other than rendering position here.
+                // Calling updatePos here could result in a wrong map collision detection
+                pos.x += explodePosPaddingX;
+                pos.y += explodePosPaddingY;
             }
+
             if (targetTookDamage) {
                 currentFrame = explodeAnimation.getKeyFrame(stateTime, false);
             } else {
