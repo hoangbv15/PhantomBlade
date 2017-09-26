@@ -20,9 +20,9 @@ import static org.mockito.Mockito.*;
  */
 public class XBusterTests {
     private XBuster attack;
-    private PlayerAnimationBase playerAnimationSpy;
     private PlayerSound soundSpy;
-    private Animation animationSpy;
+    private Animation noDamageAnimationSpy;
+    private Animation damageAnimationSpy;
 
     @Before
     public void init() {
@@ -30,29 +30,48 @@ public class XBusterTests {
         mockPlayer.mapCollisionBounds = new Rectangle();
         mockPlayer.state = PlayerState.Idle;
 
-        animationSpy = spy(mock(Animation.class));
+        noDamageAnimationSpy = mock(Animation.class);
+        damageAnimationSpy = mock(Animation.class);
 
-        this.playerAnimationSpy = spy(PlayerAnimationBase.class);
+        PlayerAnimationBase playerAnimationSpy = spy(PlayerAnimationBase.class);
         doAnswer(invocation -> mock(Animation.class)).when(playerAnimationSpy).retrieveFromCache(any(), anyInt(), any(), any(), anyFloat());
-        doAnswer(invocation -> animationSpy).when(playerAnimationSpy).retrieveFromCache(
+        doAnswer(invocation -> noDamageAnimationSpy).when(playerAnimationSpy).retrieveFromCache(
                 eq(PlayerAnimationBase.Type.BulletNoDamageExplode),
                 anyInt(), any(), any(), anyFloat());
-        soundSpy = spy(mock(PlayerSound.class));
-        soundSpy = spy(soundSpy);
+        soundSpy = mock(PlayerSound.class);
+        doAnswer(invocation -> damageAnimationSpy).when(playerAnimationSpy).retrieveFromCache(
+                eq(PlayerAnimationBase.Type.BulletHeavyExplode),
+                anyInt(), any(), any(), anyFloat());
+        soundSpy = mock(PlayerSound.class);
 
         attack = new XBuster(
                 mockPlayer,
-                new Damage(Damage.Type.NORMAL, Damage.Side.NONE, Difficulty.NORMAL),
+                new Damage(Damage.Type.HEAVY, Damage.Side.NONE, Difficulty.NORMAL),
                 MovingObject.NONEDIRECTION,
                 playerAnimationSpy,
                 soundSpy);
     }
 
     @Test
-    public void should_use_explode_animation_when_deals_damage() {
+    public void should_use_no_damage_animation_when_deals_no_damage() {
         attack.die(false);
         attack.update(1);
         verify(soundSpy).playAttackNoDamage();
-        verify(animationSpy).getKeyFrame(anyFloat(), anyBoolean());
+        verify(noDamageAnimationSpy).getKeyFrame(anyFloat(), anyBoolean());
+    }
+
+    @Test
+    public void should_use_damage_animation_when_deals_damage() {
+        attack.die(true);
+        attack.update(1);
+        verify(soundSpy).playBulletHit();
+        verify(damageAnimationSpy).getKeyFrame(anyFloat(), anyBoolean());
+    }
+
+    @Test
+    public void should_not_call_updatePos_when_exploding() {
+        XBuster spyWrapper = spy(attack);
+        spyWrapper.die(false);
+        verify(spyWrapper, never()).updatePos(anyFloat(), anyFloat());
     }
 }
