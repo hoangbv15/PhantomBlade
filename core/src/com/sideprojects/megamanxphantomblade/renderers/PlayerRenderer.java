@@ -2,7 +2,6 @@ package com.sideprojects.megamanxphantomblade.renderers;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Queue;
@@ -11,6 +10,7 @@ import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.player.PlayerAnimationBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.ChargeShader;
+import com.sideprojects.megamanxphantomblade.renderers.shaders.Shader;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.TraceShader;
 
 /**
@@ -20,9 +20,9 @@ public class PlayerRenderer implements Disposable {
     private PlayerBase player;
 
     private SpriteBatch batch;
-    private ShaderProgram traceShader;
-    private ShaderProgram damagedShader;
-    private ShaderProgram chargeShader;
+    private Shader traceShader;
+    private Shader damagedShader;
+    private Shader chargeShader;
 
     // Needed properties to offset the player position properly
     private float mapTileWidth;
@@ -59,12 +59,12 @@ public class PlayerRenderer implements Disposable {
     private float flickerStateTime = 0;
     private boolean previousDashTraceState;
 
-    public PlayerRenderer(PlayerBase player, float mapTileWidth, SpriteBatch batch, ShaderProgram damagedShader) {
+    public PlayerRenderer(PlayerBase player, float mapTileWidth, SpriteBatch batch, Shader damagedShader) {
         this.player = player;
         this.mapTileWidth = mapTileWidth;
         this.batch = batch;
 
-        traceShader = TraceShader.getShaderColor(player.getTraceColour());
+        traceShader = new TraceShader(player.getTraceColour());
         lastPlayerFrameQueue = new Queue<>(numOfTraces);
         lastPlayerPositionQueue = new Queue<>(numOfTraces);
         postDashFrameQueue = new Queue<>(numOfTraces);
@@ -77,7 +77,7 @@ public class PlayerRenderer implements Disposable {
         yUpDashRocketPadding = player.animations.get(PlayerAnimationBase.Type.Updashrocket).getKeyFrame(0).getRegionHeight();
 
         this.damagedShader = damagedShader;
-        chargeShader = ChargeShader.getShader();
+        chargeShader = new ChargeShader();
     }
 
     // Pass posX and posY in so we don't have to recalculate them
@@ -110,7 +110,7 @@ public class PlayerRenderer implements Disposable {
                 flickerStateTime = 0;
             }
             if (flickerStateTime <= damageFlickerDuration) {
-                batch.setShader(damagedShader);
+                damagedShader.apply(batch);
             }
         }
         // Only do charging shader if not currently being invincible
@@ -121,7 +121,7 @@ public class PlayerRenderer implements Disposable {
                 flickerStateTime = 0;
             }
             if (flickerStateTime <= chargeFlickerDuration) {
-                batch.setShader(chargeShader);
+                chargeShader.apply(batch);
             }
         }
         batch.draw(currentFrame, posX, posY);
@@ -180,7 +180,7 @@ public class PlayerRenderer implements Disposable {
             for (int i = 0; i < lastPlayerFrameQueue.size; i++) {
                 TextureRegion frame = lastPlayerFrameQueue.get(i);
                 Vector2 position = lastPlayerPositionQueue.get(i);
-                batch.setShader(traceShader);
+                traceShader.apply(batch);
                 batch.draw(frame, position.x, position.y);
             }
         } else {
@@ -231,7 +231,7 @@ public class PlayerRenderer implements Disposable {
             for (int i = 0; i < postDashFrameQueue.size; i++) {
                 TextureRegion frame = postDashFrameQueue.get(i);
                 Vector2 position = postDashPositionQueue.get(i);
-                batch.setShader(traceShader);
+                traceShader.apply(batch);
                 batch.draw(frame, position.x, position.y);
             }
         }
