@@ -21,6 +21,7 @@ import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.DamagedShader;
+import com.sideprojects.megamanxphantomblade.renderers.shaders.Shader;
 
 /**
  * Created by buivuhoang on 04/02/17.
@@ -33,7 +34,7 @@ public class WorldRenderer implements Disposable {
     private ParallaxBackground background;
     private SpriteBatch batch;
 
-    private ShaderProgram damagedShader;
+    private Shader damagedShader;
 
     private Vector3 lerpTarget;
 
@@ -56,7 +57,7 @@ public class WorldRenderer implements Disposable {
         gameCam = new OrthographicCamera(camViewPortY * 16 / 9f, camViewPortY);
         guiCam = new OrthographicCamera(16, 9);
         guiCam.zoom = 0.4f;
-        damagedShader = DamagedShader.getShader();
+        damagedShader = new DamagedShader();
         playerRenderer = new PlayerRenderer(map.player, map.getTileWidth(), batch, damagedShader);
         playerHealthRenderer = new PlayerHealthRenderer(batch);
         lerpTarget = new Vector3();
@@ -121,7 +122,7 @@ public class WorldRenderer implements Disposable {
             Vector2 pos = applyCameraLerp(enemy.pos);
             if (enemy.currentFrame != null) {
                 if (enemy.isTakingDamage) {
-                    batch.setShader(damagedShader);
+                    damagedShader.apply(batch);
                 }
                 Vector2 padding = enemy.animationPadding;
                 batch.draw(enemy.currentFrame, pos.x + padding.x, pos.y + padding.y);
