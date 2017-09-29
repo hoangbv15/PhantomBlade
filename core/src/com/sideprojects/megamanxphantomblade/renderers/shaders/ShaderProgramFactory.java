@@ -14,12 +14,10 @@ class ShaderProgramFactory {
 
         if (!shader.isCompiled()) {
             System.err.println(shader.getLog());
-            System.exit(0);
-        }
-
-        if (shader.getLog().length()!=0){
+        } else if (shader.getLog().length()!=0){
             System.out.println(shader.getLog());
         }
+
         return shader;
     }
 }
