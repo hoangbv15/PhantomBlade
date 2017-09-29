@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Queue;
 import com.sideprojects.megamanxphantomblade.MovingObject;
+import com.sideprojects.megamanxphantomblade.logging.Logger;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerState;
 import com.sideprojects.megamanxphantomblade.player.PlayerAnimationBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
@@ -59,12 +60,12 @@ public class PlayerRenderer implements Disposable {
     private float flickerStateTime = 0;
     private boolean previousDashTraceState;
 
-    public PlayerRenderer(PlayerBase player, float mapTileWidth, SpriteBatch batch, Shader damagedShader) {
+    public PlayerRenderer(Logger logger, PlayerBase player, float mapTileWidth, SpriteBatch batch, Shader damagedShader) {
         this.player = player;
         this.mapTileWidth = mapTileWidth;
         this.batch = batch;
 
-        traceShader = new TraceShader(player.getTraceColour());
+        traceShader = new TraceShader(logger, player.getTraceColour());
         lastPlayerFrameQueue = new Queue<>(numOfTraces);
         lastPlayerPositionQueue = new Queue<>(numOfTraces);
         postDashFrameQueue = new Queue<>(numOfTraces);
@@ -77,7 +78,7 @@ public class PlayerRenderer implements Disposable {
         yUpDashRocketPadding = player.animations.get(PlayerAnimationBase.Type.Updashrocket).getKeyFrame(0).getRegionHeight();
 
         this.damagedShader = damagedShader;
-        chargeShader = new ChargeShader();
+        chargeShader = new ChargeShader(logger);
     }
 
     // Pass posX and posY in so we don't have to recalculate them

@@ -16,6 +16,7 @@ import com.sideprojects.megamanxphantomblade.enemies.EnemyAnimationBase;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyAttack;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.enemies.ExplodeFragment;
+import com.sideprojects.megamanxphantomblade.logging.Logger;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
@@ -49,15 +50,15 @@ public class WorldRenderer implements Disposable {
 
     private MapRenderer mapRenderer;
 
-    public WorldRenderer(MapBase map) {
+    public WorldRenderer(Logger logger, MapBase map) {
         this.map = map;
         background = map.getBackground();
         batch = new SpriteBatch(5460);
         gameCam = new OrthographicCamera(camViewPortY * 16 / 9f, camViewPortY);
         guiCam = new OrthographicCamera(16, 9);
         guiCam.zoom = 0.4f;
-        damagedShader = new DamagedShader();
-        playerRenderer = new PlayerRenderer(map.player, map.getTileWidth(), batch, damagedShader);
+        damagedShader = new DamagedShader(logger);
+        playerRenderer = new PlayerRenderer(logger, map.player, map.getTileWidth(), batch, damagedShader);
         playerHealthRenderer = new PlayerHealthRenderer(batch);
         lerpTarget = new Vector3();
         playerYOffset = 1/5f * map.getTileHeight();

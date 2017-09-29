@@ -1,5 +1,6 @@
 package com.sideprojects.megamanxphantomblade.renderers.shaders;
 
+import com.sideprojects.megamanxphantomblade.logging.Logger;
 import com.sideprojects.megamanxphantomblade.player.TraceColour;
 
 /**
@@ -7,11 +8,10 @@ import com.sideprojects.megamanxphantomblade.player.TraceColour;
  */
 public class TraceShader extends Shader {
     private final TraceColour colour;
-    public TraceShader(TraceColour colour) {
-        super(ShaderProgramFactory.createFromFile(
-                Shaders.VERT_COLOUR,
+    public TraceShader(Logger logger, TraceColour colour) {
+        super(logger, Shaders.VERT_COLOUR,
                 Shaders.FRAG_PASSTHROUGH
-        ));
+        );
         this.colour = colour;
     }
 

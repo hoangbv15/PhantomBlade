@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.sideprojects.megamanxphantomblade.input.PlayerInputProcessor;
+import com.sideprojects.megamanxphantomblade.logging.TraceLogger;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.map.maps.IntroStage;
 import com.sideprojects.megamanxphantomblade.physics.player.x.PlayerXPhysicsFactory;
@@ -36,7 +37,7 @@ public class PhantomBladeGame extends ApplicationAdapter {
 		playerSounds = new PlayerXSound(sound);
 		playerSounds.preload();
 		map = new IntroStage(new PlayerXFactory(), new PlayerXPhysicsFactory(new PlayerInputProcessor(keyMap), playerSounds), sound, Difficulty.NORMAL);
-		mapRenderer = new WorldRenderer(map);
+		mapRenderer = new WorldRenderer(new TraceLogger(), map);
 		debugRenderer = new DebugRenderer(mapRenderer);
 		shapeRenderer = new ShapeRenderer();
 		shapeRenderer.setAutoShapeType(true);
