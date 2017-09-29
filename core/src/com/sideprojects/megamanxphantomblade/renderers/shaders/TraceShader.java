@@ -17,6 +17,6 @@ public class TraceShader extends Shader {
 
     @Override
     public void setGpuVariables() {
-        shader.setUniformf("custom_color", colour.r, colour.g, colour.b, 0.3f);
+        shaderProgram.setUniformf("custom_color", colour.r, colour.g, colour.b, 0.3f);
     }
 }

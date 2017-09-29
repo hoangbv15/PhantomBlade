@@ -12,6 +12,6 @@ public class ChargeShader extends Shader {
 
     @Override
     protected void setGpuVariables() {
-        shader.setUniformf("intensity", 0.2f);
+        shaderProgram.setUniformf("intensity", 0.2f);
     }
 }

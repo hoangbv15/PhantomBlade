@@ -14,4 +14,6 @@ public class Shaders {
     // Vert shaders
     public static final String VERT_COLOUR = "colour.vert";
     public static final String VERT_PASSTHROUGH = "passthrough.vert";
+
+    private Shaders() {}
 }

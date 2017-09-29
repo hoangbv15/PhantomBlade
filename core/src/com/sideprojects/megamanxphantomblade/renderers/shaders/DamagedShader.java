@@ -12,6 +12,6 @@ public class DamagedShader extends Shader {
 
     @Override
     protected void setGpuVariables() {
-        shader.setUniformf("intensity", 0.5f);
+        shaderProgram.setUniformf("intensity", 0.5f);
     }
 }

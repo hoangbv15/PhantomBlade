@@ -113,7 +113,7 @@ public class PlayerRenderer implements Disposable {
                 damagedShader.apply(batch);
             }
         }
-        // Only do charging shader if not currently being invincible
+        // Only do charging shaderProgram if not currently being invincible
         // TODO: Find a way to modify the texture color to do different weapon charges
         if (!player.invincible && player.isCharging) {
             flickerStateTime += delta;

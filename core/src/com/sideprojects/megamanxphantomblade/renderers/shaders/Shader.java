@@ -8,14 +8,14 @@ import com.badlogic.gdx.utils.Disposable;
  * Created by buivuhoang on 28/09/17.
  */
 public abstract class Shader implements Disposable {
-    protected ShaderProgram shader;
+    protected ShaderProgram shaderProgram;
 
     protected Shader(ShaderProgram shader) {
-        this.shader = shader;
+        this.shaderProgram = shader;
     }
 
     public void apply(SpriteBatch batch) {
-        batch.setShader(shader);
+        batch.setShader(shaderProgram);
         setGpuVariables();
     }
 
@@ -23,6 +23,6 @@ public abstract class Shader implements Disposable {
 
     @Override
     public void dispose() {
-        shader.dispose();
+        shaderProgram.dispose();
     }
 }
