@@ -5,6 +5,7 @@ package com.sideprojects.megamanxphantomblade.animation;
  */
 public class Sprites {
     // X
+    public static final String X_PALETTES = "sprites/x/palettes.png";
     public static final String X_IDLE = "sprites/x/idle.txt";
     public static final String X_RUN = "sprites/x/run.txt";
     public static final String X_JUMP = "sprites/x/jump.txt";

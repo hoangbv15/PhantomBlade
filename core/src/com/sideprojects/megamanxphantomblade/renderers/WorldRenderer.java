@@ -21,6 +21,7 @@ import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.DamagedShader;
+import com.sideprojects.megamanxphantomblade.renderers.shaders.PaletteSwapShader;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.Shader;
 
 /**
@@ -57,7 +58,7 @@ public class WorldRenderer implements Disposable {
         gameCam = new OrthographicCamera(camViewPortY * 16 / 9f, camViewPortY);
         guiCam = new OrthographicCamera(16, 9);
         guiCam.zoom = 0.4f;
-        damagedShader = new DamagedShader(logger);
+        damagedShader = new PaletteSwapShader(logger);
         playerRenderer = new PlayerRenderer(logger, map.player, map.getTileWidth(), batch, damagedShader);
         playerHealthRenderer = new PlayerHealthRenderer(batch);
         lerpTarget = new Vector3();

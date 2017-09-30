@@ -125,7 +125,10 @@ public class PlayerRenderer implements Disposable {
                 chargeShader.apply(batch);
             }
         }
+        //REMOVE THIS
+        damagedShader.apply(batch);
         batch.draw(currentFrame, posX, posY);
+        batch.setShader(null);
         if (player.invincible || player.isCharging) {
             batch.setShader(null);
         }

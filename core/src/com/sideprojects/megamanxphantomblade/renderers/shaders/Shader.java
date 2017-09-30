@@ -10,9 +10,9 @@ import com.sideprojects.megamanxphantomblade.logging.Logger;
  * Created by buivuhoang on 28/09/17.
  */
 public abstract class Shader implements Disposable {
-    protected ShaderProgram shaderProgram;
+    ShaderProgram shaderProgram;
 
-    protected Shader(Logger logger, String vertFileName, String fragFileName) {
+    Shader(Logger logger, String vertFileName, String fragFileName) {
         shaderProgram = new ShaderProgram(
                 Gdx.files.internal(Shaders.VERT_SHADERS_PATH + vertFileName),
                 Gdx.files.internal(Shaders.FRAG_SHADERS_PATH + fragFileName));

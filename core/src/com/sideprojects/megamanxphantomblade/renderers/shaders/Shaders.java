@@ -8,12 +8,13 @@ public class Shaders {
     protected static final String VERT_SHADERS_PATH = "shaders/vert/";
 
     // Frag shaders
-    public static final String FRAG_BRIGHTEN = "brighten.frag";
     public static final String FRAG_PASSTHROUGH = "passthrough.frag";
+    public static final String FRAG_PALETTESWAP = "paletteswap.frag";
+    public static final String FRAG_BRIGHTEN = "brighten.frag";
 
     // Vert shaders
-    public static final String VERT_COLOUR = "colour.vert";
     public static final String VERT_PASSTHROUGH = "passthrough.vert";
+    public static final String VERT_COLOUR = "colour.vert";
 
     private Shaders() {}
 }
