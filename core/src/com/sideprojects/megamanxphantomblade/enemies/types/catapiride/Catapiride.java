@@ -1,4 +1,4 @@
-package com.sideprojects.megamanxphantomblade.enemies.types.nightmarevirus;
+package com.sideprojects.megamanxphantomblade.enemies.types.catapiride;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -13,29 +13,31 @@ import com.sideprojects.megamanxphantomblade.sound.SoundPlayer;
 import java.util.EnumMap;
 
 /**
- * Created by buivuhoang on 17/09/17.
+ * Created by buivuhoang on 30/09/17.
  */
-public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
-
-    public NightmareVirus(float x, float y, MapBase map, SoundPlayer soundPlayer, int difficulty) {
+public class Catapiride extends EnemyBase<Catapiride.State> {
+    public Catapiride(float x, float y, MapBase map, SoundPlayer soundPlayer, int difficulty) {
         super(x, y, map);
         mapCollisionBounds.setPosition(x, y);
         mapCollisionBounds.setSize(0.4f, 0.4f);
-        takeDamageBounds.setSize(0.4f, 0.5f);
         takeDamageBounds.setPosition(x, y);
-        setDealDamageBoundsSize(0.4f, 0.5f);
         damage = new Damage(Damage.Type.NORMAL, Damage.Side.NONE, -difficulty);
-        animations = new NightmareVirusAnimation();
-        script = new NightmareVirusScript(this, map.player, map);
-        sounds = new NightmareVirusSound(soundPlayer);
-        state = State.IDLE;
+        script = new CatapirideScript(this, map.player);
+        animations = new CatapirideAnimation();
+        sounds = new CatapirideSound(soundPlayer);
+        state = State.WALK;
     }
 
     @Override
     protected Vector2 getCollisionBoundsOffset() {
-        return VectorCache.get(0.3f, 0.4f);
+        switch (state) {
+            case TURN:
+            case ROLL:
+                return VectorCache.get(0.2f, 0f);
+            default:
+                return VectorCache.get(0f, 0f);
+        }
     }
-
 
     @Override
     protected float deathExplosionTime() {
@@ -49,7 +51,20 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
 
     @Override
     protected void updateTakeDamageBounds() {
-        // No need to update anything here
+        switch (state) {
+            case TURN:
+                takeDamageBounds.setSize(0.2f, 0.4f);
+                setDealDamageBoundsSize(0.2f, 0.4f);
+                break;
+            case ROLL:
+                takeDamageBounds.setSize(0.2f, 0.4f);
+                setDealDamageBoundsSize(0.2f, 0.4f);
+                break;
+            default:
+                takeDamageBounds.setSize(0.4f, 0.4f);
+                setDealDamageBoundsSize(0.4f, 0.4f);
+                break;
+        }
     }
 
     @Override
@@ -59,20 +74,20 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
             type = EnemyAnimationBase.Type.DIE;
         } else {
             switch (state) {
-                case IDLE:
-                    type = EnemyAnimationBase.Type.IDLE;
+                case TURN:
+                    type = EnemyAnimationBase.Type.TURN;
                     break;
-                case FLY:
+                case CURL_UP:
+                    type = EnemyAnimationBase.Type.PREPARE_SHIELD;
+                    break;
+                case UN_CURL:
+                    type = EnemyAnimationBase.Type.STOP_SHIELD;
+                    break;
+                case WALK:
                     type = EnemyAnimationBase.Type.RUN;
                     break;
-                case PREPARE_TO_SHOOT:
-                    type = EnemyAnimationBase.Type.PREPARE_ATTACK;
-                    break;
-                case SHOOT:
-                    type = EnemyAnimationBase.Type.ATTACK;
-                    break;
-                case FINISH_SHOOTING:
-                    type = EnemyAnimationBase.Type.FINISH_ATTACK;
+                case ROLL:
+                    type = EnemyAnimationBase.Type.ROLL;
                     break;
                 case DIE:
                     type = EnemyAnimationBase.Type.DIE;
@@ -94,36 +109,20 @@ public class NightmareVirus extends EnemyBase<NightmareVirus.State> {
 
     @Override
     public Vector2 getAuxiliaryAnimationPadding(EnemyAnimationBase.Type type, float delta) {
-        if (type == EnemyAnimationBase.Type.DIE) {
-            if (direction == LEFT) {
-                return VectorCache.get(-5, 10);
-            }
-            return VectorCache.get(5, 10);
-        }
-        return VectorCache.get(0, 0);
+        return VectorCache.get(-15f, -10f);
     }
 
     @Override
     public int getMaxHealthPoints() {
-        return 15;
-    }
-
-    @Override
-    public boolean isAffectedByGravity() {
-        return false;
-    }
-
-    @Override
-    public boolean isStoppedByWalls() {
-        return false;
+        return 20;
     }
 
     protected enum State {
-        IDLE,
-        FLY,
-        PREPARE_TO_SHOOT,
-        SHOOT,
-        FINISH_SHOOTING,
+        WALK,
+        TURN,
+        CURL_UP,
+        ROLL,
+        UN_CURL,
         DIE
     }
 }

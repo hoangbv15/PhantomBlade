@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="left-up" width="180" height="10" tilewidth="62" tileheight="62" nextobjectid="136">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="left-up" width="180" height="10" tilewidth="62" tileheight="62" nextobjectid="145">
  <tileset firstgid="1" name="ground-sheet" tilewidth="62" tileheight="62" tilecount="60" columns="10">
   <image source="ground.png" width="620" height="372"/>
   <tile id="41">
@@ -106,18 +106,6 @@
   <object id="37" name="MettoolSpawn" x="1227" y="118.5" width="64" height="63"/>
   <object id="38" name="MettoolSpawn" x="1266" y="115.5" width="64" height="63"/>
   <object id="39" name="MettoolSpawn" x="1298.5" y="115.5" width="64" height="63"/>
-  <object id="40" name="MettoolSpawn" x="2700" y="250.667" width="56" height="40.6667"/>
-  <object id="41" name="MettoolSpawn" x="2769" y="248.667" width="56" height="40.6667"/>
-  <object id="42" name="MettoolSpawn" x="2849" y="247.667" width="56" height="40.6667"/>
-  <object id="43" name="MettoolSpawn" x="2916" y="250.667" width="56" height="40.6667"/>
-  <object id="44" name="MettoolSpawn" x="2951" y="250.667" width="56" height="40.6667"/>
-  <object id="45" name="MettoolSpawn" x="3018" y="253.667" width="56" height="40.6667"/>
-  <object id="46" name="MettoolSpawn" x="3083" y="256.667" width="56" height="40.6667"/>
-  <object id="47" name="MettoolSpawn" x="3145" y="254.667" width="56" height="40.6667"/>
-  <object id="48" name="MettoolSpawn" x="3225" y="253.667" width="56" height="40.6667"/>
-  <object id="49" name="MettoolSpawn" x="3268" y="255.667" width="56" height="40.6667"/>
-  <object id="50" name="MettoolSpawn" x="3359" y="257.667" width="56" height="40.6667"/>
-  <object id="51" name="MettoolSpawn" x="3408" y="259.667" width="56" height="40.6667"/>
   <object id="52" name="MettoolSpawn" x="1566" y="86.667" width="56" height="40.6667"/>
   <object id="53" name="MettoolSpawn" x="1719" y="139.667" width="56" height="40.6667"/>
   <object id="54" name="MettoolSpawn" x="1788" y="179.667" width="56" height="40.6667"/>
@@ -197,6 +185,15 @@
   <object id="133" name="NightmareVirusSpawn" x="11037" y="130.5" width="58" height="51"/>
   <object id="134" name="NightmareVirusSpawn" x="11039" y="256.5" width="58" height="51"/>
   <object id="135" name="NightmareVirusSpawn" x="621" y="217.5" width="58" height="51"/>
+  <object id="136" name="CatapirideSpawn" x="2722" y="245.5" width="58" height="51"/>
+  <object id="137" name="CatapirideSpawn" x="2821" y="246.5" width="58" height="51"/>
+  <object id="138" name="CatapirideSpawn" x="2919" y="246.5" width="58" height="51"/>
+  <object id="139" name="CatapirideSpawn" x="3023" y="249.5" width="58" height="51"/>
+  <object id="140" name="CatapirideSpawn" x="3112" y="250.5" width="58" height="51"/>
+  <object id="141" name="CatapirideSpawn" x="3199" y="250.5" width="58" height="51"/>
+  <object id="142" name="CatapirideSpawn" x="3284" y="249.5" width="58" height="51"/>
+  <object id="143" name="CatapirideSpawn" x="716" y="201.5" width="58" height="51"/>
+  <object id="144" name="CatapirideSpawn" x="805" y="167.5" width="58" height="51"/>
  </objectgroup>
  <layer name="Map" width="180" height="10">
   <data encoding="base64">

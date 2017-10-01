@@ -13,6 +13,7 @@ import com.sideprojects.megamanxphantomblade.animation.Particle;
 import com.sideprojects.megamanxphantomblade.animation.Particles;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyAttack;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
+import com.sideprojects.megamanxphantomblade.enemies.types.catapiride.Catapiride;
 import com.sideprojects.megamanxphantomblade.enemies.types.mettool.Mettool;
 import com.sideprojects.megamanxphantomblade.enemies.types.nightmarevirus.NightmareVirus;
 import com.sideprojects.megamanxphantomblade.physics.TileBase;
@@ -33,24 +34,25 @@ import java.util.List;
  * Created by buivuhoang on 04/02/17.
  */
 public abstract class MapBase implements Disposable {
-    public static String TotalNumOfTiles = "Total";
-    public static String TileIndex = "Index";
-    public static String Orientation = "Orientation";
-    public static String BottomLeft = "BottomLeft";
-    public static String BottomRight = "BottomRight";
-    public static String TopLeft = "TopLeft";
-    public static String TopRight = "TopRight";
-    public static String TileType = "Type";
-    public static String SquareTriangle = "SquareTriangle";
+    public static final String TOTAL_NUM_OF_TILES = "Total";
+    public static final String TILE_INDEX = "Index";
+    public static final String ORIENTATION = "Orientation";
+    public static final String BOTTOM_LEFT = "BottomLeft";
+    public static final String BOTTOM_RIGHT = "BottomRight";
+    public static final String TOP_LEFT = "TopLeft";
+    public static final String TOP_RIGHT = "TopRight";
+    public static final String TILE_TYPE = "Type";
+    public static final String SQUARE_TRIANGLE = "SquareTriangle";
 
-    public static String HalfTileSize = "Half";
-    public static String TileSize = "Size";
+    public static final String HALF_TILE_SIZE = "Half";
+    public static final String TILE_SIZE = "Size";
 
-    public static String MapLayer = "Map";
-    public static String ObjectLayer = "Objects";
-    public static String XSpawn = "XSpawn";
-    public static String MettoolSpawn = "MettoolSpawn";
-    public static String NightmareVirusSpawn = "NightmareVirusSpawn";
+    public static final String MAP_LAYER = "Map";
+    public static final String OBJECT_LAYER = "Objects";
+    public static final String X_SPAWN = "XSpawn";
+    public static final String METTOOL_SPAWN = "MettoolSpawn";
+    public static final String NIGHTMARE_VIRUS_SPAWN = "NightmareVirusSpawn";
+    public static final String CATAPIRIDE_SPAWN = "CatapirideSpawn";
 
     public float GRAVITY = 15f;
     public float MAX_FALLSPEED = -8f;
@@ -112,26 +114,28 @@ public abstract class MapBase implements Disposable {
         if (tiledMap == null) {
             return;
         }
-        mapLayer = (TiledMapTileLayer)tiledMap.getLayers().get(MapLayer);
+        mapLayer = (TiledMapTileLayer)tiledMap.getLayers().get(MAP_LAYER);
         if (mapLayer == null) {
             return;
         }
         bounds = new TileBase[mapLayer.getWidth()][mapLayer.getHeight()];
 
         // Spawn player and enemies
-        MapObjects objects = tiledMap.getLayers().get(ObjectLayer).getObjects();
+        MapObjects objects = tiledMap.getLayers().get(OBJECT_LAYER).getObjects();
         for (int i = 0; i < objects.getCount(); i ++) {
             RectangleMapObject object = (RectangleMapObject)objects.get(i);
             float x = object.getRectangle().x / getTileWidth();
             float y = object.getRectangle().y / getTileHeight();
-            if (XSpawn.equals(object.getName())) {
+            if (X_SPAWN.equals(object.getName())) {
                 player = playerFactory.createPlayer(x, y, difficulty);
                 playerPhysics = playerPhysicsFactory.create(player);
             }
-            if (MettoolSpawn.equals(object.getName())) {
+            if (METTOOL_SPAWN.equals(object.getName())) {
                 enemyList.add(new Mettool(x, y, this, soundPlayer, difficulty));
-            } else if (NightmareVirusSpawn.equals(object.getName())) {
+            } else if (NIGHTMARE_VIRUS_SPAWN.equals(object.getName())) {
                 enemyList.add(new NightmareVirus(x, y, this, soundPlayer, difficulty));
+            } else if (CATAPIRIDE_SPAWN.equals(object.getName())) {
+                enemyList.add(new Catapiride(x, y, this, soundPlayer, difficulty));
             }
         }
 
@@ -141,21 +145,21 @@ public abstract class MapBase implements Disposable {
                 TiledMapTileLayer.Cell cell = mapLayer.getCell(x, y);
                 if (cell != null) {
                     MapProperties properties = cell.getTile().getProperties();
-                    if (properties.containsKey(TileSize) && HalfTileSize.equals(properties.get(TileSize, String.class))) {
+                    if (properties.containsKey(TILE_SIZE) && HALF_TILE_SIZE.equals(properties.get(TILE_SIZE, String.class))) {
                         bounds[x][y] = new RectangleTile(x, y, 1, 45/62f);
-                    } else if (properties.containsKey(TileType) && SquareTriangle.equals(properties.get(TileType, String.class))) {
-                        String orientation = properties.get(Orientation, String.class);
-                        int totalTiles = properties.get(TotalNumOfTiles, Integer.class);
-                        int tileIndex = properties.get(TileIndex, Integer.class);
+                    } else if (properties.containsKey(TILE_TYPE) && SQUARE_TRIANGLE.equals(properties.get(TILE_TYPE, String.class))) {
+                        String orientation = properties.get(ORIENTATION, String.class);
+                        int totalTiles = properties.get(TOTAL_NUM_OF_TILES, Integer.class);
+                        int tileIndex = properties.get(TILE_INDEX, Integer.class);
                         float startY = y + tileIndex / (float)totalTiles;
                         float endY = y + (tileIndex + 1) / (float)totalTiles;
-                        if (BottomLeft.equals(orientation)) {
+                        if (BOTTOM_LEFT.equals(orientation)) {
                             bounds[x][y] = new SquareTriangleTile(x, startY, x, startY, x, endY, x + 1, startY, tileIndex, totalTiles);
-                        } else if (BottomRight.equals(orientation)) {
+                        } else if (BOTTOM_RIGHT.equals(orientation)) {
                             bounds[x][y] = new SquareTriangleTile(x, startY, x + 1, startY, x + 1, endY, x, startY, tileIndex, totalTiles);
-                        } else if (TopRight.equals(orientation)) {
+                        } else if (TOP_RIGHT.equals(orientation)) {
                             bounds[x][y] = new SquareTriangleTile(x, startY, x, endY, x, startY, x + 1, endY, tileIndex, totalTiles);
-                        } else if (TopLeft.equals(orientation)) {
+                        } else if (TOP_LEFT.equals(orientation)) {
                             bounds[x][y] = new SquareTriangleTile(x, startY, x + 1, endY, x + 1, startY, x, endY, tileIndex, totalTiles);
                         }
                     } else {

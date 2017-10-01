@@ -103,8 +103,11 @@ public abstract class EnemyAnimationBase {
 
     public enum Type {
         // Common
+        PREPARE_SHIELD,
         IDLE,
-        STOP_IDLING,
+        TURN,
+        STOP_SHIELD,
+        ROLL,
         RUN,
         JUMP,
         FALL,

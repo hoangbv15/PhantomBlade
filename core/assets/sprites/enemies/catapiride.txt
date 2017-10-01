@@ -1,0 +1,180 @@
+catapiride.png
+size: 1175, 32
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+0
+  rotate: false
+  xy: 0, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+1
+  rotate: false
+  xy: 47, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+2
+  rotate: false
+  xy: 94, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+3
+  rotate: false
+  xy: 141, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+4
+  rotate: false
+  xy: 188, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+5
+  rotate: false
+  xy: 235, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+6
+  rotate: false
+  xy: 282, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+7
+  rotate: false
+  xy: 329, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+8
+  rotate: false
+  xy: 376, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+9
+  rotate: false
+  xy: 423, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+10
+  rotate: false
+  xy: 470, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+11
+  rotate: false
+  xy: 517, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+12
+  rotate: false
+  xy: 564, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+13
+  rotate: false
+  xy: 611, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+14
+  rotate: false
+  xy: 658, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+15
+  rotate: false
+  xy: 705, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+16
+  rotate: false
+  xy: 752, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+17
+  rotate: false
+  xy: 799, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+18
+  rotate: false
+  xy: 846, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+19
+  rotate: false
+  xy: 893, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+20
+  rotate: false
+  xy: 940, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+21
+  rotate: false
+  xy: 987, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+22
+  rotate: false
+  xy: 1034, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+23
+  rotate: false
+  xy: 1081, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1
+24
+  rotate: false
+  xy: 1128, 0
+  size: 47, 32
+  orig: 47, 32
+  offset: 0, 0
+  index: -1

@@ -24,7 +24,6 @@ public class Mettool extends EnemyBase<Mettool.State> {
         setDealDamageBoundsSize(0.3f, 0.4f);
         damage = new Damage(Damage.Type.NORMAL, Damage.Side.NONE, -difficulty);
         script = new MettoolScript(this, map.player);
-        auxiliaryFrames = new EnumMap<>(EnemyAnimationBase.Type.class);
         animations = new MettoolAnimation();
         sounds = new MettoolSound(soundPlayer);
         state = State.WALK;
@@ -68,7 +67,7 @@ public class Mettool extends EnemyBase<Mettool.State> {
                     type = EnemyAnimationBase.Type.IDLE;
                     break;
                 case UNBUCKLE:
-                    type = EnemyAnimationBase.Type.STOP_IDLING;
+                    type = EnemyAnimationBase.Type.STOP_SHIELD;
                     break;
                 case WALK:
                     type = EnemyAnimationBase.Type.RUN;

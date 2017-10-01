@@ -52,6 +52,7 @@ public abstract class EnemyBase<T> extends MovingObject {
         canTakeDamage = true;
         canSpawn = true;
         explodeFragments = new ArrayList<>();
+        auxiliaryFrames = new EnumMap<>(EnemyAnimationBase.Type.class);
         takeDamageStateTime = 0;
         stateTime = 0;
         direction = MovingObject.LEFT;
@@ -142,6 +143,13 @@ public abstract class EnemyBase<T> extends MovingObject {
 
     protected abstract void updateAnimation(float delta);
 
+    /**
+     * Padding for auxiliary frames.
+     * Auxiliary frames for enemies are most of the time death explosion
+     * @param type Type of animation. For enemies it's mostly DIE
+     * @param delta time passed since last frame
+     * @return The padding
+     */
     public abstract Vector2 getAuxiliaryAnimationPadding(EnemyAnimationBase.Type type, float delta);
 
     public abstract int getMaxHealthPoints();
