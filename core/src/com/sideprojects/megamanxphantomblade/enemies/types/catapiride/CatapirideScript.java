@@ -24,6 +24,7 @@ public class CatapirideScript extends EnemyScript<Catapiride.State> {
 
     @Override
     public void describe() {
+        setCanTakeDamage(true);
         setEnemyState(Catapiride.State.WALK);
         moveTillEdge(MovingObject.LEFT, velocity, walkTime);
         setEnemyState(Catapiride.State.TURN);
@@ -31,10 +32,14 @@ public class CatapirideScript extends EnemyScript<Catapiride.State> {
         setEnemyState(Catapiride.State.WALK);
         moveTillEdge(MovingObject.RIGHT, velocity, walkTime);
         setEnemyState(Catapiride.State.CURL_UP);
-        wait(waitTimeCurlUp);
+        wait(waitTimeCurlUp/2);
+        setCanTakeDamage(false);
+        wait(waitTimeCurlUp/2);
         setEnemyState(Catapiride.State.ROLL);
         moveTillEdge(MovingObject.LEFT, rollVelocity, rollTime);
         setEnemyState(Catapiride.State.UN_CURL);
-        wait(waitTimeCurlUp);
+        wait(waitTimeCurlUp/2);
+        setCanTakeDamage(true);
+        wait(waitTimeCurlUp/2);
     }
 }
