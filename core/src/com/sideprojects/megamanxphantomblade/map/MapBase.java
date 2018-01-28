@@ -16,6 +16,7 @@ import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.enemies.types.mettool.Mettool;
 import com.sideprojects.megamanxphantomblade.enemies.types.nightmarevirus.NightmareVirus;
 import com.sideprojects.megamanxphantomblade.physics.TileBase;
+import com.sideprojects.megamanxphantomblade.physics.TileFactoryBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
 import com.sideprojects.megamanxphantomblade.physics.tiles.RectangleTile;
@@ -33,19 +34,6 @@ import java.util.List;
  * Created by buivuhoang on 04/02/17.
  */
 public abstract class MapBase implements Disposable {
-    public static String TotalNumOfTiles = "Total";
-    public static String TileIndex = "Index";
-    public static String Orientation = "Orientation";
-    public static String BottomLeft = "BottomLeft";
-    public static String BottomRight = "BottomRight";
-    public static String TopLeft = "TopLeft";
-    public static String TopRight = "TopRight";
-    public static String TileType = "Type";
-    public static String SquareTriangle = "SquareTriangle";
-
-    public static String HalfTileSize = "Half";
-    public static String TileSize = "Size";
-
     public static String MapLayer = "Map";
     public static String ObjectLayer = "Objects";
     public static String XSpawn = "XSpawn";
@@ -63,6 +51,7 @@ public abstract class MapBase implements Disposable {
 
     private PlayerFactory playerFactory;
     private PlayerPhysicsFactory playerPhysicsFactory;
+    private TileFactoryBase tileFactory;
     public PlayerBase player;
     public PlayerPhysics playerPhysics;
     public TileBase[][] bounds;
@@ -76,9 +65,14 @@ public abstract class MapBase implements Disposable {
     // This is DI to inject into enemies
     private SoundPlayer soundPlayer;
 
-    public MapBase(PlayerFactory playerFactory, PlayerPhysicsFactory playerPhysicsFactory, SoundPlayer soundPlayer, int difficulty) {
+    public MapBase(PlayerFactory playerFactory,
+                   PlayerPhysicsFactory playerPhysicsFactory,
+                   TileFactoryBase tileFactory,
+                   SoundPlayer soundPlayer,
+                   int difficulty) {
         this.playerFactory = playerFactory;
         this.playerPhysicsFactory = playerPhysicsFactory;
+        this.tileFactory = tileFactory;
         this.soundPlayer = soundPlayer;
         particles = new Particles(20);
         enemyList = new ArrayList<>();
@@ -141,25 +135,9 @@ public abstract class MapBase implements Disposable {
                 TiledMapTileLayer.Cell cell = mapLayer.getCell(x, y);
                 if (cell != null) {
                     MapProperties properties = cell.getTile().getProperties();
-                    if (properties.containsKey(TileSize) && HalfTileSize.equals(properties.get(TileSize, String.class))) {
-                        bounds[x][y] = new RectangleTile(x, y, 1, 45/62f);
-                    } else if (properties.containsKey(TileType) && SquareTriangle.equals(properties.get(TileType, String.class))) {
-                        String orientation = properties.get(Orientation, String.class);
-                        int totalTiles = properties.get(TotalNumOfTiles, Integer.class);
-                        int tileIndex = properties.get(TileIndex, Integer.class);
-                        float startY = y + tileIndex / (float)totalTiles;
-                        float endY = y + (tileIndex + 1) / (float)totalTiles;
-                        if (BottomLeft.equals(orientation)) {
-                            bounds[x][y] = new SquareTriangleTile(x, startY, x, startY, x, endY, x + 1, startY, tileIndex, totalTiles);
-                        } else if (BottomRight.equals(orientation)) {
-                            bounds[x][y] = new SquareTriangleTile(x, startY, x + 1, startY, x + 1, endY, x, startY, tileIndex, totalTiles);
-                        } else if (TopRight.equals(orientation)) {
-                            bounds[x][y] = new SquareTriangleTile(x, startY, x, endY, x, startY, x + 1, endY, tileIndex, totalTiles);
-                        } else if (TopLeft.equals(orientation)) {
-                            bounds[x][y] = new SquareTriangleTile(x, startY, x + 1, endY, x + 1, startY, x, endY, tileIndex, totalTiles);
-                        }
-                    } else {
-                        bounds[x][y] = new RectangleTile(x, y, 1, 1);
+                    TileBase tile = tileFactory.getTile(properties, x, y);
+                    if (tile != null) {
+                        bounds[x][y] = tile;
                     }
                 }
             }

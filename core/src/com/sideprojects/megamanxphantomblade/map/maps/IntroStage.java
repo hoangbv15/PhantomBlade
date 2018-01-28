@@ -11,6 +11,7 @@ import com.rahul.libgdx.parallax.ParallaxBackground;
 import com.rahul.libgdx.parallax.Utils;
 import com.sideprojects.megamanxphantomblade.animation.AnimationLoader;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
+import com.sideprojects.megamanxphantomblade.physics.TileFactoryBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
 import com.sideprojects.megamanxphantomblade.player.PlayerFactory;
 import com.sideprojects.megamanxphantomblade.sound.SoundPlayer;
@@ -19,8 +20,12 @@ import com.sideprojects.megamanxphantomblade.sound.SoundPlayer;
  * Created by buivuhoang on 04/02/17.
  */
 public class IntroStage extends MapBase {
-    public IntroStage(PlayerFactory playerFactory, PlayerPhysicsFactory playerPhysicsFactory, SoundPlayer soundPlayer, int difficulty) {
-        super(playerFactory, playerPhysicsFactory, soundPlayer, difficulty);
+    public IntroStage(PlayerFactory playerFactory,
+                      PlayerPhysicsFactory playerPhysicsFactory,
+                      TileFactoryBase tileFactory,
+                      SoundPlayer soundPlayer,
+                      int difficulty) {
+        super(playerFactory, playerPhysicsFactory, tileFactory, soundPlayer, difficulty);
     }
 
     @Override

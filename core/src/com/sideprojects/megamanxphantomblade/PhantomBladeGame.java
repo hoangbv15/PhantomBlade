@@ -9,6 +9,7 @@ import com.sideprojects.megamanxphantomblade.input.PlayerInputProcessor;
 import com.sideprojects.megamanxphantomblade.logging.TraceLogger;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.map.maps.IntroStage;
+import com.sideprojects.megamanxphantomblade.physics.TileFactory;
 import com.sideprojects.megamanxphantomblade.physics.player.x.PlayerXPhysicsFactory;
 import com.sideprojects.megamanxphantomblade.player.x.PlayerXFactory;
 import com.sideprojects.megamanxphantomblade.player.x.PlayerXSound;
@@ -36,7 +37,12 @@ public class PhantomBladeGame extends ApplicationAdapter {
 		SoundPlayer sound = new SoundPlayer();
 		playerSounds = new PlayerXSound(sound);
 		playerSounds.preload();
-		map = new IntroStage(new PlayerXFactory(), new PlayerXPhysicsFactory(new PlayerInputProcessor(keyMap), playerSounds), sound, Difficulty.NORMAL);
+		map = new IntroStage(
+				new PlayerXFactory(),
+				new PlayerXPhysicsFactory(new PlayerInputProcessor(keyMap), playerSounds),
+				new TileFactory(),
+				sound,
+				Difficulty.NORMAL);
 		mapRenderer = new WorldRenderer(new TraceLogger(), map);
 		debugRenderer = new DebugRenderer(mapRenderer);
 		shapeRenderer = new ShapeRenderer();
