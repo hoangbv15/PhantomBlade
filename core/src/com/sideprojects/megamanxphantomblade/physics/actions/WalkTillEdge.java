@@ -11,8 +11,13 @@ public class WalkTillEdge extends Walk {
         super(object, direction, speed, time);
     }
 
+    private boolean isAtEdge(CollisionList collisions) {
+        return (this.direction == MovingObject.LEFT && collisions.isAtEdgeLeft()) ||
+                (this.direction == MovingObject.RIGHT && collisions.isAtEdgeRight());
+    }
+
     @Override
     public boolean finish(CollisionList collisions) {
-        return collisions.isAtEdge() || super.finish(collisions);
+        return isAtEdge(collisions) || super.finish(collisions);
     }
 }
