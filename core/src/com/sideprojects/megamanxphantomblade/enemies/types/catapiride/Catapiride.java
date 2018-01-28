@@ -53,15 +53,15 @@ public class Catapiride extends EnemyBase<Catapiride.State> {
     protected void updateTakeDamageBounds() {
         switch (state) {
             case TURN:
-                takeDamageBounds.setSize(0.2f, 0.4f);
+                takeDamageBounds.setSize(0.2f, 0.5f);
                 setDealDamageBoundsSize(0.2f, 0.4f);
                 break;
             case ROLL:
-                takeDamageBounds.setSize(0.2f, 0.4f);
+                takeDamageBounds.setSize(0.2f, 0.5f);
                 setDealDamageBoundsSize(0.2f, 0.4f);
                 break;
             default:
-                takeDamageBounds.setSize(0.4f, 0.4f);
+                takeDamageBounds.setSize(0.4f, 0.5f);
                 setDealDamageBoundsSize(0.4f, 0.4f);
                 break;
         }
