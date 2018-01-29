@@ -20,7 +20,6 @@ import com.sideprojects.megamanxphantomblade.physics.TileFactoryBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
 import com.sideprojects.megamanxphantomblade.physics.tiles.RectangleTile;
-import com.sideprojects.megamanxphantomblade.physics.tiles.SquareTriangleTile;
 import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerFactory;
