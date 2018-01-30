@@ -1,6 +1,7 @@
 package com.sideprojects.megamanxphantomblade.physics;
 
 import com.badlogic.gdx.maps.MapProperties;
+import com.sideprojects.megamanxphantomblade.physics.tiles.MovingRectangleTile;
 import com.sideprojects.megamanxphantomblade.physics.tiles.RectangleTile;
 import com.sideprojects.megamanxphantomblade.physics.tiles.SquareTriangleTile;
 
@@ -19,6 +20,9 @@ public class TileFactory extends TileFactoryBase {
 
     private static final String Rectangle = "Rectangle";
     private static final String SquareTriangle = "SquareTriangle";
+    private static final String MovingRectangle = "MovingRectangle";
+
+    private static final String DefaultTileType = Rectangle;
 
     private static final String HalfTileSize = "Half";
     private static final String TileSize = "Size";
@@ -26,7 +30,7 @@ public class TileFactory extends TileFactoryBase {
     @Override
     public TileBase getTile(MapProperties cellProperties, int x, int y) {
         String type = cellProperties.get(Type, String.class);
-        type = type == null ? Rectangle : type;
+        type = type == null ? DefaultTileType : type;
         switch (type) {
             case SquareTriangle:
                 String orientation = cellProperties.get(Orientation, String.class);
@@ -49,6 +53,8 @@ public class TileFactory extends TileFactoryBase {
                 } else {
                     return new RectangleTile(x, y, 1, 1);
                 }
+            case MovingRectangle:
+                return new MovingRectangleTile(x, y, 1, 45/62f);
         }
         return null;
     }
