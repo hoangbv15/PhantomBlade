@@ -15,10 +15,12 @@ import com.sideprojects.megamanxphantomblade.enemies.EnemyAttack;
 import com.sideprojects.megamanxphantomblade.enemies.EnemyBase;
 import com.sideprojects.megamanxphantomblade.enemies.types.mettool.Mettool;
 import com.sideprojects.megamanxphantomblade.enemies.types.nightmarevirus.NightmareVirus;
+import com.sideprojects.megamanxphantomblade.physics.MovingTileBase;
 import com.sideprojects.megamanxphantomblade.physics.TileBase;
 import com.sideprojects.megamanxphantomblade.physics.TileFactoryBase;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysics;
 import com.sideprojects.megamanxphantomblade.physics.player.PlayerPhysicsFactory;
+import com.sideprojects.megamanxphantomblade.physics.tiles.MovingRectangleTile;
 import com.sideprojects.megamanxphantomblade.physics.tiles.RectangleTile;
 import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
 import com.sideprojects.megamanxphantomblade.player.PlayerBase;
@@ -38,6 +40,7 @@ public abstract class MapBase implements Disposable {
     public static String XSpawn = "XSpawn";
     public static String MettoolSpawn = "MettoolSpawn";
     public static String NightmareVirusSpawn = "NightmareVirusSpawn";
+    public static String MovingPlatform = "MovingPlatform";
 
     public float GRAVITY = 15f;
     public float MAX_FALLSPEED = -8f;
@@ -55,6 +58,7 @@ public abstract class MapBase implements Disposable {
     public PlayerPhysics playerPhysics;
     public TileBase[][] bounds;
 
+    public List<MovingTileBase> movingPlatforms;
     public List<EnemyBase> enemyList;
     public Queue<PlayerAttack> playerAttackQueue;
     public Queue<EnemyAttack> enemyAttackQueue;
@@ -75,6 +79,7 @@ public abstract class MapBase implements Disposable {
         this.soundPlayer = soundPlayer;
         particles = new Particles(20);
         enemyList = new ArrayList<>();
+        movingPlatforms = new ArrayList<>();
         playerAttackQueue = new Queue<>(MAX_PLAYERATTACK);
         enemyAttackQueue = new Queue<>(MAX_ENEMYATTACK);
         loadMap(difficulty);
@@ -121,10 +126,12 @@ public abstract class MapBase implements Disposable {
                 player = playerFactory.createPlayer(x, y, difficulty);
                 playerPhysics = playerPhysicsFactory.create(player);
             }
-            if (MettoolSpawn.equals(object.getName())) {
+            else if (MettoolSpawn.equals(object.getName())) {
                 enemyList.add(new Mettool(x, y, this, soundPlayer, difficulty));
             } else if (NightmareVirusSpawn.equals(object.getName())) {
                 enemyList.add(new NightmareVirus(x, y, this, soundPlayer, difficulty));
+            } else if (MovingPlatform.equals(object.getName())) {
+                movingPlatforms.add(new MovingRectangleTile(x, y, 1, 45/62f));
             }
         }
 
@@ -153,6 +160,7 @@ public abstract class MapBase implements Disposable {
     }
 
     public void update(float deltaTime) {
+        updateMovingTiles(deltaTime);
         playerPhysics.update(player, deltaTime, this);
         player.update(this, deltaTime);
         particles.update(deltaTime);
@@ -178,6 +186,12 @@ public abstract class MapBase implements Disposable {
         // If player dies, respawn for now
         if (player.isDead()) {
             player.spawn();
+        }
+    }
+
+    private void updateMovingTiles(float deltaTime) {
+        for (MovingTileBase tile: movingPlatforms) {
+            tile.update(deltaTime);
         }
     }
 

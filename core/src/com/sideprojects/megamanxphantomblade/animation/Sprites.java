@@ -48,6 +48,9 @@ public class Sprites {
     public static final String METTOOL = "sprites/enemies/mettool.txt";
     public static final String NIGHTMARE_VIRUS = "sprites/enemies/nightmare_virus.txt";
 
+    // Map
+    public static final String INTROSTAGE_MOVING_PLATFORM = "maps/moving-platform-1.png";
+
     // GUI elements
     public static final String GUI_ELEMENTS = "sprites/ingame_gui.txt";
 

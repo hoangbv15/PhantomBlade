@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sideprojects.megamanxphantomblade.MovingObject;
 import com.sideprojects.megamanxphantomblade.math.GeoMathRectangle;
+import com.sideprojects.megamanxphantomblade.math.VectorCache;
 import com.sideprojects.megamanxphantomblade.physics.TileBase;
 import com.sideprojects.megamanxphantomblade.physics.collision.Collision;
 import com.sideprojects.megamanxphantomblade.physics.collision.CollisionDetectionRay;
@@ -149,6 +150,11 @@ public class RectangleTile extends TileBase {
     @Override
     public float getYPositionIfStandingOnTile(float x) {
         return y() + getHeight();
+    }
+
+    public final void setPosition(float x, float y) {
+        tile.setPosition(x, y);
+        vertices = new float[] {x, y, x + getWidth(), y, x + getWidth(), y + getHeight(), x, y + getHeight()};
     }
 
     private boolean shouldThereBeCollisionWithSideTile(TileBase thisTile, TileBase otherTile) {

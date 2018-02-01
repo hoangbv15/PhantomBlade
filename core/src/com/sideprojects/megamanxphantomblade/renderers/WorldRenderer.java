@@ -19,6 +19,7 @@ import com.sideprojects.megamanxphantomblade.enemies.ExplodeFragment;
 import com.sideprojects.megamanxphantomblade.logging.Logger;
 import com.sideprojects.megamanxphantomblade.map.MapBase;
 import com.sideprojects.megamanxphantomblade.animation.Particle;
+import com.sideprojects.megamanxphantomblade.physics.MovingTileBase;
 import com.sideprojects.megamanxphantomblade.player.PlayerAttack;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.DamagedShader;
 import com.sideprojects.megamanxphantomblade.renderers.shaders.Shader;
@@ -91,6 +92,7 @@ public class WorldRenderer implements Disposable {
         renderMap();
         batch.setProjectionMatrix(gameCam.combined);
         batch.begin();
+        renderMovingPlatforms();
         renderEnemies(delta);
         playerRenderer.render(pos.x, pos.y, delta);
         renderEnemyAttack();
@@ -102,6 +104,7 @@ public class WorldRenderer implements Disposable {
         playerHealthRenderer.renderHealth(map.player.maxHealthPoints, map.player.healthPoints, map.player.isLowHealth(), delta);
     }
 
+
     private void renderGui(float delta) {
         // Need to flip y to render gui from top down
         guiCam.setToOrtho(true);
@@ -112,6 +115,13 @@ public class WorldRenderer implements Disposable {
     private void renderMap() {
         mapRenderer.setView(gameCam);
         mapRenderer.render();
+    }
+
+    private void renderMovingPlatforms() {
+        for (MovingTileBase tile: map.movingPlatforms) {
+            Vector2 pos = applyCameraLerp(tile.getPosition());
+            batch.draw(tile.frame, pos.x, pos.y);
+        }
     }
 
     private void renderEnemies(float delta) {
