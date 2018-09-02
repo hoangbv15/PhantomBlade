@@ -41,5 +41,8 @@ after_script:
   - git push
 
 after_success:
- - cd PhantomBlade
- - ./gradlew sonarqube -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=hoangbv15-bitbucket -Dsonar.login=${SONAR_TOKEN}
+  - cd PhantomBlade
+  - ./gradlew sonarqube -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=hoangbv15-bitbucket -Dsonar.login=${SONAR_TOKEN}
+
+notifications:
+  slack: phantom-blade:U6gbei72tk5apTTRtMQCHiQ1
