@@ -68,8 +68,29 @@ public class MovingRectangleTile extends MovingTileBase {
     }
 
     @Override
-    public Collision getCollisionWithTile(MovingObject object, CollisionDetectionRay ray, TileBase tileUp, TileBase tileDown, TileBase tileLeft, TileBase tileRight, TileBase tileTopLeft, TileBase tileTopRight, TileBase tileBottomLeft, TileBase tileBottomRight, boolean overlapMode) {
-        return tile.getCollisionWithTile(object, ray, tileUp, tileDown, tileLeft, tileRight, tileTopLeft, tileTopRight, tileBottomLeft, tileBottomRight, overlapMode);
+    public Collision getCollisionWithTile(MovingObject object,
+                                          CollisionDetectionRay ray,
+                                          TileBase tileUp,
+                                          TileBase tileDown,
+                                          TileBase tileLeft,
+                                          TileBase tileRight,
+                                          TileBase tileTopLeft,
+                                          TileBase tileTopRight,
+                                          TileBase tileBottomLeft,
+                                          TileBase tileBottomRight,
+                                          boolean overlapMode) {
+        return tile.getCollisionWithTile(
+                object,
+                ray,
+                tileUp,
+                tileDown,
+                tileLeft,
+                tileRight,
+                tileTopLeft,
+                tileTopRight,
+                tileBottomLeft,
+                tileBottomRight,
+                overlapMode);
     }
 
     private float stateTime = 0;

@@ -255,15 +255,18 @@ public abstract class MapBase implements Disposable {
             return new RectangleTile(x, y, 1, 1, true);
         }
         if (y >= bounds[0].length) {
-            if (x >= 0 && x < bounds.length ) {
-                if (bounds[x][bounds[0].length - 1] != null) {
-                    return new RectangleTile(x, y, 1, 1, true);
-                }
+            if (bounds[x][bounds[0].length - 1] != null) {
+                return new RectangleTile(x, y, 1, 1, true);
             }
-            return null;
         }
         if (y < 0) {
             return null;
+        }
+        // Look for moving tiles
+        for (MovingTileBase tile: movingPlatforms) {
+            if (Math.abs(x - tile.x()) < 1 && Math.abs(y - tile.y()) < 1) {
+                return tile;
+            }
         }
         return bounds[x][y];
     }
