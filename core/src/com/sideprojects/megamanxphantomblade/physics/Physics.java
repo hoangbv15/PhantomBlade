@@ -41,10 +41,14 @@ public abstract class Physics extends PhysicsBase {
                     case RightSlippery:
                     case Left:
                     case Right:
+                    case LeftMovingTile:
+                    case RightMovingTile:
                         object.vel.x = 0;
                         object.mapCollisionBounds.x = preCollide.x;
                         break;
                     case UpRamp:
+                    case UpMovingTile:
+                        object.mapCollisionBounds.x = preCollide.x;
                     case Up:
                         object.grounded = true;
                     case Down:

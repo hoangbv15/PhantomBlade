@@ -116,7 +116,7 @@ public abstract class MapBase implements Disposable {
         }
         bounds = new TileBase[mapLayer.getWidth()][mapLayer.getHeight()];
 
-        // Spawn player and enemies
+        // Spawn player, enemies and moving platforms
         MapObjects objects = tiledMap.getLayers().get(ObjectLayer).getObjects();
         for (int i = 0; i < objects.getCount(); i ++) {
             RectangleMapObject object = (RectangleMapObject)objects.get(i);
@@ -126,11 +126,12 @@ public abstract class MapBase implements Disposable {
                 player = playerFactory.createPlayer(x, y, difficulty);
                 playerPhysics = playerPhysicsFactory.create(player);
             }
-            else if (MettoolSpawn.equals(object.getName())) {
-                enemyList.add(new Mettool(x, y, this, soundPlayer, difficulty));
-            } else if (NightmareVirusSpawn.equals(object.getName())) {
-                enemyList.add(new NightmareVirus(x, y, this, soundPlayer, difficulty));
-            } else if (MovingPlatform.equals(object.getName())) {
+            // TODO: reenable enemy spawn
+//            else if (MettoolSpawn.equals(object.getName())) {
+//                enemyList.add(new Mettool(x, y, this, soundPlayer, difficulty));
+//            } else if (NightmareVirusSpawn.equals(object.getName())) {
+//                enemyList.add(new NightmareVirus(x, y, this, soundPlayer, difficulty));
+            else if (MovingPlatform.equals(object.getName())) {
                 movingPlatforms.add(new MovingRectangleTile(x, y, 1, 45/62f));
             }
         }

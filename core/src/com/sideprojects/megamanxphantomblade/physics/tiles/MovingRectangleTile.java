@@ -16,6 +16,9 @@ public class MovingRectangleTile extends MovingTileBase {
     private Vector2 position;
 
     public MovingRectangleTile(float x, float y, float width, float height, boolean slippery) {
+        // TODO: remove this
+        x -= 2;
+        y -= 1;
         tile = new RectangleTile(x, y, width, height, slippery);
         position = new Vector2(x, y);
         frame = new Texture("maps/moving-platform-1.png");
@@ -68,6 +71,11 @@ public class MovingRectangleTile extends MovingTileBase {
     }
 
     @Override
+    public boolean isMovingTile() {
+        return true;
+    }
+
+    @Override
     public Collision getCollisionWithTile(MovingObject object,
                                           CollisionDetectionRay ray,
                                           TileBase tileUp,
@@ -79,7 +87,7 @@ public class MovingRectangleTile extends MovingTileBase {
                                           TileBase tileBottomLeft,
                                           TileBase tileBottomRight,
                                           boolean overlapMode) {
-        return tile.getCollisionWithTile(
+        Collision collision = tile.getCollisionWithTile(
                 object,
                 ray,
                 tileUp,
@@ -91,10 +99,29 @@ public class MovingRectangleTile extends MovingTileBase {
                 tileBottomLeft,
                 tileBottomRight,
                 overlapMode);
+
+        if (collision != null) {
+            switch (collision.side) {
+                case Up:
+                    System.out.println("Collision up!!!!!!!!!!!!");
+                    collision.side = Collision.Side.UpMovingTile;
+                    break;
+                case Left:
+                    System.out.println("Collision left!!!!!!!!!!!!");
+                    collision.side = Collision.Side.LeftMovingTile;
+                    break;
+                case Right:
+                    System.out.println("Collision right!!!!!!!!!!!!");
+                    collision.side = Collision.Side.RightMovingTile;
+                    break;
+            }
+        }
+
+        return collision;
     }
 
     private float stateTime = 0;
-    private float vel = 3f;
+    private float vel = 1.5f;
 
     @Override
     public void update(float delta) {

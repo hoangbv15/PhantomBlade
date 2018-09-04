@@ -16,6 +16,7 @@ public abstract class TileBase {
     public abstract float[] getVertices();
     public abstract Vector2 getPostCollisionPos(Collision collision);
     public abstract float getYPositionIfStandingOnTile(float x);
+    public abstract boolean isMovingTile();
 
     public abstract Collision getCollisionWithTile(MovingObject object, CollisionDetectionRay ray,
                                           TileBase tileUp,

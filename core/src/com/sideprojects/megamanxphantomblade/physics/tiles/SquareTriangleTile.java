@@ -192,7 +192,7 @@ public class SquareTriangleTile extends TileBase {
         // If we just wants to check collision from overlapping
         if (overlapMode) {
             if (tile.contains(start)) {
-                return new Collision(object, start, Collision.Side.None, ray, this);
+                return new Collision(object, start, Collision.Side.None, ray, this, isMovingTile());
             } else {
                 return null;
             }
@@ -205,12 +205,12 @@ public class SquareTriangleTile extends TileBase {
         // Find intersection on each side of the tile
         if (squareAngle != SquareAngle.BottomRight && squareAngle != SquareAngle.TopRight &&
                 shouldThereBeCollisionWithSideTile(this, tileLeft)) {
-            Collision left = new Collision(object, GeoMathRectangle.findIntersectionLeft(this, start, end), Collision.Side.Left, ray, this);
+            Collision left = new Collision(object, GeoMathRectangle.findIntersectionLeft(this, start, end), Collision.Side.Left, ray, this, isMovingTile());
             if (left.point != null) collisionList.add(left);
         }
         if (squareAngle != SquareAngle.BottomLeft && squareAngle != SquareAngle.TopLeft &&
                 shouldThereBeCollisionWithSideTile(this, tileRight)) {
-            Collision right = new Collision(object, GeoMathRectangle.findIntersectionRight(this, start, end), Collision.Side.Right, ray, this);
+            Collision right = new Collision(object, GeoMathRectangle.findIntersectionRight(this, start, end), Collision.Side.Right, ray, this, isMovingTile());
             if (right.point != null) collisionList.add(right);
         }
         if ((squareAngle == SquareAngle.BottomLeft || squareAngle == SquareAngle.BottomRight) && tileUp == null &&
@@ -218,12 +218,12 @@ public class SquareTriangleTile extends TileBase {
                         (direction != upDirection && ray.side == CollisionDetectionRay.Side.Back)
                 )
             ) {
-            Collision up = new Collision(object, GeoMathTriangle.findVertexIntersectionUp(this, start, end), Collision.Side.UpRamp, ray, this, leftTile, rightTile);
+            Collision up = new Collision(object, GeoMathTriangle.findVertexIntersectionUp(this, start, end), Collision.Side.UpRamp, ray, this, leftTile, rightTile, isMovingTile());
             if (up.point != null) collisionList.add(up);
         }
         if ((squareAngle == SquareAngle.TopLeft || squareAngle == SquareAngle.TopRight) && tileDown == null &&
                 object.vel.y >= 0) {
-            Collision down = new Collision(object, GeoMathTriangle.findIntersectionDown(this, start, end), Collision.Side.Down, ray, this);
+            Collision down = new Collision(object, GeoMathTriangle.findIntersectionDown(this, start, end), Collision.Side.Down, ray, this, isMovingTile());
             if (down.point != null) {
                 collisionList.add(down);
             }
@@ -286,6 +286,11 @@ public class SquareTriangleTile extends TileBase {
                 // Invalid case
                 return -1;
         }
+    }
+
+    @Override
+    public boolean isMovingTile() {
+        return false;
     }
 
     public float getTanAngle() {

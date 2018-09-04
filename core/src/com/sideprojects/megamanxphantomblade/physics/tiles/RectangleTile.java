@@ -91,7 +91,7 @@ public class RectangleTile extends TileBase {
         // If we just wants to check collision from overlapping
         if (overlapMode) {
             if (tile.contains(start)) {
-                return new Collision(object, start, Collision.Side.None, ray, this);
+                return new Collision(object, start, Collision.Side.None, ray, this, isMovingTile());
             } else {
                 return null;
             }
@@ -103,19 +103,19 @@ public class RectangleTile extends TileBase {
 
         // Find intersection on each side of the tile
         if (shouldThereBeCollisionWithSideTile(this, tileLeft)) {
-            Collision left = new Collision(object, GeoMathRectangle.findIntersectionLeft(this, start, end), slippery ? Collision.Side.LeftSlippery : Collision.Side.Left, ray, this);
+            Collision left = new Collision(object, GeoMathRectangle.findIntersectionLeft(this, start, end), slippery ? Collision.Side.LeftSlippery : Collision.Side.Left, ray, this, isMovingTile());
             if (left.point != null) collisionList.add(left);
         }
         if (shouldThereBeCollisionWithSideTile(this, tileRight)) {
-            Collision right = new Collision(object, GeoMathRectangle.findIntersectionRight(this, start, end), slippery ? Collision.Side.RightSlippery : Collision.Side.Right, ray, this);
+            Collision right = new Collision(object, GeoMathRectangle.findIntersectionRight(this, start, end), slippery ? Collision.Side.RightSlippery : Collision.Side.Right, ray, this, isMovingTile());
             if (right.point != null) collisionList.add(right);
         }
         if (tileUp == null) {
-            Collision up = new Collision(object, GeoMathRectangle.findIntersectionUp(this, start, end), Collision.Side.Up, ray, this, tileLeft, tileRight);
+            Collision up = new Collision(object, GeoMathRectangle.findIntersectionUp(this, start, end), Collision.Side.Up, ray, this, tileLeft, tileRight, isMovingTile());
             if (up.point != null) collisionList.add(up);
         }
         if (tileDown == null) {
-            Collision down = new Collision(object, GeoMathRectangle.findIntersectionDown(this, start, end), Collision.Side.Down, ray, this);
+            Collision down = new Collision(object, GeoMathRectangle.findIntersectionDown(this, start, end), Collision.Side.Down, ray, this, isMovingTile());
             if (down.point != null) collisionList.add(down);
         }
 
@@ -150,6 +150,11 @@ public class RectangleTile extends TileBase {
     @Override
     public float getYPositionIfStandingOnTile(float x) {
         return y() + getHeight();
+    }
+
+    @Override
+    public boolean isMovingTile() {
+        return false;
     }
 
     public final void setPosition(float x, float y) {

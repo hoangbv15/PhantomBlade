@@ -48,11 +48,16 @@ public class Collision {
     public CollisionDetectionRay ray;
 
     /**
+     * Whether the tile is a moving platform
+     */
+    public boolean isMovingTile;
+
+    /**
      * The source moving object colliding with the tile
      */
     public MovingObject object;
 
-    public Collision(MovingObject object, Vector2 collidePoint, Side collideSide, CollisionDetectionRay ray, TileBase tile, TileBase tileLeft, TileBase tileRight) {
+    public Collision(MovingObject object, Vector2 collidePoint, Side collideSide, CollisionDetectionRay ray, TileBase tile, TileBase tileLeft, TileBase tileRight, boolean isMovingTile) {
         this.object = object;
         this.point = collidePoint;
         this.side = collideSide;
@@ -63,10 +68,11 @@ public class Collision {
         this.ray = ray;
         this.tileLeft = tileLeft;
         this.tileRight = tileRight;
+        this.isMovingTile = isMovingTile;
     }
 
-    public Collision(MovingObject object, Vector2 collidePoint, Side collideSide, CollisionDetectionRay ray, TileBase tile) {
-        this(object, collidePoint, collideSide, ray, tile, null, null);
+    public Collision(MovingObject object, Vector2 collidePoint, Side collideSide, CollisionDetectionRay ray, TileBase tile, boolean isMovingTile) {
+        this(object, collidePoint, collideSide, ray, tile, null, null, isMovingTile);
     }
 
     public Vector2 getPostCollidePos() {
@@ -74,7 +80,8 @@ public class Collision {
     }
 
     public enum Side {
-        Up, Down, Left, Right,
+        Up, Down, Left, Right, // Up, Down means the side of the tile that collides with the player. so Up means the player is standing on the tile
+        LeftMovingTile, RightMovingTile, UpMovingTile,
         LeftSlippery, RightSlippery, // Cannot do wallslide
         UpRamp, // Behave exactly like Up, but at an angle
         None
@@ -90,12 +97,7 @@ public class Collision {
     }
 
     private static Comparator<Collision> getComparatorByDistanceToStart() {
-        return new Comparator<Collision>() {
-            @Override
-            public int compare(Collision a, Collision b) {
-                return Float.compare(a.dist, b.dist);
-            }
-        };
+        return (a, b) -> Float.compare(a.dist, b.dist);
     }
 }
 
