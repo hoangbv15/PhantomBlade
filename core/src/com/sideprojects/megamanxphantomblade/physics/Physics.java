@@ -35,25 +35,24 @@ public abstract class Physics extends PhysicsBase {
             // Apply collision-specific movement logic
             // Take current state into account if needed
             for (Collision collision : collisionList.toList) {
-                Vector2 preCollide = collision.getPostCollidePos();
+                Vector2 postCollide = collision.getPostCollidePos();
                 switch (collision.side) {
                     case LeftSlippery:
                     case RightSlippery:
                     case Left:
                     case Right:
-                    case LeftMovingTile:
-                    case RightMovingTile:
                         object.vel.x = 0;
-                        object.mapCollisionBounds.x = preCollide.x;
+                        object.mapCollisionBounds.x = postCollide.x;
                         break;
                     case UpRamp:
-                    case UpMovingTile:
-                        object.mapCollisionBounds.x = preCollide.x;
                     case Up:
                         object.grounded = true;
+                        if (collision.isMovingTile) {
+                            object.mapCollisionBounds.x = postCollide.x;
+                        }
                     case Down:
                         object.vel.y = 0;
-                        object.mapCollisionBounds.y = preCollide.y;
+                        object.mapCollisionBounds.y = postCollide.y;
                         break;
                 }
             }

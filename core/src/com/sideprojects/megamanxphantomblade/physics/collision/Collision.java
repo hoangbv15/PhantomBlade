@@ -81,7 +81,6 @@ public class Collision {
 
     public enum Side {
         Up, Down, Left, Right, // Up, Down means the side of the tile that collides with the player. so Up means the player is standing on the tile
-        LeftMovingTile, RightMovingTile, UpMovingTile,
         LeftSlippery, RightSlippery, // Cannot do wallslide
         UpRamp, // Behave exactly like Up, but at an angle
         None

@@ -62,17 +62,14 @@ public class MovingRectangleTile extends MovingTileBase {
 
     @Override
     public Vector2 getPostCollisionPos(Collision collision) {
-        return tile.getPostCollisionPos(collision);
+        Vector2 posCollide = tile.getPostCollisionPos(collision);
+        posCollide.x += xDelta;
+        return posCollide;
     }
 
     @Override
     public float getYPositionIfStandingOnTile(float x) {
         return tile.getYPositionIfStandingOnTile(x);
-    }
-
-    @Override
-    public boolean isMovingTile() {
-        return true;
     }
 
     @Override
@@ -101,20 +98,8 @@ public class MovingRectangleTile extends MovingTileBase {
                 overlapMode);
 
         if (collision != null) {
-            switch (collision.side) {
-                case Up:
-                    System.out.println("Collision up!!!!!!!!!!!!");
-                    collision.side = Collision.Side.UpMovingTile;
-                    break;
-                case Left:
-                    System.out.println("Collision left!!!!!!!!!!!!");
-                    collision.side = Collision.Side.LeftMovingTile;
-                    break;
-                case Right:
-                    System.out.println("Collision right!!!!!!!!!!!!");
-                    collision.side = Collision.Side.RightMovingTile;
-                    break;
-            }
+            collision.isMovingTile = true;
+            collision.tile = this;
         }
 
         return collision;
@@ -122,6 +107,7 @@ public class MovingRectangleTile extends MovingTileBase {
 
     private float stateTime = 0;
     private float vel = 1.5f;
+    private float xDelta = 0f;
 
     @Override
     public void update(float delta) {
@@ -130,6 +116,7 @@ public class MovingRectangleTile extends MovingTileBase {
             vel = -vel;
             stateTime = 0;
         }
+        xDelta = delta * vel;
         tile.setPosition(tile.x() + delta * vel, tile.y());
     }
 }
